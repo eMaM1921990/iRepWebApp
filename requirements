@@ -1,0 +1,13 @@
+Django==1.11
+Pillow==3.3.0
+dateutils==0.6.6
+django-endless-pagination==2.0
+django-allauth
+psycopg2
+django-import-export
+django-rosetta
+djangorestframework
+django-cities-light
+django-notifications-hq
+django-debug-toolbar
+§
