@@ -1,0 +1,68 @@
+{% extends "account/base.html" %}
+
+{% load i18n staticfiles %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+    <div class="form-signin">
+        <div class="text-center">
+            <img src="{% static 'img/logo.png' %}" alt="iRep Logo">
+        </div>
+        <hr>
+        <div class="tab-content">
+            <div id="login" class="tab-pane active">
+                <form method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    <p class="text-muted text-center">
+                        Enter your username and password
+                    </p>
+
+                    {{ form.login }}
+                    {{ form.password }}
+                    <div class="checkbox">
+                        <label>
+                            {{ form.remember }} {{ form.remember.label }}
+                        </label>
+                    </div>
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>
+                </form>
+
+
+            </div>
+
+
+        </div>
+        <hr>
+        <div class="text-center">
+            <ul class="list-inline">
+                <li><a class="text-muted" href="{{ login_url }}" data-toggle="tab">{% trans "Sign In" %}</a></li>
+                <li><a class="text-muted" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></li>
+
+            </ul>
+        </div>
+
+        <div>
+
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">English</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">عربي</button>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+{% endblock %}

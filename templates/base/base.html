@@ -1,0 +1,30 @@
+{% load i18n %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--IE Compatibility modes-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--Mobile first-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="content here..">
+    <meta name="author" content="">
+    <title>{% block head_title %}{% trans 'iRep v1.01' %}{% endblock %}</title>
+    {% include 'base/baseHead.html' %}
+    {% block extra_head %}{% endblock %}
+    </head>
+
+<body>
+    <div class="bg-dark dk" id="wrap">
+        {% include 'base/topHeader.html' %}
+        {% include 'base/leftNav.html' %}
+        <div id="content" >
+            {% block content %}{% endblock %}
+
+        </div>
+    {% include 'base/baseJs.html' %}
+    {% block extra_js_src %}{% endblock %}
+    {% block extra_javascript %}{% endblock %}
+    </div>
+</body>
+
+</html>

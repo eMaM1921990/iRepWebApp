@@ -1,0 +1,36 @@
+{% load staticfiles i18n %}
+<div id="top">
+    <header class="head">
+        <a href="#" class="navbar-brand"><img src="{% static 'img/logo.png' %}" alt=""></a>
+        <div class="main-bar">
+            <div class="topnav">
+                <div class="btn-group ">
+                    <a data-placement="bottom" data-original-title="Menu" data-toggle="tooltip"
+                       class="nav-btns toggle-left visible-xs" id="menu-toggle">
+                        <i class="glyphicon glyphicon-menu-hamburger"></i>
+                    </a>
+
+                </div>
+
+                <div class="btn-group">
+                    <span data-toggle="tooltip" data-placement="bottom" data-original-title="Messages">
+                        <a href="#right" data-toggle="onoffcanvas" aria-expanded="false" class="nav-btns">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <span class="label label-info">4</span>
+                        </a>
+                    </span>
+                </div>
+                <div class="btn-group">
+                    <a href="#" data-toggle="tooltip" data-original-title="Logout" data-placement="bottom"
+                       class="nav-btns">
+                        <i class="fa fa-power-off"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.main-bar -->
+    </header>
+    <!-- /.head -->
+</div>
+<!-- /#top -->

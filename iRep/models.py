@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from cities_light.admin import City
+from cities_light.models import City, Region, Country
 from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator, ASCIIUsernameValidator
 from django.db import models
@@ -38,33 +38,6 @@ class Corporate(models.Model):
         ordering = ['-created_date']
 
 
-class Clients(models.Model):
-    avatar = models.ImageField(upload_to='', null=True)
-    name =models.CharField(max_length=150, null=False)
-    address_txt = models.CharField(max_length=200, null=False)
-    city = models.ForeignKey(City, default=None, related_name='client_city', db_column='cities_light_city_id')
-    zipcode = models.IntegerField()
-    contact_name = models.CharField(max_length=150)
-    contact_title = models.CharField(max_length=100)
-    website = models.URLField()
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
-    cell_phone = models.CharField(max_length=20)
-    notes = models.TextField()
-    status = models.ForeignKey()
-    created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey('iRep.User', on_delete=models.CASCADE, db_column='auth_user_id')
-    is_active = models.BooleanField(default=True)
-    slug = models.SlugField(db_index=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'clients'
-
-
 class ClientStatus(models.Model):
     status_name = models.CharField(max_length=150)
     created_date = models.DateTimeField(default=timezone.now)
@@ -79,6 +52,34 @@ class ClientStatus(models.Model):
         managed = MANAGED
         db_table = 'client_status'
         ordering = ['-created_date']
+
+
+class Clients(models.Model):
+    avatar = models.ImageField(upload_to='', null=True)
+    name = models.CharField(max_length=150, null=False)
+    address_txt = models.CharField(max_length=200, null=False)
+    city = models.ForeignKey(City, models.CASCADE, related_name='client_city', db_column='cities_light_city_id')
+    zipcode = models.IntegerField()
+    contact_name = models.CharField(max_length=150)
+    contact_title = models.CharField(max_length=100)
+    website = models.URLField()
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    cell_phone = models.CharField(max_length=20)
+    notes = models.TextField()
+    status = models.ForeignKey(ClientStatus, models.SET_NULL, db_column='status_id', related_name='client_status',
+                               null=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey('iRep.User', on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+    slug = models.SlugField(db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'clients'
 
 
 class User(AbstractBaseUser, PermissionsMixin):

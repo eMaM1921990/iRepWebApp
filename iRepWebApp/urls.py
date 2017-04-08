@@ -16,7 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from iRep import views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
+    url(r'^accounts/', include('allauth.urls')),  # All auth
+    url(r'^$',views.home,name='index'),
 ]

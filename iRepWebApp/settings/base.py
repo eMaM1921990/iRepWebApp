@@ -14,7 +14,9 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+print 'base' + BASE_DIR
+TEMPLATE_DIR = os.path.join(BASE_DIR, '..') + '/templates'
+print TEMPLATE_DIR
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -26,7 +28,6 @@ SECRET_KEY = '-poq+1s6rho!qq+o^atz)%j_vn1^q-m80!p1*n=-gp1l#q686q'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -40,14 +41,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.humanize',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'iRep',
     'notifications',
     'cities_light',
     'endless_pagination',
     'rosetta',
     'import_export',
-    'allauth',
-    'allauth.account',
+
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -70,27 +73,31 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-
 ROOT_URLCONF = 'iRepWebApp.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                # 'django.core.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+                # 'allauth.account.context_processors.account',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'iRepWebApp.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
@@ -105,9 +112,6 @@ DATABASES = {
         'PORT': '5432',  # '5556'
     }
 }
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -127,13 +131,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
-
 
 LANGUAGE_CODE = 'en-us'
 
@@ -145,12 +147,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 # ALLAUTH AUTHENTICATION
 SITE_ID = 1
@@ -163,10 +163,9 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 3
 AUTH_USER_MODEL = 'iRep.User'
+# ACCOUNT_FORMS = {'login': 'iRep.forms.LoginForm'}
 
 
-
-# LOGGING
 # LOGGING
 LOGGING = {
     'version': 1,
@@ -195,6 +194,5 @@ LOGGING = {
         },
     }
 }
-
 
 GRAPPELLI_ADMIN_TITLE = 'iRep Admin Panel'

@@ -1,0 +1,99 @@
+{% load staticfiles i18n %}
+<div id="left">
+    <div class="media user-media bg-dark dker">
+        <div class="user-media-toggleHover">
+            <span class="fa fa-user"></span>
+        </div>
+        <div class="user-wrapper bg-dark">
+            <a class="user-link" href="">
+                <img class="media-object img-thumbnail user-img" alt="User Picture" src="{% static 'img/user.gif' %}">
+
+            </a>
+
+            <div class="media-body">
+                <h5 class="media-heading">Archie</h5>
+                <ul class="list-unstyled user-info">
+                    <li><a href="">Administrator</a></li>
+                    <li>Last Access : <br>
+                        <small><i class="fa fa-calendar"></i>&nbsp;16 Mar 16:32</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- #menu -->
+    <ul id="menu" class="bg-blue dker">
+
+
+        <li class="">
+            <a href="index.html">
+                <i class="fa fa-dashboard"></i><span class="link-title">&nbsp;{% trans 'Dashboard' %}</span>
+            </a>
+        </li>
+
+
+        <li class="">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-user"></i>
+                <span class="link-title">
+                        {% trans 'User Setting' %}
+                </span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="collapse leftmenu-style">
+
+                <li><a href="#"> <i class="fa fa-caret-right"></i> {% trans 'Create user' %} </a></li>
+
+                <li><a href="#"> <i class="fa fa-caret-right"></i>{% trans 'View all' %} </a></li>
+
+            </ul>
+        </li>
+
+
+{#        <li class="">#}
+{#            <a href="javascript:;">#}
+{#                <i class="glyphicon glyphicon-briefcase"></i>#}
+{#                <span class="link-title">#}
+{#                    {% trans 'Corporate' %}#}
+{#                </span>#}
+{#                <span class="fa arrow"></span>#}
+{#            </a>#}
+{#            <ul class="collapse leftmenu-style">#}
+{##}
+{#                <li><a href="#"> <i class="fa fa-caret-right"></i> new Corporate </a></li>#}
+{##}
+{#                <li><a href="#"> <i class="fa fa-caret-right"></i>View all </a></li>#}
+{##}
+{#            </ul>#}
+{#        </li>#}
+
+
+        <li class="">
+            <a href="javascript:;">
+                <i class="glyphicon glyphicon-user"></i>
+                <span class="link-title">
+                    {% trans 'Clients' %}
+                </span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="collapse leftmenu-style">
+
+                <li><a href="#"> <i class="fa fa-caret-right"></i>{% trans 'Create new Client' %} </a></li>
+
+                <li><a href="#"> <i class="fa fa-caret-right"></i>{% trans 'View all'%} </a></li>
+
+            </ul>
+        </li>
+
+
+        <li class="">
+            <a href="@">
+                <i class="glyphicon glyphicon-ok-sign"></i><span class="link-title">&nbsp;Permissions</span>
+            </a>
+        </li>
+
+
+    </ul>
+    <!-- /#menu -->
+</div>
+<!-- /#left -->
