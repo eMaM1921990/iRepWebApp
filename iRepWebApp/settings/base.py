@@ -134,10 +134,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR,'..', 'locale'),
 )
 
-LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -162,7 +161,7 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 # ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 3
-AUTH_USER_MODEL = 'iRep.User'
+# AUTH_USER_MODEL = 'iRep.User'
 # ACCOUNT_FORMS = {'login': 'iRep.forms.LoginForm'}
 
 

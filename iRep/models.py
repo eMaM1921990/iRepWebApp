@@ -16,6 +16,17 @@ MANAGED = True
 
 
 # Create your models here.
+class UserProfile(models.Model):
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    user_type = models.IntegerField(default=0)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='user_profile_corp', db_column='corp_id')
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'user_profile'
+
+
 class Corporate(models.Model):
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     corporate_name = models.CharField(max_length=150, null=False)
@@ -27,7 +38,7 @@ class Corporate(models.Model):
     no_of_user = models.IntegerField(default=0)
     is_limited = models.BooleanField(default=False)
     created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey('iRep.User', on_delete=models.CASCADE, db_column='auth_user_id')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
@@ -38,10 +49,10 @@ class Corporate(models.Model):
         ordering = ['-created_date']
 
 
-class ClientStatus(models.Model):
+class SalesFunnelStatus(models.Model):
     status_name = models.CharField(max_length=150)
     created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey('iRep.User', on_delete=models.CASCADE, db_column='auth_user_id')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
@@ -50,11 +61,25 @@ class ClientStatus(models.Model):
 
     class Meta:
         managed = MANAGED
-        db_table = 'client_status'
+        db_table = 'sales_funnel_status'
         ordering = ['-created_date']
 
 
-class Clients(models.Model):
+class Client(models.Model):
+    avatar = models.ImageField(upload_to='', null=True)
+    name = models.CharField(max_length=150, null=False)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corporate_client', db_column='corp_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+    slug = models.SlugField(db_index=True)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'client'
+
+
+class Branches(models.Model):
     avatar = models.ImageField(upload_to='', null=True)
     name = models.CharField(max_length=150, null=False)
     address_txt = models.CharField(max_length=200, null=False)
@@ -67,10 +92,10 @@ class Clients(models.Model):
     phone = models.CharField(max_length=20)
     cell_phone = models.CharField(max_length=20)
     notes = models.TextField()
-    status = models.ForeignKey(ClientStatus, models.SET_NULL, db_column='status_id', related_name='client_status',
+    status = models.ForeignKey(SalesFunnelStatus, models.SET_NULL, db_column='status_id', related_name='client_status',
                                null=True)
     created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey('iRep.User', on_delete=models.CASCADE, db_column='auth_user_id')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
@@ -79,74 +104,136 @@ class Clients(models.Model):
 
     class Meta:
         managed = MANAGED
-        db_table = 'clients'
+        db_table = 'branches'
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    """
-        An abstract base class implementing a fully featured User model with
-        admin-compliant permissions.
-
-        Username and password are required. Other fields are optional.
-        """
-    username_validator = UnicodeUsernameValidator() if six.PY3 else ASCIIUsernameValidator()
-
-    username = models.CharField(
-        _('username'),
-        max_length=150,
-        unique=True,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[username_validator],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        },
-    )
-    email = models.EmailField(_('email address'), unique=True)
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=30, blank=True)
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    is_staff = models.BooleanField(
-        _('staff status'),
-        default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
-    )
-    is_active = models.BooleanField(
-        _('active'),
-        default=True,
-        help_text=_(
-            'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
-        ),
-    )
-    corperate = models.ForeignKey(Corporate, models.CASCADE, db_column='corperate_id', related_name='user_corp',
-                                  null=True)
-
-    objects = UserManager()
-
-    EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+class Tags(models.Model):
+    name = models.CharField(max_length=150, null=False)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+    slug = models.SlugField(db_index=True)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_tags', db_column='corp_id')
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+        managed = MANAGED
+        db_table = 'tags'
 
-    def get_full_name(self):
-        '''
-        Returns the first_name plus the last_name, with a space in between.
-        '''
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip()
 
-    def get_short_name(self):
-        '''
-        Returns the short name for the user.
-        '''
-        return self.first_name
+class SalesForceBranches(models.Model):
+    branch = models.ForeignKey(Branches, models.CASCADE, related_name='client_branch', db_column='branch_id')
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_branch',
+                                    db_column='sales_force_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        '''
-        Sends an email to this User.
-        '''
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force_branches'
+
+
+class BranchesTags(models.Model):
+    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_tags', db_column='branch_id')
+    tags = models.ForeignKey(Tags, models.CASCADE, related_name='tags', db_column='tag_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'branch_tags'
+
+
+class SalesForceCategory(models.Model):
+    name = models.CharField(max_length=150, null=False, unique=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force_category'
+
+
+class AppLanguage(models.Model):
+    name = models.CharField(max_length=150, null=False, unique=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'app_language'
+
+
+class SalesForce(models.Model):
+    avatar = models.ImageField(upload_to='')
+    name = models.CharField(max_length=150, null=False)
+    phone = models.CharField(max_length=150, null=False)
+    email = models.EmailField(null=False)
+    profile_language = models.ForeignKey(AppLanguage, models.CASCADE, related_name='profile_lang',
+                                         db_column='profile_lang_id')
+    login_company = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
+    login_user_id = models.CharField(max_length=150, null=False)
+    login_password = models.CharField(max_length=150, null=False)
+    notes = models.TextField()
+    last_activity = models.DateTimeField()
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force'
+
+
+class SalesForceSchedual(models.Model):
+    sales_force = models.ForeignKey(SalesForce,models.CASCADE, related_name='sales_force_schedual',db_column='sales_force_id')
+    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_schedual', db_column='branch_id')
+    schedual_date = models.DateField(null=False)
+    schedual_time = models.TimeField(null=False)
+    notes = models.TextField()
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'schedual'
+
+
+class ProductGroup(models.Model):
+    name = models.CharField(max_length=150, null=False)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_product_group', db_column='corp_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'product_group'
+
+
+class ProductUnit(models.Model):
+    name = models.CharField(max_length=150, null=False)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_product_unit', db_column='corp_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'product_unit'
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=150 , null=False)
+    ean_code = models.CharField(max_length=150)
+    default_price = models.DecimalField()
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'product'
+
