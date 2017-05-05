@@ -193,7 +193,8 @@ class SalesForce(models.Model):
 
 
 class SalesForceSchedual(models.Model):
-    sales_force = models.ForeignKey(SalesForce,models.CASCADE, related_name='sales_force_schedual',db_column='sales_force_id')
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_schedual',
+                                    db_column='sales_force_id')
     branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_schedual', db_column='branch_id')
     schedual_date = models.DateField(null=False)
     schedual_time = models.TimeField(null=False)
@@ -229,11 +230,27 @@ class ProductUnit(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=150 , null=False)
+    name = models.CharField(max_length=150, null=False)
     ean_code = models.CharField(max_length=150)
     default_price = models.DecimalField()
+    note = models.TextField()
+    product_group = models.ForeignKey(ProductGroup, models.CASCADE, related_name='product_group',
+                                      db_column='product_group_id')
+    unit = models.ForeignKey(ProductUnit, models.CASCADE, related_name='product_unit', db_column='unit_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         managed = MANAGED
         db_table = 'product'
 
+
+class ProductTags(models.Model):
+    product = models.ForeignKey(Product, models.CASCADE, related_name='product_tag', db_column='product_id')
+    tag = models.ForeignKey(Tags, models.CASCADE, related_name='tag_product', db_column='tag_id')
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'product_tag'
