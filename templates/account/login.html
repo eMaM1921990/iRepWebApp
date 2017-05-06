@@ -1,7 +1,7 @@
 {% extends "account/base.html" %}
 
 {% load i18n staticfiles %}
-{% load account socialaccount %}
+{% load account socialaccount widget_tweaks%}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
@@ -17,11 +17,11 @@
                 <form method="POST" action="{% url 'account_login' %}">
                     {% csrf_token %}
                     <p class="text-muted text-center">
-                        Enter your username and password
+                        {% trans 'Enter your username and password' %}
                     </p>
+                    {% render_field form.login placeholder=form.login.label class='form-control top' %}
+                    {% render_field form.password placeholder=form.password.label class='form-control bottom' %}
 
-                    {{ form.login }}
-                    {{ form.password }}
                     <div class="checkbox">
                         <label>
                             {{ form.remember }} {{ form.remember.label }}
@@ -41,7 +41,7 @@
         <hr>
         <div class="text-center">
             <ul class="list-inline">
-                <li><a class="text-muted" href="{{ login_url }}" data-toggle="tab">{% trans "Sign In" %}</a></li>
+                <li><a class="text-muted" href="{{ signup_url }}" >{% trans "Sign Up" %}</a></li>
                 <li><a class="text-muted" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></li>
 
             </ul>
