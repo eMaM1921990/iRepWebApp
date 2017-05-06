@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rosetta',
     'import_export',
     'crispy_forms',
+    'widget_tweaks',
 
 ]
 
