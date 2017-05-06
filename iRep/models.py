@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from cities_light.models import City, Region, Country
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
@@ -13,21 +14,8 @@ MANAGED = True
 
 
 # Create your models here.
-class UserProfile(models.Model):
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
-    user_type = models.IntegerField(default=0)
-    digital_signature = models.ImageField(upload_to='')
-    auth_user = models.ForeignKey(User, models.CASCADE, related_name='user_profile', db_column='auth_user_id')
-    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='user_profile_corp', db_column='corp_id')
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'user_profile'
-
-
 class Corporate(models.Model):
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to=settings.AVATAR_DIR, null=True, blank=True)
     corporate_name = models.CharField(max_length=150, null=False)
     corporate_address_txt = models.CharField(max_length=150, null=False)
     mobile = models.CharField(max_length=150, null=False)
@@ -48,6 +36,33 @@ class Corporate(models.Model):
         ordering = ['-created_date']
 
 
+class AppLanguage(models.Model):
+    name = models.CharField(max_length=150, null=False, unique=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'app_language'
+
+
+class UserProfile(models.Model):
+    avatar = models.ImageField(upload_to=settings.AVATAR_DIR, null=True, blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    user_type = models.IntegerField(default=0)
+    digital_signature = models.ImageField(upload_to='')
+    auth_user = models.ForeignKey(User, models.CASCADE, related_name='user_profile', db_column='auth_user_id')
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='user_profile_corp', db_column='corp_id')
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'user_profile'
+
+
 class SalesFunnelStatus(models.Model):
     status_name = models.CharField(max_length=150)
     created_date = models.DateTimeField(default=timezone.now)
@@ -64,8 +79,43 @@ class SalesFunnelStatus(models.Model):
         ordering = ['-created_date']
 
 
+class SalesForceCategory(models.Model):
+    name = models.CharField(max_length=150, null=False, unique=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force_category'
+
+
+class SalesForce(models.Model):
+    avatar = models.ImageField(upload_to=settings.AVATAR_DIR)
+    name = models.CharField(max_length=150, null=False)
+    phone = models.CharField(max_length=150, null=False)
+    email = models.EmailField(null=False)
+    profile_language = models.ForeignKey(AppLanguage, models.CASCADE, related_name='profile_lang',
+                                         db_column='profile_lang_id')
+    login_company = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
+    login_user_id = models.CharField(max_length=150, null=False)
+    login_password = models.CharField(max_length=150, null=False)
+    notes = models.TextField()
+    last_activity = models.DateTimeField()
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force'
+
+
 class Client(models.Model):
-    avatar = models.ImageField(upload_to='', null=True)
+    avatar = models.ImageField(upload_to=settings.AVATAR_DIR, null=True)
     name = models.CharField(max_length=150, null=False)
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corporate_client', db_column='corp_id')
     created_date = models.DateTimeField(default=timezone.now)
@@ -79,7 +129,7 @@ class Client(models.Model):
 
 
 class Branches(models.Model):
-    avatar = models.ImageField(upload_to='', null=True)
+    avatar = models.ImageField(upload_to=settings.AVATAR_DIR, null=True)
     name = models.CharField(max_length=150, null=False)
     address_txt = models.CharField(max_length=200, null=False)
     city = models.ForeignKey(City, models.CASCADE, related_name='client_city', db_column='cities_light_city_id')
@@ -142,55 +192,6 @@ class BranchesTags(models.Model):
         db_table = 'branch_tags'
 
 
-class SalesForceCategory(models.Model):
-    name = models.CharField(max_length=150, null=False, unique=True)
-    created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
-    is_active = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'sales_force_category'
-
-
-class AppLanguage(models.Model):
-    name = models.CharField(max_length=150, null=False, unique=True)
-    created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
-    is_active = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'app_language'
-
-
-class SalesForce(models.Model):
-    avatar = models.ImageField(upload_to='')
-    name = models.CharField(max_length=150, null=False)
-    phone = models.CharField(max_length=150, null=False)
-    email = models.EmailField(null=False)
-    profile_language = models.ForeignKey(AppLanguage, models.CASCADE, related_name='profile_lang',
-                                         db_column='profile_lang_id')
-    login_company = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
-    login_user_id = models.CharField(max_length=150, null=False)
-    login_password = models.CharField(max_length=150, null=False)
-    notes = models.TextField()
-    last_activity = models.DateTimeField()
-    created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
-    is_active = models.BooleanField(default=True)
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'sales_force'
-
-
 class SalesForceSchedual(models.Model):
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_schedual',
                                     db_column='sales_force_id')
@@ -231,7 +232,7 @@ class ProductUnit(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=150, null=False)
     ean_code = models.CharField(max_length=150)
-    default_price = models.DecimalField()
+    default_price = models.DecimalField(max_digits=10, decimal_places=2)
     note = models.TextField()
     product_group = models.ForeignKey(ProductGroup, models.CASCADE, related_name='product_group',
                                       db_column='product_group_id')
@@ -358,8 +359,7 @@ class Orders(models.Model):
 
 class OrderLine(models.Model):
     order = models.ForeignKey(Orders, models.CASCADE, related_name='order_lines', db_column='order_id')
-    product = models.ForeignKey(Product, models.DO_NOTHING, related_name='order_product', db_column='product_id'
-    ُ)
+    product = models.ForeignKey(Product, models.DO_NOTHING, related_name='order_product', db_column='product_id')
     price = models.FloatField(null=False)
     quantity = models.IntegerField()
 
