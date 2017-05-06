@@ -3,14 +3,11 @@ from __future__ import unicode_literals
 
 from cities_light.models import City, Region, Country
 from django.contrib.auth.models import User
-from django.contrib.auth.validators import UnicodeUsernameValidator, ASCIIUsernameValidator
 from django.db import models
-from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
-from managers.UserManager import UserManager
-from django.utils import six, timezone
+from django.utils import timezone
 
 MANAGED = True
 
@@ -20,6 +17,8 @@ class UserProfile(models.Model):
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     user_type = models.IntegerField(default=0)
+    digital_signature = models.ImageField(upload_to='')
+    auth_user = models.ForeignKey(User, models.CASCADE, related_name='user_profile', db_column='auth_user_id')
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='user_profile_corp', db_column='corp_id')
 
     class Meta:
@@ -254,3 +253,115 @@ class ProductTags(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'product_tag'
+
+
+class PriceList(models.Model):
+    name = models.CharField(max_length=150, null=False)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'price_list'
+
+
+class ProductPriceList(models.Model):
+    price_list = models.ForeignKey(PriceList, models.CASCADE, related_name='price_list_product',
+                                   db_column='price_list_id')
+    product = models.ForeignKey(Product, models.CASCADE, related_name='product_price_list', db_column='product_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'product_price_list'
+
+
+class SystemSettings(models.Model):
+    mileage_tracking = models.CharField(max_length=20, null=False)
+    add_place_via_mobile = models.BooleanField(default=True)
+    edit_place_via_mobile = models.BooleanField(default=True)
+    assign_sales_force_via_mobile = models.BooleanField(default=True)
+    show_inactive_rep_in_webapp = models.BooleanField(default=True)
+    see_other_rep_activity = models.BooleanField(default=True)
+    upload_image_via_mobile = models.BooleanField(default=True)
+    manage_schedual = models.BooleanField(default=True)
+    elec_sign_in_order = models.BooleanField(default=False)
+    elec_sign_in_form = models.BooleanField(default=False)
+    send_email_via_mobile = models.BooleanField(default=False)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_settings', db_column='corp_id')
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'system_settings'
+
+
+class BillBoard(models.Model):
+    subject = models.CharField(max_length=150, null=False)
+    body = models.TextField(null=False)
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    is_active = models.BooleanField(default=False)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'billboard'
+
+
+class Messages(models.Model):
+    reciept = models.ForeignKey(User, models.CASCADE, related_name='reciept_user', db_column='reciept_auth_user_id')
+    sender = models.ForeignKey(User, models.CASCADE, related_name='sender_user', db_column='sender_auth_user_id')
+    body = models.TextField(null=False)
+    message_thread = models.ForeignKey('self', null=True)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'message'
+
+
+class Visits(models.Model):
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_visits',
+                                    db_column='sales_force_id')
+    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_visits', db_column='branch_id')
+    visit_date = models.DateTimeField(null=False)
+    notes = models.TextField()
+    schedualed = models.BooleanField(default=True)
+    schedual = models.ForeignKey(SalesForceSchedual, models.CASCADE, related_name='visit_schedual',
+                                 db_column='schedual_id', null=True)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'visits'
+
+
+class Orders(models.Model):
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_orders',
+                                    db_column='sales_force_id')
+    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_order', db_column='branch_id')
+    order_date = models.DateTimeField(null=False)
+    total = models.FloatField()
+    created_form_visit = models.ForeignKey(Visits, models.CASCADE, related_name='order_visits', db_column='visit_id',
+                                           null=True)
+    notes = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'order'
+
+
+class OrderLine(models.Model):
+    order = models.ForeignKey(Orders, models.CASCADE, related_name='order_lines', db_column='order_id')
+    product = models.ForeignKey(Product, models.DO_NOTHING, related_name='order_product', db_column='product_id'ُ)
+    price = models.FloatField(null=False)
+    quantity = models.IntegerField()
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'order_line'
