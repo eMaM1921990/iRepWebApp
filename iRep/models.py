@@ -358,7 +358,8 @@ class Orders(models.Model):
 
 class OrderLine(models.Model):
     order = models.ForeignKey(Orders, models.CASCADE, related_name='order_lines', db_column='order_id')
-    product = models.ForeignKey(Product, models.DO_NOTHING, related_name='order_product', db_column='product_id'ُ)
+    product = models.ForeignKey(Product, models.DO_NOTHING, related_name='order_product', db_column='product_id'
+    ُ)
     price = models.FloatField(null=False)
     quantity = models.IntegerField()
 

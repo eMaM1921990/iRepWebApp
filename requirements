@@ -10,4 +10,4 @@ djangorestframework
 django-cities-light
 django-notifications-hq
 django-debug-toolbar
-§
+django-crispy-forms
