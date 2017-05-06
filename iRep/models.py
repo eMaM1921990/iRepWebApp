@@ -5,8 +5,6 @@ from cities_light.models import City, Region, Country
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
@@ -100,9 +98,9 @@ class SalesForce(models.Model):
     email = models.EmailField(null=False)
     profile_language = models.ForeignKey(AppLanguage, models.CASCADE, related_name='profile_lang',
                                          db_column='profile_lang_id')
-    login_company = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
-    login_user_id = models.CharField(max_length=150, null=False)
-    login_password = models.CharField(max_length=150, null=False)
+    corp_id = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
+    user_pin = models.CharField(max_length=150, null=False)
+    password_pin = models.CharField(max_length=150, null=False)
     notes = models.TextField()
     last_activity = models.DateTimeField()
     created_date = models.DateTimeField(default=timezone.now)

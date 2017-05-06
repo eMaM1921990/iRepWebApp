@@ -194,7 +194,8 @@ LOGGING = {
 }
 
 GRAPPELLI_ADMIN_TITLE = 'iRep Admin Panel'
-
+# CRISPY
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # UPLOAD DIR
 AVATAR_DIR = 'avatar/'
