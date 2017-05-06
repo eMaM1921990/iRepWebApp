@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'endless_pagination',
     'rosetta',
     'import_export',
+    'crispy_forms',
 
 ]
 
