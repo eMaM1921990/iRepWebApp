@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+{% load i18n staticfiles crispy_forms_tags %}
+{% block content %}
+    <div class="body bs-example">
+        <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i>
+            {% if form %}{{ form.name }}{% else %}{% trans 'New representative' %}{% endif %}</h1>
+
+        <ul class="nav nav-tabs sales-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                                                      data-toggle="tab">{% trans 'Sales force Info' %}</a></li>
+            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab"
+                                       data-toggle="tab">{% trans 'Report' %}</a></li>
+            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab"
+                                       data-toggle="tab">{% trans 'Schedule' %}</a>
+            </li>
+
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="home">
+                <div class="divider-md"></div>
+                {% crispy form %}
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

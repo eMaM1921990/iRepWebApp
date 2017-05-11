@@ -101,7 +101,7 @@ class SalesForce(models.Model):
     corp_id = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
     user_pin = models.CharField(max_length=150, null=False)
     password_pin = models.CharField(max_length=150, null=False)
-    notes = models.TextField()
+    notes = models.TextField(null=True)
     last_activity = models.DateTimeField()
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
