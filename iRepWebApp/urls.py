@@ -36,5 +36,5 @@ urlpatterns = [
 
 
 urlpatterns +=[
-    url(r'^salesForce/add/',views.salesForceDetails,name='createSalesForce'),
+    url(r'^salesForce/add/', views.AddSalesForce, name='createSalesForce'),
 ]

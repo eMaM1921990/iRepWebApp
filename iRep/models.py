@@ -102,7 +102,7 @@ class SalesForce(models.Model):
     user_pin = models.CharField(max_length=150, null=False)
     password_pin = models.CharField(max_length=150, null=False)
     notes = models.TextField(null=True)
-    last_activity = models.DateTimeField()
+    last_activity = models.DateTimeField(default=None,null=True)
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)

@@ -2,8 +2,10 @@ from crispy_forms.bootstrap import PrependedText
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Field, Fieldset, Div
 from django import forms
+from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from iRep.managers.SalesForce import SalesForceManager
 from iRep.models import SalesForce
 
 
@@ -16,6 +18,7 @@ class SalesForceForm(forms.ModelForm):
         super(SalesForceForm, self).__init__(*args, **kwargs)
         # init data
         self.fields['company_id'].initial = user_instance.id
+        self.fields['user_pin'].initial = user_instance.id
         # control Required
         self.fields['avatar'].required = False
         self.fields['name'].required = True
@@ -40,13 +43,12 @@ class SalesForceForm(forms.ModelForm):
         self.fields['is_active'].label = _('active sales force')
         self.fields['company_id'].label = _('Company ID')
 
-
-
         # If you pass FormHelper constructor a form instance
         # It builds a default layout with all its fields
         self.helper = FormHelper(self)
         self.helper.form_id = 'sales-force-form-id'
         self.helper.form_method = 'post'
+        self.helper.form_action = reverse('createSalesForce')
         self.helper.layout = Layout(
             Field('avatar', css_class=''),
             Div(css_class='clearfix'),
@@ -88,6 +90,15 @@ class SalesForceForm(forms.ModelForm):
             ),
 
         )
+
+    # override save form
+    def save(self, user, commit=True):
+        m = super(SalesForceForm, self).save(commit=False)
+        m.corp_id_id = self.cleaned_data['company_id']
+        m.created_by = user
+        m.save()
+        return m
+
 
     class Meta:
         model = SalesForce
