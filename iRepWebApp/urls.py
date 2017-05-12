@@ -37,4 +37,6 @@ urlpatterns = [
 
 urlpatterns +=[
     url(r'^salesForce/add/', views.AddSalesForce, name='createSalesForce'),
+    url(r'^salesForce/view/', views.ViewSalesForceDefault, name='viewSalesForceByUser'),
+    url(r'^salesForce/edit/(?P<slug>[-\w]+)/', views.EditSalesForce, name='editSalesForce'),
 ]

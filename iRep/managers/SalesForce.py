@@ -1,8 +1,7 @@
-from iRep.models import SalesForce
+from iRep.models import SalesForce, UserProfile
 
 
 class SalesForceManager():
-
     def createSalesForce(self, avatar, name, phone, email, profile_language, corp_id, user_pin, password_pin, notes,
                          is_active, auth_user):
         record = SalesForce()
@@ -20,3 +19,10 @@ class SalesForceManager():
         record.is_active = is_active
         record.created_by = auth_user
         record.save()
+
+    def ListByUser(self, auth_user):
+        auth_use_profile = UserProfile.objects.get(auth_user=auth_user)
+        return self.ListByUserCorp(auth_use_profile.corporate_id)
+
+    def ListByUserCorp(self, corpId):
+        return SalesForce.objects.filter(corp_id__id=corpId)

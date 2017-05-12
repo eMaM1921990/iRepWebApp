@@ -1,10 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
+{% load i18n staticfiles %}
+{% block extra_head %}
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css">
+{% endblock %}
+{% block content %}
+    <div class="body bs-example">
+    <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i> {% trans 'Sales force' %}</h1>
+    <div class="outer">
+    <div class="col-md-12">
+        <div id="collapse4" class="body">
+            <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>--</th>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Last Activity' %}</th>
+                    <th>{% trans 'Current Status' %}</th>
+                    <th>{% trans 'Active' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in salesForce %}
+                    <tr>
+                        <td><img src="{{ row.avatar.url }}"></td>
+                        <td><a href="{% url 'editSalesForce' row.slug %}">{{ row.name }}</a></td>
+                        <td>{{ row.last_activity }}</td>
+                        <td>--</td>
+                        <td>{{ row.is_active }}</td>
 
-</body>
-</html>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div>
+
+
+    </div>
+{% endblock %}
+{% block extra_js_src %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.6/js/jquery.tablesorter.min.js"></script>
+{% endblock %}
+{% block extra_javascript %}
+    <script>
+        $(function () {
+            Metis.MetisTable();
+            Metis.metisSortable();
+        });
+    </script>
+{% endblock %}

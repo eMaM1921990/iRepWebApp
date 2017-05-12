@@ -1,0 +1,6 @@
+
+.fc-future:before {
+    font-family: FontAwesome;
+    content: "\f067";
+    color: #ccc;
+}

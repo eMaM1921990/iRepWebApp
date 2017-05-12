@@ -98,14 +98,18 @@ class SalesForce(models.Model):
     email = models.EmailField(null=False)
     profile_language = models.ForeignKey(AppLanguage, models.CASCADE, related_name='profile_lang',
                                          db_column='profile_lang_id')
-    corp_id = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
+
     user_pin = models.CharField(max_length=150, null=False)
     password_pin = models.CharField(max_length=150, null=False)
     notes = models.TextField(null=True)
-    last_activity = models.DateTimeField(default=None,null=True)
+    corp_id = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
+    position = models.ForeignKey(SalesForceCategory, models.DO_NOTHING, related_name='sales_force_category',
+                                 db_column='position_id',null=True)
+    last_activity = models.DateTimeField(default=None, null=True)
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
+    slug = models.SlugField(db_index=True)
 
     class Meta:
         managed = MANAGED
