@@ -81,9 +81,9 @@ class SalesForceForm(forms.ModelForm):
                     Div(css_class='clearfix'),
 
                     Div(Fieldset(_('Activation Data'),
-                                 PrependedText('company_id', '#', css_class='col-md-6', placeholder=_('Company ID')),
-                                 PrependedText('user_pin', '#', css_class='col-md-6', placeholder=_('App UserID')),
-                                 PrependedText('password_pin', '#', css_class='col-md-6',
+                                 PrependedText('company_id', '<i class="fa fa-building" aria-hidden="true"></i>', css_class='col-md-6', placeholder=_('Company ID')),
+                                 PrependedText('user_pin', '<i class="fa fa-user" aria-hidden="true"></i>', css_class='col-md-6', placeholder=_('App UserID')),
+                                 PrependedText('password_pin', '<i class="fa fa-key" aria-hidden="true"></i>', css_class='col-md-6',
                                                placeholder=_('App Password')),
                                  ),
                         css_class='col-md-6')
