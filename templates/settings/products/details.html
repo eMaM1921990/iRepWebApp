@@ -1,0 +1,134 @@
+{% extends 'base/base.html' %}
+{% load i18n staticfiles crispy_forms_tags %}
+{% block extra_head %}
+    <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.min.css' %}"/>
+    {#    <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.print.css' %}"/>#}
+    <link rel="stylesheet" href="{% static 'css/development.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="body bs-example">
+        <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i>
+            {% if not new %}{{ form.name.value }}{% else %}{% trans 'New representative' %}{% endif %}</h1>
+        <div>
+            <ul class="nav nav-tabs sales-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#info" aria-controls="home" role="tab" {% if not new %}data-toggle="tab"{% endif %}>
+                        {% trans 'Sales force Info' %}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#report" aria-controls="profile" role="tab" {% if not new %}data-toggle="tab"{% endif %}>
+                        {% trans 'Report' %}
+                    </a>
+                </li>
+
+
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="info">
+                    <div class="divider-md"></div>
+                    {% crispy form %}
+                </div>
+                <div role="tabpanel" class="tab-pane fade in active" id="report">
+                    <div class="divider-md"></div>
+                    <div class="top-controlbar">
+{#                        {% crispy reportForm %}#}
+                        <div class="clearfix"></div>
+                    </div>
+
+{#                    {% include 'sales_force/reports.html' %}#}
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block extra_js_src %}
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'app_js/highcharts.js' %}"></script>
+    {#    <script src="{% static 'app_js/exporting.js' %}"></script>#}
+    <script src="{% static 'full_calendar/fullcalendar.min.js' %}"></script>
+{% endblock %}
+{% block extra_javascript %}
+    <script>
+        $(function () {
+            $('#id_date_from').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#id_date_to').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+        });
+
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: ''
+            },
+
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            credits: {
+                enabled: false
+            },
+
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: '{% trans 'Time at place' %}',
+                data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+            }, {
+                name: '{% trans 'Place visits' %}',
+                data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+            },
+                {
+                    name: '{% trans 'Activities' %}',
+                    data: [3.9, 4.2, 5.7, 10, 11.9, 15.2, 1.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+                }]
+        });
+
+        $(document).ready(function () {
+
+            // page is now ready, initialize the calendar...
+
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                editable: true,
+                dayClick: function (date, jsEvent, view) {
+                    if (moment().format('YYYY-MM-DD') === date.format('YYYY-MM-DD') || date.isAfter(moment())) {
+                        // This allows today and future date
+                        alert(date);
+                    }
+
+                },
+
+            });
+
+        });
+    </script>
+{% endblock %}

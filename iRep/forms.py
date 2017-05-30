@@ -1,12 +1,12 @@
 import datetime
 from crispy_forms.bootstrap import PrependedText, AppendedText
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Reset, Layout, Field, Fieldset, Div, HTML
+from crispy_forms.layout import Submit, Reset, Layout, Field, Fieldset, Div, HTML, Button
 from django import forms
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
-from iRep.models import SalesForce
+from iRep.models import SalesForce, ProductGroup, Product
 
 
 class BaseReportForm(forms.Form):
@@ -81,9 +81,12 @@ class SalesForceForm(forms.ModelForm):
                     Div(css_class='clearfix'),
 
                     Div(Fieldset(_('Activation Data'),
-                                 PrependedText('company_id', '<i class="fa fa-building" aria-hidden="true"></i>', css_class='col-md-6', placeholder=_('Company ID')),
-                                 PrependedText('user_pin', '<i class="fa fa-user" aria-hidden="true"></i>', css_class='col-md-6', placeholder=_('App UserID')),
-                                 PrependedText('password_pin', '<i class="fa fa-key" aria-hidden="true"></i>', css_class='col-md-6',
+                                 PrependedText('company_id', '<i class="fa fa-building" aria-hidden="true"></i>',
+                                               css_class='col-md-6', placeholder=_('Company ID')),
+                                 PrependedText('user_pin', '<i class="fa fa-user" aria-hidden="true"></i>',
+                                               css_class='col-md-6', placeholder=_('App UserID')),
+                                 PrependedText('password_pin', '<i class="fa fa-key" aria-hidden="true"></i>',
+                                               css_class='col-md-6',
                                                placeholder=_('App Password')),
                                  ),
                         css_class='col-md-6')
@@ -159,3 +162,117 @@ class SalesForceReportForm(BaseReportForm):
             )
 
         )
+
+
+class ProductCategoryForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProductCategoryForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = ProductGroup
+        exclude = ['created_date', 'created_by']
+
+
+class ProductForm(forms.ModelForm):
+    tags = forms.ChoiceField()
+
+    def __init__(self, *args, **kwargs):
+        # POP from kwargs
+        user_instance = kwargs.pop('user_instance', None)
+        action = kwargs.pop('action', None)
+        super(ProductForm, self).__init__(*args, **kwargs)
+        # input label
+        self.fields['name'].label = _('Name')
+        self.fields['ean_code'].label = _('EAN')
+        self.fields['default_price'].label = _('Default price')
+        self.fields['note'].label = _('Notes')
+        self.fields['product_group'].label = _('Product Group')
+        self.fields['unit'].label = _('Units')
+        self.fields['is_active'].label = _('Is active')
+        self.fields['tags'].label = _('Tags')
+        # control Required
+        self.fields['default_price'].required = True
+        # init
+        self.fields['default_price'].initial = '0.00'
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'product-form-id'
+        self.helper.form_method = 'post'
+        self.helper.form_action = action
+        self.helper.layout = Layout(
+            Div(
+                css_class='divider-md'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('id', placeholder=_('ID#')),
+                        css_class='col-md-4'
+                    ),
+                    Div(
+                        Field('name', placeholder=_('Product name')),
+                        css_class='col-md-4'
+                    ),
+                    Div(
+                        Field('is_active', placeholder=_('Status')),
+                        css_class='col-md-4'
+                    ),
+                    css_class='col-md-12'
+                ),
+                css_class='row'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('ean_code', placeholder=_('EAN')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Field('tags', placeholder=_('Tags')),
+                        css_class='col-md-6'
+                    ),
+                    css_class='col-md-12'
+                ),
+                css_class='row'
+            ),
+            Div(
+                css_class='divider-md'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('product_group', placeholder=_('Product category')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Div(
+                            css_class='divider-md'
+                        ),
+                        Button(_('Custom Group'), _('Custom Group'), css_class="btn btn-lg btn-default"),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        css_class='clearfix'
+                    ),
+                    css_class='col-md-12'
+                ),
+                css_class='row'
+            ),
+            Div(
+                Div(
+                    css_class='divider-lg clearfix'
+                ),
+                Div(
+                    Reset(_('Cancel'), _('Cancel'), css_class='btn btn-default  btn-lg min-btn'),
+                    Submit(_('Save'), _('Save'), css_class='btn btn-primary  btn-lg min-btn'),
+                    css_class='text-center'
+                ),
+
+                css_class='row'
+            )
+
+        )
+
+    class Meta:
+        model = Product
+        exclude = ['created_date', 'created_by']

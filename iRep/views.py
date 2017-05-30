@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from django.urls import reverse
 
-from iRep.forms import SalesForceForm, SalesForceReportForm
+from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.models import SalesForce
 
@@ -26,7 +26,7 @@ def AddSalesForce(request):
     if form.is_valid():
         form.save(user=request.user)
         return redirect(reverse('index'))
-    return render(request, template_name=template, context={'form': form,'new':True})
+    return render(request, template_name=template, context={'form': form, 'new': True})
 
 
 @login_required
@@ -44,9 +44,19 @@ def EditSalesForce(request, slug):
     sales_force_instance = get_object_or_404(SalesForce, slug=slug)
     form = SalesForceForm(request.POST or None, request.FILES or None,
                           user_instance=request.user,
-                          instance=sales_force_instance, action=reverse('editSalesForce',kwargs={'slug':slug}))
+                          instance=sales_force_instance, action=reverse('editSalesForce', kwargs={'slug': slug}))
     reportForm = SalesForceReportForm()
     if form.is_valid():
         form.save(user=request.user)
         return redirect(reverse('index'))
-    return render(request, template_name=template, context={'form': form,'new':False,'reportForm':reportForm})
+    return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm})
+
+
+@login_required
+def AddProduct(request):
+    template = 'settings/products/details.html'
+    form = ProductForm(request.POST or None, user_instance=request.user, action=None)
+    if form.is_valid():
+        form.save()
+        return redirect(reverse('productList'))
+    return render(request, template_name=template, context={'form': form, 'new': False})

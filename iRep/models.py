@@ -43,6 +43,8 @@ class AppLanguage(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
     class Meta:
         managed = MANAGED
         db_table = 'app_language'
@@ -226,6 +228,9 @@ class ProductUnit(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         managed = MANAGED
         db_table = 'product_unit'
@@ -242,6 +247,7 @@ class Product(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
+
 
     class Meta:
         managed = MANAGED

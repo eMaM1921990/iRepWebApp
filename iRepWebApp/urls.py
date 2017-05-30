@@ -19,14 +19,14 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.static import serve
 
-from iRep import views
+from iRep import views, api
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^grappelli/', include('grappelli.urls')),  # grappelli URLS
     url(r'^accounts/logout/$', logout, {'next_page': '/'}, name='logout'),
     url(r'^accounts/', include('allauth.urls')),  # All auth
-    url(r'^$',views.home,name='index'),
+    url(r'^$', views.home, name='index'),
     # Localizations #
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
@@ -34,9 +34,18 @@ urlpatterns = [
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
 ]
 
-
-urlpatterns +=[
-    url(r'^salesForce/add/', views.AddSalesForce, name='createSalesForce'),
-    url(r'^salesForce/view/', views.ViewSalesForceDefault, name='viewSalesForceByUser'),
+urlpatterns += [
+    # sales force
+    url(r'^salesForce/add/$', views.AddSalesForce, name='createSalesForce'),
+    url(r'^salesForce/list/$', views.ViewSalesForceDefault, name='viewSalesForceByUser'),
     url(r'^salesForce/edit/(?P<slug>[-\w]+)/', views.EditSalesForce, name='editSalesForce'),
+    # Products
+    url(r'^settings/product/add/$', views.AddProduct, name='createProduct'),
+    url(r'^settings/product/list/$', views.AddSalesForce, name='productList'),
+]
+
+urlpatterns += [
+    # API
+    url(r'^api/v1/login/$', api.SalesForceLogin, name='apiLogin'),
+    url(r'^api/v1/catalog/(?P<p_branchId>.+)/$', api.ProductCategory, name='apiProductCatalaog'),
 ]
