@@ -216,6 +216,12 @@ class ProductGroup(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return self.name
+
+    def __str__(self):
+        return self.name
+
     class Meta:
         managed = MANAGED
         db_table = 'product_group'

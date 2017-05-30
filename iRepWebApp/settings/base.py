@@ -201,3 +201,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # UPLOAD DIR
 AVATAR_DIR = 'avatar/'
+
+# Media
+MEDIA_ROOT = 'media/'
