@@ -45,6 +45,7 @@ class AppLanguage(models.Model):
 
     def __str__(self):
         return self.name
+
     class Meta:
         managed = MANAGED
         db_table = 'app_language'
@@ -106,7 +107,7 @@ class SalesForce(models.Model):
     notes = models.TextField(null=True)
     corp_id = models.ForeignKey(Corporate, models.CASCADE, related_name='sales_force_corp', db_column='corp_id')
     position = models.ForeignKey(SalesForceCategory, models.DO_NOTHING, related_name='sales_force_category',
-                                 db_column='position_id',null=True)
+                                 db_column='position_id', null=True)
     last_activity = models.DateTimeField(default=None, null=True)
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
@@ -121,7 +122,20 @@ class SalesForce(models.Model):
 class Client(models.Model):
     avatar = models.ImageField(upload_to=settings.AVATAR_DIR, null=True)
     name = models.CharField(max_length=150, null=False)
+    address_txt = models.CharField(max_length=200, null=False)
+    zipcode = models.IntegerField()
+    contact_name = models.CharField(max_length=150)
+    contact_title = models.CharField(max_length=100)
+    website = models.URLField()
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    notes = models.TextField()
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corporate_client', db_column='corp_id')
+    status = models.ForeignKey(SalesFunnelStatus, models.SET_NULL, db_column='status_id', related_name='client_status',
+                               null=True)
+    city = models.ForeignKey(City, models.CASCADE, related_name='client_city', db_column='cities_light_city_id')
+    branch = models.BooleanField(default=False)
+    main_branch = models.ForeignKey('self', null=True)
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
@@ -130,34 +144,6 @@ class Client(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'client'
-
-
-class Branches(models.Model):
-    avatar = models.ImageField(upload_to=settings.AVATAR_DIR, null=True)
-    name = models.CharField(max_length=150, null=False)
-    address_txt = models.CharField(max_length=200, null=False)
-    city = models.ForeignKey(City, models.CASCADE, related_name='client_city', db_column='cities_light_city_id')
-    zipcode = models.IntegerField()
-    contact_name = models.CharField(max_length=150)
-    contact_title = models.CharField(max_length=100)
-    website = models.URLField()
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
-    cell_phone = models.CharField(max_length=20)
-    notes = models.TextField()
-    status = models.ForeignKey(SalesFunnelStatus, models.SET_NULL, db_column='status_id', related_name='client_status',
-                               null=True)
-    created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
-    is_active = models.BooleanField(default=True)
-    slug = models.SlugField(db_index=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        managed = MANAGED
-        db_table = 'branches'
 
 
 class Tags(models.Model):
@@ -174,7 +160,7 @@ class Tags(models.Model):
 
 
 class SalesForceBranches(models.Model):
-    branch = models.ForeignKey(Branches, models.CASCADE, related_name='client_branch', db_column='branch_id')
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='client_branch', db_column='branch_id')
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_branch',
                                     db_column='sales_force_id')
     created_date = models.DateTimeField(default=timezone.now)
@@ -185,8 +171,8 @@ class SalesForceBranches(models.Model):
         db_table = 'sales_force_branches'
 
 
-class BranchesTags(models.Model):
-    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_tags', db_column='branch_id')
+class ClientTags(models.Model):
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_tags', db_column='branch_id')
     tags = models.ForeignKey(Tags, models.CASCADE, related_name='tags', db_column='tag_id')
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
@@ -199,7 +185,7 @@ class BranchesTags(models.Model):
 class SalesForceSchedual(models.Model):
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_schedual',
                                     db_column='sales_force_id')
-    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_schedual', db_column='branch_id')
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_schedual', db_column='branch_id')
     schedual_date = models.DateField(null=False)
     schedual_time = models.TimeField(null=False)
     notes = models.TextField()
@@ -247,13 +233,12 @@ class Product(models.Model):
     ean_code = models.CharField(max_length=150)
     default_price = models.DecimalField(max_digits=10, decimal_places=2)
     note = models.TextField()
-    product_group = models.ForeignKey(ProductGroup, models.CASCADE, related_name='product_group',
-                                      db_column='product_group_id')
+    product = models.ForeignKey(ProductGroup, models.CASCADE, related_name='group_products',
+                                db_column='product_group_id')
     unit = models.ForeignKey(ProductUnit, models.CASCADE, related_name='product_unit', db_column='unit_id')
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
-
 
     class Meta:
         managed = MANAGED
@@ -342,7 +327,7 @@ class Messages(models.Model):
 class Visits(models.Model):
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_visits',
                                     db_column='sales_force_id')
-    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_visits', db_column='branch_id')
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_visits', db_column='branch_id')
     visit_date = models.DateTimeField(null=False)
     notes = models.TextField()
     schedualed = models.BooleanField(default=True)
@@ -358,7 +343,7 @@ class Visits(models.Model):
 class Orders(models.Model):
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_orders',
                                     db_column='sales_force_id')
-    branch = models.ForeignKey(Branches, models.CASCADE, related_name='branch_order', db_column='branch_id')
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_order', db_column='branch_id')
     order_date = models.DateTimeField(null=False)
     total = models.FloatField()
     created_form_visit = models.ForeignKey(Visits, models.CASCADE, related_name='order_visits', db_column='visit_id',

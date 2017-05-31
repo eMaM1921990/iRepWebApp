@@ -3,8 +3,8 @@ from django.views.decorators.gzip import gzip_page
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer
-from iRep.models import SalesForce, ProductGroup
+from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer
+from iRep.models import SalesForce, ProductGroup, Client
 from django.utils.translation import ugettext_lazy as _
 
 @gzip_page
@@ -66,5 +66,30 @@ def ProductCategory(request, corp_id):
         print str(e)
         resp['code'] = None
         resp['msg'] = _('Can`t retrieve product catalog')
+
+    return Response(resp)
+
+
+@gzip_page
+@api_view(['GET'])
+def Clients(request,corpId):
+    resp = {}
+    resp['code'] = None
+    # Validation
+    if not corpId:
+        resp['code'] = None
+        resp['msg'] = _('Missing corpID')
+        return Response(resp)
+    try:
+        resp['data'] = []
+        resp['code'] = None
+        ClientQS = Client.objects.filter(is_active=True, corporate__id=corpId)
+        for row in ClientQS:
+            resp['data'].append(ClientSerializer(row).data)
+
+    except Exception as e:
+        print str(e)
+        resp['code'] = None
+        resp['msg'] = _('Can`t retrieve clients')
 
     return Response(resp)

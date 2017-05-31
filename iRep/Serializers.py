@@ -1,17 +1,11 @@
 from rest_framework import serializers
 
-from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage
+from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductUnit
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'product_group', 'unit']
 
 
 class ProfileLang(serializers.ModelSerializer):
@@ -33,9 +27,33 @@ class SalesForceSerializer(serializers.ModelSerializer):
         fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity']
 
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'unit']
+
+
 class ProductGroupSerializer(serializers.ModelSerializer):
-    products = ProductSerializer()
+    group_products = ProductSerializer(many=True)
 
     class Meta:
         model = ProductGroup
-        fields = ['id', 'name', 'products']
+        fields = ['id', 'name', 'group_products']
+
+
+class ClientSerializer(serializers.ModelSerializer):
+    region = serializers.SerializerMethodField('get_region')
+    country = serializers.SerializerMethodField('get_country')
+
+    def get_region(self, obj):
+        if hasattr(obj, 'city'):
+            return obj.city.region
+
+    def get_country(self, obj):
+        if hasattr(obj, 'city'):
+            return obj.city.country
+
+    class Meta:
+        model = Client
+        fields = ['id', 'avatar', 'name', 'address_txt', 'country', 'region', 'city', 'zipcode', 'contact_name',
+                  'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch']
