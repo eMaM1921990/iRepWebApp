@@ -3,9 +3,11 @@ from django.views.decorators.gzip import gzip_page
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer
-from iRep.models import SalesForce, ProductGroup, Client
+from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
+    OrderSerializers
+from iRep.models import SalesForce, ProductGroup, Client, Orders
 from django.utils.translation import ugettext_lazy as _
+
 
 @gzip_page
 @never_cache
@@ -72,7 +74,7 @@ def ProductCategory(request, corp_id):
 
 @gzip_page
 @api_view(['GET'])
-def Clients(request,corpId):
+def Clients(request, corpId):
     resp = {}
     resp['code'] = None
     # Validation
@@ -88,8 +90,31 @@ def Clients(request,corpId):
             resp['data'].append(ClientSerializer(row).data)
 
     except Exception as e:
-        print str(e)
         resp['code'] = None
         resp['msg'] = _('Can`t retrieve clients')
+
+    return Response(resp)
+
+
+@gzip_page
+@api_view(['GET'])
+def ClientsOrder(request, clientId):
+    resp = {}
+    resp['code'] = None
+    # Validation
+    if not clientId:
+        resp['code'] = None
+        resp['msg'] = _('Missing Client ID')
+        return Response(resp)
+    try:
+        resp['code'] = None
+        resp['data'] = []
+        ordersQS = Orders.objects.filter(branch__id=clientId)
+        for raw in ordersQS:
+            resp['data'].append(OrderSerializers(raw).data)
+
+    except Exception as e:
+        resp['code'] = None
+        resp['msg'] = _('Can`t retrieve client orders')
 
     return Response(resp)

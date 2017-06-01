@@ -60,3 +60,11 @@ def AddProduct(request):
         form.save()
         return redirect(reverse('productList'))
     return render(request, template_name=template, context={'form': form, 'new': False})
+
+
+def ViewProduct(request):
+    template = 'settings/products/list.html'
+    context = {
+        'products':
+    }
+

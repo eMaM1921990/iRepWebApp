@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client
+from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -57,3 +57,18 @@ class ClientSerializer(serializers.ModelSerializer):
         model = Client
         fields = ['id', 'avatar', 'name', 'address_txt', 'country', 'region', 'city', 'zipcode', 'contact_name',
                   'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch']
+
+
+class OrderLinesSerializer(serializers.ModelSerializer):
+    order_product = ProductSerializer(many=True)
+
+    class Meta:
+        model = OrderLine
+        fields = ['order_product', 'quantity', 'price']
+
+
+class OrderSerializers(serializers.ModelSerializer):
+    order_lines = OrderLinesSerializer(many=True)
+    class Meta:
+        model = Orders
+        fields = ['id', 'sales_force', 'order_date', 'total', 'notes','order_lines']

@@ -49,4 +49,5 @@ urlpatterns += [
     url(r'^api/v1/login/$', api.SalesForceLogin, name='apiLogin'),
     url(r'^api/v1/catalog/(?P<corp_id>.+)/$', api.ProductCategory, name='apiProductCatalaog'),
     url(r'^api/v1/clients/(?P<corp_id>.+)/$', api.Clients, name='apiClients'),
+    url(r'^api/v1/clients/orders/(?P<clientId>.+)/$', api.ClientsOrder, name='apiClientsOrder'),
 ]
