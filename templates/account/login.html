@@ -1,67 +1,153 @@
 {% extends "account/base.html" %}
 
 {% load i18n staticfiles %}
-{% load account socialaccount widget_tweaks%}
+{% load account socialaccount widget_tweaks %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
+    <div class="container">
+        <!--content-->
+        <div class="divider-md"></div>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="header-logo-dark text-center"><img src="{% static 'img/logo.png' %}" alt="logo"></div>
 
-    <div class="form-signin">
-        <div class="text-center">
-            <img src="{% static 'img/logo.png' %}" alt="iRep Logo">
-        </div>
-        <hr>
-        <div class="tab-content">
-            <div id="login" class="tab-pane active">
+            <div class=" bs-example login-form">
+                {% if form.errors %}
+                <!-- Error messaging -->
+                <div id="errors">
+                    <div class="alert alert-danger ">
+                        {{ form.non_field_errors }}
+                        <ul class="alert-message">
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    <li>{{ field.label }}: {{ field.errors|striptags|linebreaks }}</li>{% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- /Error messaging -->
+            {% endif %}
+
+
                 <form method="POST" action="{% url 'account_login' %}">
                     {% csrf_token %}
-                    <p class="text-muted text-center">
-                        {% trans 'Enter your username and password' %}
-                    </p>
-                    {% render_field form.login placeholder=form.login.label class='form-control top' %}
-                    {% render_field form.password placeholder=form.password.label class='form-control bottom' %}
+                    <fieldset>
 
-                    <div class="checkbox">
-                        <label>
-                            {{ form.remember }} {{ form.remember.label }}
-                        </label>
-                    </div>
-                    {% if redirect_field_value %}
-                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                    {% endif %}
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>
+                        <div class="form-group">
+                            <label for="email" class="cols-sm-2 control-label">{{ form.login.label }}</label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                    {% render_field form.login placeholder=form.login.label class='form-control ' %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">{{ form.password.label }} <a
+                                    href="{% url 'account_reset_password' %}">({% trans "Forgot Password?" %})</a></label>
+
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+
+                                    {% render_field form.password placeholder=form.password.label class='form-control ' %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkbox">
+                            <label>
+                                {{ form.remember }} {{ form.remember.label }}
+                            </label>
+                        </div>
+                        {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                        {% endif %}
+                        <input class="btn btn-lg btn-success btn-block" type="submit" value="{% trans "Sign In" %}">
+                    </fieldset>
                 </form>
+                <hr/>
+
+
+                <div class="login_footer" style="clear:both;">
+                        <span>
+                            Don't have an account?
+                                <a href="{{ signup_url }}"
+                                   id="rn-registerHere-link">{% trans "Sign Up" %}!</a>
+                        </span>
+                </div>
 
 
             </div>
 
 
-        </div>
-        <hr>
-        <div class="text-center">
-            <ul class="list-inline">
-                <li><a class="text-muted" href="{{ signup_url }}" >{% trans "Sign Up" %}</a></li>
-                <li><a class="text-muted" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></li>
+            <!--content end -->
 
-            </ul>
-        </div>
 
-        <div>
-
-            <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                <div class="btn-group" role="group">
-                    <a href="javascript:changeAppLanguage('en')" class="btn btn-default">English</a>
-                </div>
-                <div class="btn-group" role="group">
-                    <a href="javascript:changeAppLanguage('ar')" class="btn btn-default">عربي</a>
-                </div>
-
-            </div>
         </div>
 
 
     </div>
+
+
+    {#    <div class="form-signin">#}
+    {#        <div class="text-center">#}
+    {#            <img src="{% static 'img/logo.png' %}" alt="iRep Logo">#}
+    {#        </div>#}
+    {#        <hr>#}
+    {#        <div class="tab-content">#}
+    {#            <div id="login" class="tab-pane active">#}
+    {#                <form method="POST" action="{% url 'account_login' %}">#}
+    {#                    {% csrf_token %}#}
+    {#                    <p class="text-muted text-center">#}
+    {#                        {% trans 'Enter your username and password' %}#}
+    {#                    </p>#}
+    {#                    {% render_field form.login placeholder=form.login.label class='form-control top' %}#}
+    {#                    {% render_field form.password placeholder=form.password.label class='form-control bottom' %}#}
+    {##}
+    {#                    <div class="checkbox">#}
+    {#                        <label>#}
+    {#                            {{ form.remember }} {{ form.remember.label }}#}
+    {#                        </label>#}
+    {#                    </div>#}
+    {#                    {% if redirect_field_value %}#}
+    {#                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>#}
+    {#                    {% endif %}#}
+    {#                    <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "Sign In" %}</button>#}
+    {#                </form>#}
+    {##}
+    {##}
+    {#            </div>#}
+    {##}
+    {##}
+    {#        </div>#}
+    {#        <hr>#}
+    {#        <div class="text-center">#}
+    {#            <ul class="list-inline">#}
+    {#                <li><a class="text-muted" href="{{ signup_url }}">{% trans "Sign Up" %}</a></li>#}
+    {#                <li><a class="text-muted" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>#}
+    {#                </li>#}
+    {##}
+    {#            </ul>#}
+    {#        </div>#}
+    {##}
+    {#        <div>#}
+    {##}
+    {#            <div class="btn-group btn-group-justified" role="group" aria-label="...">#}
+    {#                <div class="btn-group" role="group">#}
+    {#                    <a href="javascript:changeAppLanguage('en')" class="btn btn-default">English</a>#}
+    {#                </div>#}
+    {#                <div class="btn-group" role="group">#}
+    {#                    <a href="javascript:changeAppLanguage('ar')" class="btn btn-default">عربي</a>#}
+    {#                </div>#}
+    {##}
+    {#            </div>#}
+    {#        </div>#}
+    {##}
+    {##}
+    {#    </div>#}
 
 
 

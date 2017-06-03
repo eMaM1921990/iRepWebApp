@@ -20,9 +20,7 @@ class SalesForceManager():
         record.created_by = auth_user
         record.save()
 
-    def ListByUser(self, auth_user):
-        auth_use_profile = UserProfile.objects.get(auth_user=auth_user)
-        return self.ListByUserCorp(auth_use_profile.corporate_id)
 
-    def ListByUserCorp(self, corpId):
-        return SalesForce.objects.filter(corp_id__id=corpId)
+
+    def ListByUserCorp(self, slug):
+        return SalesForce.objects.filter(corp_id__slug=slug)

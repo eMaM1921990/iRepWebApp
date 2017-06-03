@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm
+from iRep.managers.Corp import CorpManager
+from iRep.managers.Products import ProductManager
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.models import SalesForce
 
@@ -21,7 +23,9 @@ def home(request):
 @login_required
 def AddSalesForce(request):
     template = 'sales_force/details.html'
-    form = SalesForceForm(request.POST or None, request.FILES or None, user_instance=request.user,
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    form = SalesForceForm(request.POST or None, request.FILES or None, user_instance=request.user, corp_instance=corp,
                           action=reverse('createSalesForce'))
     if form.is_valid():
         form.save(user=request.user)
@@ -30,10 +34,10 @@ def AddSalesForce(request):
 
 
 @login_required
-def ViewSalesForceDefault(request):
+def ViewSalesForceDefault(request,slug):
     template = 'sales_force/list.html'
     context = {
-        'salesForce': SalesForceManager().ListByUser(request.user)
+        'salesForce': SalesForceManager().ListByUserCorp(slug=slug)
     }
     return render(request, template_name=template, context=context)
 
@@ -53,18 +57,19 @@ def EditSalesForce(request, slug):
 
 
 @login_required
-def AddProduct(request):
+def AddProduct(request,slug):
     template = 'settings/products/details.html'
-    form = ProductForm(request.POST or None, user_instance=request.user, action=None)
+    form = ProductForm(request.POST or None,slug=slug,action=reverse('createProduct',kwargs={'slug':slug}))
     if form.is_valid():
         form.save()
         return redirect(reverse('productList'))
-    return render(request, template_name=template, context={'form': form, 'new': False})
+    return render(request, template_name=template, context={'form': form, 'new': True})
 
 
-def ViewProduct(request):
+@login_required
+def ViewProduct(request, slug):
     template = 'settings/products/list.html'
     context = {
-        'products':
+        'products': ProductManager().get_corp_products(slug=slug)
     }
-
+    return render(request, template_name=template, context=context)

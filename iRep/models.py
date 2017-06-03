@@ -23,7 +23,7 @@ class Corporate(models.Model):
     no_of_user = models.IntegerField(default=0)
     is_limited = models.BooleanField(default=False)
     created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='corp_users', db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
@@ -154,6 +154,9 @@ class Tags(models.Model):
     slug = models.SlugField(db_index=True)
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_tags', db_column='corp_id')
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         managed = MANAGED
         db_table = 'tags'
@@ -236,9 +239,11 @@ class Product(models.Model):
     product = models.ForeignKey(ProductGroup, models.CASCADE, related_name='group_products',
                                 db_column='product_group_id')
     unit = models.ForeignKey(ProductUnit, models.CASCADE, related_name='product_unit', db_column='unit_id')
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_product', db_column='corp_id')
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
+    slug = models.SlugField()
 
     class Meta:
         managed = MANAGED

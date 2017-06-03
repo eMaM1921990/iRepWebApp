@@ -37,11 +37,11 @@ urlpatterns = [
 urlpatterns += [
     # sales force
     url(r'^salesForce/add/$', views.AddSalesForce, name='createSalesForce'),
-    url(r'^salesForce/list/$', views.ViewSalesForceDefault, name='viewSalesForceByUser'),
+    url(r'^(?P<slug>[-\w]+)/salesForce/list/$', views.ViewSalesForceDefault, name='viewSalesForceByUser'),
     url(r'^salesForce/edit/(?P<slug>[-\w]+)/', views.EditSalesForce, name='editSalesForce'),
     # Products
-    url(r'^settings/product/add/$', views.AddProduct, name='createProduct'),
-    url(r'^settings/product/list/$', views.AddSalesForce, name='productList'),
+    url(r'^settings/(?P<slug>[-\w]+)/product/add/$', views.AddProduct, name='createProduct'),
+    url(r'^settings/(?P<slug>[-\w]+)/product/list/$', views.ViewProduct, name='productList'),
 ]
 
 urlpatterns += [

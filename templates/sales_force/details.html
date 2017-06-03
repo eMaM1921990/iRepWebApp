@@ -38,7 +38,9 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="report">
                     <div class="divider-md"></div>
                     <div class="top-controlbar">
+                        {% if reportForm %}
                         {% crispy reportForm %}
+                        {% endif %}
                         <div class="clearfix"></div>
                     </div>
 

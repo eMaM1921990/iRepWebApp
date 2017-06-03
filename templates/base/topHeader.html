@@ -33,10 +33,12 @@
                                 <i class="glyphicon glyphicon-user"></i> {% trans 'Sales Force' %}
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu top-align user-align animated fadeIn">
-                                <li><a href="{%  url 'createSalesForce' %}"><i class=" glyphicon glyphicon-plus-sign"></i> {% trans 'Create Sales force' %}</a></li>
+                                <li><a href="{% url 'createSalesForce' %}"><i
+                                        class=" glyphicon glyphicon-plus-sign"></i> {% trans 'Create Sales force' %}</a>
+                                </li>
 
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'viewSalesForceByUser' %}">{% trans 'View all' %}</a></li>
+                                <li><a href="{% url 'viewSalesForceByUser' user.corp_users.get.slug %}">{% trans 'View all' %}</a></li>
 
                             </ul>
                         </li>
@@ -48,41 +50,13 @@
                                 <i class="glyphicon glyphicon-sunglasses"></i> {% trans 'Clients' %}
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu top-align user-align animated fadeIn">
-                                <li><a href="#"><i class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Client' %}</a></li>
+                                <li><a href="#"><i class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Client' %}
+                                </a></li>
 
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#">{% trans 'View all' %}</a></li>
 
                             </ul>
-                        </li>
-
-
-                        <li class="visible-xs">
-
-                            <a class="Setting-cog" href="" id="dropdownMenu1" data-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="true">
-
-                                <i class="glyphicon glyphicon-cog"></i> Setting
-                                <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu top-align2" aria-labelledby="dropdownMenu1">
-                                <li><a href="{% url 'productList' %}"><i class="fa fa-archive"></i> Products</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="fa fa-comments"></i> Bill board</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="fa fa-shopping-basket"></i> Retail Audit</a></li>
-                                <li role="separator" class="divider"></li>
-
-                                <li><a href="#"><i class="fa fa-cloud-download"></i> Export and emport </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-ok-sign"></i> Permisions</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">Settings... </a></li>
-
-                            </ul>
-
-
                         </li>
 
 
@@ -103,7 +77,8 @@
                             </a>
 
                             <ul class="dropdown-menu top-align2" aria-labelledby="dropdownMenu1">
-                                <li><a href="#"><i class="fa fa-archive"></i> Products</a></li>
+                                <li><a href="{% url 'productList' user.corp_users.get.slug %}"><i
+                                        class="fa fa-archive"></i> {% trans 'Products' %}</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#"><i class="fa fa-comments"></i> Bill board</a></li>
                                 <li role="separator" class="divider"></li>
@@ -141,14 +116,10 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle user-btn" data-toggle="dropdown" role="button"
                                aria-haspopup="true" aria-expanded="false">
-
-
-
-
-    <span class="media-heading">
-<i class="user-img"><img class="img-circle" src="{% static 'img/thumbnail.png' %}"></i>
-{{ user.get_full_name }}
-</span>
+                            <span class="media-heading">
+                                    <i class="user-img"><img class="img-circle" src="{% static 'img/thumbnail.png' %}"></i>
+                                    {{ user.get_full_name }}
+                            </span>
 
 
                                 <span class="caret"></span></a>

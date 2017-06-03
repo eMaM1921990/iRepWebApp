@@ -6,7 +6,47 @@ from django import forms
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
-from iRep.models import SalesForce, ProductGroup, Product
+from iRep.managers.Tags import TagManager
+from iRep.models import SalesForce, ProductGroup, Product, Corporate
+
+
+class SignupForm(forms.Form):
+    name = forms.CharField(max_length=30, label=_('Name'),
+                           widget=forms.TextInput(attrs={'placeholder': _(' Name')}), required=False)
+    email = forms.CharField(max_length=64, label=_('Email'),
+                            widget=forms.TextInput(attrs={'placeholder': _('E-mail address')}))
+    address = forms.CharField(max_length=150, label=_('Address'),
+                            widget=forms.TextInput(attrs={'placeholder': _('Address')}))
+    mobile = forms.CharField(max_length=150, label=_('Phone'),
+                              widget=forms.TextInput(attrs={'placeholder': _('Phone')}))
+    corp_admin= forms.CharField(max_length=150, label=_('Corporate Admin'),
+                              widget=forms.TextInput(attrs={'placeholder': _('Corporate Admin')}))
+    corp_admin_phone = forms.CharField(max_length=150, label=_('Corporate Admin Phone'),
+                                 widget=forms.TextInput(attrs={'placeholder': _('Corporate Admin Phone')}))
+
+    # def raise_duplicate_email_error(self):
+    # # here I tried to override the method, but it is not called
+    #     raise forms.ValidationError(
+    #         _("An account already exists with this e-mail address."
+    #           " Please sign in to that account."))
+
+    def signup(self, request, user):
+        user.first_name = self.cleaned_data['name']
+        user.last_name = ''
+        user.email = self.cleaned_data['email']
+        user.username = self.cleaned_data['email']
+        user.save()
+        # save profile
+        corp = Corporate()
+        corp.corporate_name = user.first_name
+        corp.corporate_address_txt=self.cleaned_data['address']
+        corp.mobile = self.cleaned_data['mobile']
+        corp.email = self.cleaned_data['email']
+        corp.admin_name = self.cleaned_data['corp_admin']
+        corp.admin_mobile = self.cleaned_data['corp_admin_phone']
+        corp.created_by = user
+        corp.slug = slugify('%s %s' % (user.get_full_name(), user.id), allow_unicode=True)
+        corp.save()
 
 
 class BaseReportForm(forms.Form):
@@ -23,10 +63,11 @@ class SalesForceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # Get data from kwargs
         user_instance = kwargs.pop('user_instance', None)
+        corp_instance = kwargs.pop('corp_instance',None)
         action = kwargs.pop('action', None)
         super(SalesForceForm, self).__init__(*args, **kwargs)
         # init data
-        self.fields['company_id'].initial = user_instance.id
+        self.fields['company_id'].initial = corp_instance.slug
         self.fields['user_pin'].initial = user_instance.id
         # control Required
         self.fields['avatar'].required = False
@@ -174,11 +215,13 @@ class ProductCategoryForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-    tags = forms.ChoiceField()
+    tags = forms.ModelChoiceField(queryset=None)
 
     def __init__(self, *args, **kwargs):
         # POP from kwargs
-        user_instance = kwargs.pop('user_instance', None)
+        corpSlug = kwargs.pop('slug',None)
+        # Retrieve Corp Tags
+        tags = TagManager().get_corp_tags(corpSlug)
         action = kwargs.pop('action', None)
         super(ProductForm, self).__init__(*args, **kwargs)
         # input label
@@ -186,14 +229,21 @@ class ProductForm(forms.ModelForm):
         self.fields['ean_code'].label = _('EAN')
         self.fields['default_price'].label = _('Default price')
         self.fields['note'].label = _('Notes')
-        self.fields['product_group'].label = _('Product Group')
+        self.fields['product'].label = _('Product Group')
         self.fields['unit'].label = _('Units')
         self.fields['is_active'].label = _('Is active')
         self.fields['tags'].label = _('Tags')
+
         # control Required
         self.fields['default_price'].required = True
+        self.fields['corporate'].required = False
+        self.fields['unit'].required = False
+        self.fields['slug'].required = False
         # init
         self.fields['default_price'].initial = '0.00'
+        self.fields['note'].widget.attrs['rows']=3
+        if tags:
+            self.fields['tags'].queryset = tags
         # It builds a default layout with all its fields
         self.helper = FormHelper(self)
         self.helper.form_id = 'product-form-id'
@@ -205,17 +255,18 @@ class ProductForm(forms.ModelForm):
             ),
             Div(
                 Div(
-                    Div(
-                        Field('id', placeholder=_('ID#')),
-                        css_class='col-md-4'
-                    ),
+
                     Div(
                         Field('name', placeholder=_('Product name')),
-                        css_class='col-md-4'
+                        css_class='col-md-6'
                     ),
+
                     Div(
+                        Div(
+                            css_class='divider-md'
+                        ),
                         Field('is_active', placeholder=_('Status')),
-                        css_class='col-md-4'
+                        css_class='col-md-6'
                     ),
                     css_class='col-md-12'
                 ),
@@ -225,6 +276,23 @@ class ProductForm(forms.ModelForm):
                 Div(
                     Div(
                         Field('ean_code', placeholder=_('EAN')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Field('default_price', placeholder=_('Default price')),
+                        css_class='col-md-6'
+                    ),
+                    css_class='col-md-12'
+                ),
+                css_class='row'
+            ),
+            Div(
+                css_class='divider-md'
+            ),
+            Div(
+                Div(
+                    Div(
+                        Field('note', placeholder=_('Notes')),
                         css_class='col-md-6'
                     ),
                     Div(
@@ -241,7 +309,7 @@ class ProductForm(forms.ModelForm):
             Div(
                 Div(
                     Div(
-                        Field('product_group', placeholder=_('Product category')),
+                        Field('product', placeholder=_('Product category')),
                         css_class='col-md-6'
                     ),
                     Div(
@@ -272,6 +340,15 @@ class ProductForm(forms.ModelForm):
             )
 
         )
+
+    # override save form
+    def save(self, user, commit=True):
+        m = super(ProductForm, self).save(commit=False)
+        m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
+        m.save()
+        # Save Tags
+        m.tag_product.create(tag__id=self.cleaned_data['tags'])
+        return m
 
     class Meta:
         model = Product

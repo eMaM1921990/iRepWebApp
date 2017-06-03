@@ -8,8 +8,25 @@
 {% block content %}
     <div class="body bs-example">
         <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i>
-            {% if not new %}{{ form.name.value }}{% else %}{% trans 'New representative' %}{% endif %}</h1>
+            {% if not new %}{{ form.name.value }}{% else %}{% trans 'New product' %}{% endif %}</h1>
         <div>
+
+         {% if form.errors %}
+                <!-- Error messaging -->
+                <div id="errors">
+                    <div class="alert alert-danger ">
+                        {{ form.non_field_errors }}
+                        <ul class="alert-message">
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    <li>{{ field.label }}: {{ field.errors|striptags|linebreaks }}</li>{% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- /Error messaging -->
+            {% endif %}
+
             <ul class="nav nav-tabs sales-tabs" role="tablist">
                 <li role="presentation" class="active">
                     <a href="#info" aria-controls="home" role="tab" {% if not new %}data-toggle="tab"{% endif %}>
@@ -33,7 +50,9 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="report">
                     <div class="divider-md"></div>
                     <div class="top-controlbar">
-{#                        {% crispy reportForm %}#}
+                        {% if reportForm %}
+                        {% crispy reportForm %}
+                        {% endif %}
                         <div class="clearfix"></div>
                     </div>
 
