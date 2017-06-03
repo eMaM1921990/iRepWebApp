@@ -61,7 +61,10 @@ def AddProduct(request,slug):
     template = 'settings/products/details.html'
     form = ProductForm(request.POST or None,slug=slug,action=reverse('createProduct',kwargs={'slug':slug}))
     if form.is_valid():
-        form.save()
+        corporate = CorpManager().get_corp_form_user_profile(request.user)
+        corporate= corporate.corporate
+        print corporate
+        form.save(user=request.user,corporate=corporate)
         return redirect(reverse('productList'))
     return render(request, template_name=template, context={'form': form, 'new': True})
 

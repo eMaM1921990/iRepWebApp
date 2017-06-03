@@ -7,7 +7,7 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from iRep.managers.Tags import TagManager
-from iRep.models import SalesForce, ProductGroup, Product, Corporate
+from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile
 
 
 class SignupForm(forms.Form):
@@ -16,13 +16,13 @@ class SignupForm(forms.Form):
     email = forms.CharField(max_length=64, label=_('Email'),
                             widget=forms.TextInput(attrs={'placeholder': _('E-mail address')}))
     address = forms.CharField(max_length=150, label=_('Address'),
-                            widget=forms.TextInput(attrs={'placeholder': _('Address')}))
+                              widget=forms.TextInput(attrs={'placeholder': _('Address')}))
     mobile = forms.CharField(max_length=150, label=_('Phone'),
-                              widget=forms.TextInput(attrs={'placeholder': _('Phone')}))
-    corp_admin= forms.CharField(max_length=150, label=_('Corporate Admin'),
-                              widget=forms.TextInput(attrs={'placeholder': _('Corporate Admin')}))
+                             widget=forms.TextInput(attrs={'placeholder': _('Phone')}))
+    corp_admin = forms.CharField(max_length=150, label=_('Corporate Admin'),
+                                 widget=forms.TextInput(attrs={'placeholder': _('Corporate Admin')}))
     corp_admin_phone = forms.CharField(max_length=150, label=_('Corporate Admin Phone'),
-                                 widget=forms.TextInput(attrs={'placeholder': _('Corporate Admin Phone')}))
+                                       widget=forms.TextInput(attrs={'placeholder': _('Corporate Admin Phone')}))
 
     # def raise_duplicate_email_error(self):
     # # here I tried to override the method, but it is not called
@@ -36,10 +36,10 @@ class SignupForm(forms.Form):
         user.email = self.cleaned_data['email']
         user.username = self.cleaned_data['email']
         user.save()
-        # save profile
+        # save corp
         corp = Corporate()
         corp.corporate_name = user.first_name
-        corp.corporate_address_txt=self.cleaned_data['address']
+        corp.corporate_address_txt = self.cleaned_data['address']
         corp.mobile = self.cleaned_data['mobile']
         corp.email = self.cleaned_data['email']
         corp.admin_name = self.cleaned_data['corp_admin']
@@ -47,6 +47,12 @@ class SignupForm(forms.Form):
         corp.created_by = user
         corp.slug = slugify('%s %s' % (user.get_full_name(), user.id), allow_unicode=True)
         corp.save()
+        # save profile
+        profile = UserProfile()
+        profile.auth_user = user
+        profile.corporate = corp
+        profile.user_type = 1
+        profile.save()
 
 
 class BaseReportForm(forms.Form):
@@ -63,7 +69,7 @@ class SalesForceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # Get data from kwargs
         user_instance = kwargs.pop('user_instance', None)
-        corp_instance = kwargs.pop('corp_instance',None)
+        corp_instance = kwargs.pop('corp_instance', None)
         action = kwargs.pop('action', None)
         super(SalesForceForm, self).__init__(*args, **kwargs)
         # init data
@@ -219,7 +225,7 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         # POP from kwargs
-        corpSlug = kwargs.pop('slug',None)
+        corpSlug = kwargs.pop('slug', None)
         # Retrieve Corp Tags
         tags = TagManager().get_corp_tags(corpSlug)
         action = kwargs.pop('action', None)
@@ -241,7 +247,7 @@ class ProductForm(forms.ModelForm):
         self.fields['slug'].required = False
         # init
         self.fields['default_price'].initial = '0.00'
-        self.fields['note'].widget.attrs['rows']=3
+        self.fields['note'].widget.attrs['rows'] = 3
         if tags:
             self.fields['tags'].queryset = tags
         # It builds a default layout with all its fields
@@ -342,9 +348,11 @@ class ProductForm(forms.ModelForm):
         )
 
     # override save form
-    def save(self, user, commit=True):
+    def save(self, user,corporate, commit=True):
         m = super(ProductForm, self).save(commit=False)
         m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
+        m.corporate = corporate
+        m.created_by = user
         m.save()
         # Save Tags
         m.tag_product.create(tag__id=self.cleaned_data['tags'])

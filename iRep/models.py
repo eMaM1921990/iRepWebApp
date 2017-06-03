@@ -238,7 +238,7 @@ class Product(models.Model):
     note = models.TextField()
     product = models.ForeignKey(ProductGroup, models.CASCADE, related_name='group_products',
                                 db_column='product_group_id')
-    unit = models.ForeignKey(ProductUnit, models.CASCADE, related_name='product_unit', db_column='unit_id')
+    unit = models.ForeignKey(ProductUnit, models.CASCADE, related_name='product_unit', db_column='unit_id',null=True)
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_product', db_column='corp_id')
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
