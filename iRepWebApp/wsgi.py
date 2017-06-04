@@ -11,6 +11,19 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "iRepWebApp.settings")
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "iRepWebApp.settings")
+#
+# application = get_wsgi_application()
+
+
+
+import os
+import sys
+
+sys.path.append('/opt/bitnami/apps/django/django_projects/iRepWebApp')
+os.environ['PYTHON_EGG_CACHE']="/opt/bitnami/apps/django/django_projects/iRepWebApp/egg_cache"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "iRepWebApp.settings.")
+
+from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()
