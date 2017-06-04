@@ -22,7 +22,7 @@ import sys
 
 sys.path.append('/opt/bitnami/apps/django/django_projects/iRepWebApp')
 os.environ['PYTHON_EGG_CACHE']="/opt/bitnami/apps/django/django_projects/iRepWebApp/egg_cache"
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "iRepWebApp.settings.")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "iRepWebApp.settings.staging")
 
 from django.core.wsgi import get_wsgi_application
 
