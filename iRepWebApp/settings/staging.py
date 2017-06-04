@@ -9,3 +9,6 @@ DATABASES = {
         'PASSWORD': '31f50ea6e1'
     }
 }
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
