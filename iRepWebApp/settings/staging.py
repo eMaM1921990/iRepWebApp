@@ -15,6 +15,11 @@ DATABASES = {
 
 STATIC_ROOT = '/opt/bitnami/apps/django/django_projects/iRepWebApp/staticfiles'
 
+STATICFILES_DIRS = (
+    os.path.join('/opt/bitnami/apps/django/django_projects/iRepWebApp/', "static"),
+)
+
+
 
 
 
