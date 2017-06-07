@@ -1,6 +1,7 @@
 from django.views.decorators.cache import never_cache
 from django.views.decorators.gzip import gzip_page
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
@@ -12,29 +13,30 @@ from django.utils.translation import ugettext_lazy as _
 @gzip_page
 @never_cache
 @api_view(['POST'])
+@parser_classes((JSONParser,))
 def SalesForceLogin(request):
     resp = {}
     resp['code'] = None
     # validations
-    if 'user_pin' not in request.POST:
+    if 'user_pin' not in request.data:
         resp['code'] = None
         resp['msg'] = _('Missing user pin.')
         return Response(resp)
 
-    if 'password' not in request.POST:
+    if 'password' not in request.data:
         resp['code'] = None
         resp['msg'] = _('Missing password')
         return Response(resp)
 
-    if 'corp_id' not in request.POST:
+    if 'corp_id' not in request.data:
         resp['code'] = None
         resp['msg'] = _('Missing corpId')
         return Response(resp)
 
     try:
-        profile = SalesForce.objects.get(user_pin=request.POST['user_pin'],
-                                         password_pin=request.POST['password'],
-                                         corp_id=request.POST['corp_id'])
+        profile = SalesForce.objects.get(user_pin=request.data['user_pin'],
+                                         password_pin=request.data['password'],
+                                         corp_id=request.data['corp_id'])
 
         resp['data'] = SalesForceSerializer(profile, context={'request': request}).data
         return Response(resp)
