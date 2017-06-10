@@ -158,7 +158,7 @@ class SalesForceForm(forms.ModelForm):
     # override save form
     def save(self, user, commit=True):
         m = super(SalesForceForm, self).save(commit=False)
-        m.corp_id = Corporate.objects.get(slud=self.cleaned_data['company_id'])
+        m.corp_id = Corporate.objects.get(slug=self.cleaned_data['company_id'])
         m.created_by = user
         m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
         m.save()
