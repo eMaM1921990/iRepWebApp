@@ -23,7 +23,11 @@
                 <tbody>
                 {% for row in salesForce %}
                     <tr>
-                        <td><img src="{{ row.avatar.url }}"></td>
+                        <td>
+                            {% if row.avatar  %}
+                                 <img src="{{ row.avatar.url }}">
+                            {% endif %}
+                        </td>
                         <td><a href="{% url 'editSalesForce' row.slug %}">{{ row.name }}</a></td>
                         <td>{{ row.last_activity }}</td>
                         <td>--</td>
