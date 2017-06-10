@@ -19,6 +19,8 @@ STATICFILES_DIRS = (
     os.path.join('/opt/bitnami/apps/django/django_projects/iRepWebApp/', "static"),
 )
 
+# Media
+MEDIA_ROOT = '/opt/bitnami/apps/django/django_projects/iRepWebApp/media/'
 
 
 
