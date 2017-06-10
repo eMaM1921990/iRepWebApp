@@ -16,7 +16,7 @@ from iRep.models import SalesForce
 
 @login_required
 def home(request):
-    template = 'base/base.html'
+    template = 'index.html'
     return render(request, template_name=template)
 
 
