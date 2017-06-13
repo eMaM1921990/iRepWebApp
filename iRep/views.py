@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm
+from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Products import ProductManager
 from iRep.managers.SalesForce import SalesForceManager
@@ -98,7 +99,11 @@ def ViewEditProduct(request, slug):
 
 @login_required
 def ViewClient(request, slug):
-    return None
+    template = 'settings/clients/list.html'
+    context = {
+        'clients': ClientManager().get_client_by_slug(slug=slug)
+    }
+    return render(request, template_name=template, context=context)
 
 
 @login_required
