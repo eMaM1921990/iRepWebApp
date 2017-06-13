@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
@@ -11,8 +12,9 @@ from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseRe
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Products import ProductManager
+from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
 from iRep.managers.SalesForce import SalesForceManager
-from iRep.models import SalesForce, Product, Client
+from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders
 
 
 @login_required
@@ -109,20 +111,20 @@ def ViewClient(request, slug):
 @login_required
 def AddClient(request, slug):
     template = 'clients/details.html'
-    form = ClientForm(request.POST or None,action=reverse('AddClient', kwargs={'slug': slug}))
+    form = ClientForm(request.POST or None, action=reverse('AddClient', kwargs={'slug': slug}))
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
-        m = form.save(user=request.user, corporate=corporate,main_branch=None)
+        m = form.save(user=request.user, corporate=corporate, main_branch=None)
         return redirect(reverse('viewClient', kwargs={'slug': slug}))
     return render(request, template_name=template, context={'form': form, 'new': True})
 
 
 @login_required
-def EditClient(request,slug):
+def EditClient(request, slug):
     template = 'clients/details.html'
     client_instance = get_object_or_404(Client, slug=slug)
-    form = ClientForm(request.POST or None,instance=client_instance,
+    form = ClientForm(request.POST or None, instance=client_instance,
                       action=reverse('EditClient', kwargs={'slug': slug}))
     reportForm = SalesForceReportForm()
     if form.is_valid():
@@ -132,3 +134,53 @@ def EditClient(request,slug):
         return redirect(reverse('viewClient', kwargs={'slug': slug}))
     return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm})
 
+
+# Export
+def ExportVisits(request):
+    if request.POST:
+        visitResources = VisitsResource()
+        if 'fromDate' in request.POST and len(request.POST['fromDate']) > 0:
+            sqs = Visits.objects.filter(visit_date__gte=request.POST['fromDate'])
+        if 'toDate' in request.POST and len(request.POST['toDate']) > 0:
+            sqs = Visits.objects.filter(visit_date__lte=request.POST['toDate'])
+        if 'salesForce' in request.POST and len(request.POST['salesForce']) > 0:
+            sqs = Visits.objects.filter(sales_force__id=request.POST['toDate'])
+
+        dataset = visitResources.export(sqs)
+        response = HttpResponse(dataset.csv, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="visits.csv"'
+        return response
+
+
+@login_required
+def ExportSchedual(request):
+    if request.POST:
+        schedualResources = SchedualResource()
+        if 'fromDate' in request.POST and len(request.POST['fromDate']) > 0:
+            sqs = SalesForceSchedual.objects.filter(schedual_date__gte=request.POST['fromDate'])
+        if 'toDate' in request.POST and len(request.POST['toDate']) > 0:
+            sqs = SalesForceSchedual.objects.filter(schedual_date__lte=request.POST['toDate'])
+        if 'salesForce' in request.POST and len(request.POST['salesForce']) > 0:
+            sqs = SalesForceSchedual.objects.filter(sales_force__id=request.POST['toDate'])
+
+        dataset = schedualResources.export(sqs)
+        response = HttpResponse(dataset.csv, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="schedual.csv"'
+        return response
+
+
+@login_required
+def ExportOrders(request):
+    if request.POST:
+        orderResources = OrderResource()
+        if 'fromDate' in request.POST and len(request.POST['fromDate']) > 0:
+            sqs = Orders.objects.filter(order_date__gte=request.POST['fromDate'])
+        if 'toDate' in request.POST and len(request.POST['toDate']) > 0:
+            sqs = Orders.objects.filter(order_date__lte=request.POST['toDate'])
+        if 'salesForce' in request.POST and len(request.POST['salesForce']) > 0:
+            sqs = Orders.objects.filter(sales_force__id=request.POST['toDate'])
+
+        dataset = orderResources.export(sqs)
+        response = HttpResponse(dataset.csv, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="schedual.csv"'
+        return response
