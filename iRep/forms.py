@@ -366,14 +366,9 @@ class ProductForm(forms.ModelForm):
 
 
 class ClientForm(forms.ModelForm):
-    # tags = forms.ModelChoiceField(queryset=None)
 
     def __init__(self, *args, **kwargs):
         # POP from kwargs
-        corpSlug = kwargs.pop('slug', None)
-        # Retrieve Corp Tags
-        tags = TagManager().get_corp_tags(corpSlug)
-        action = kwargs.pop('action', None)
         super(ClientForm, self).__init__(*args, **kwargs)
         # Input label
         self.fields['name'] = _('Name')
