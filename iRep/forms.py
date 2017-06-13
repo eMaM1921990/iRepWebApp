@@ -409,7 +409,7 @@ class ClientForm(forms.ModelForm):
         self.fields['is_active'].required = False
         self.fields['sales_force'].required = True
         # init
-        self.fields['notes'].widget.attrs['rows'] = 3
+        # self.fields['notes'].widget.attrs['rows'] = 3
 
         # It builds a default layout with all its fields
         self.helper = FormHelper(self)
