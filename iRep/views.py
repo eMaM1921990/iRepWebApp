@@ -99,7 +99,7 @@ def ViewEditProduct(request, slug):
 
 @login_required
 def ViewClient(request, slug):
-    template = 'settings/clients/list.html'
+    template = 'clients/list.html'
     context = {
         'clients': ClientManager().get_client_by_slug(slug=slug)
     }
