@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
     <div class="body bs-example">
-    <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i> {% trans 'Clients' %}</h1>
+    <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i> {% trans 'Clients ' %}</h1>
     <div class="outer">
     <div class="col-md-12">
         <div id="collapse4" class="body">
@@ -15,7 +15,6 @@
                 <tr>
                     <th></th>
                     <th>{% trans 'Name' %}</th>
-                    <th>{% trans 'Main branch' %}</th>
                     <th>{% trans  'Status' %}</th>
                     <th>{% trans 'Active' %}</th>
                 </tr>
@@ -28,10 +27,8 @@
                                  <img src="{{ row.avatar.url }}">
                             {% endif %}
                         </td>
-                        <td><a href="{% url 'editSalesForce' row.slug %}">{{ row.name }}</a></td>
-                         <td>{{ row.main_branch }}</td>
+                        <td><a href="{% url 'EditClient' row.slug %}">{{ row.name }}</a></td>
                         <td>{{ row.status.status_name }}</td>
-
                         <td>{{ row.is_active }}</td>
 
                     </tr>

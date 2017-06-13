@@ -1,5 +1,5 @@
 import datetime
-from crispy_forms.bootstrap import PrependedText, AppendedText
+from crispy_forms.bootstrap import PrependedText, AppendedText, Accordion, AccordionGroup
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Field, Fieldset, Div, HTML, Button
 from django import forms
@@ -366,27 +366,27 @@ class ProductForm(forms.ModelForm):
 
 
 class ClientForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         # POP from kwargs
+        action = kwargs.pop('action', None)
         super(ClientForm, self).__init__(*args, **kwargs)
         # Input label
-        self.fields['name'] = _('Name')
-        self.fields['address_txt'] = _('Address ')
-        self.fields['zipcode'] = _('Zipcode')
-        self.fields['contact_name'] = _('Contact name')
-        self.fields['contact_title'] = _('Contant title')
-        self.fields['website'] = _('Website')
-        self.fields['email'] = _('E-mail')
-        self.fields['phone'] = _('Phone')
-        self.fields['notes'] = _('Notes')
-        self.fields['status'] = _('Status')
-        self.fields['city'] = _('City')
-        self.fields['state'] = _('State')
-        self.fields['country'] = _('Country')
-        self.fields['main_branch'] = _('Main branch')
-        self.fields['is_active'] = _('Is active')
-        self.fields['sales_force'] = _('Sales force')
+        self.fields['name'].label = _('Name')
+        self.fields['address_txt'].label = _('Address ')
+        self.fields['zipcode'].label = _('Zipcode')
+        self.fields['contact_name'].label = _('Contact name')
+        self.fields['contact_title'].label = _('Contant title')
+        self.fields['website'].label = _('Website')
+        self.fields['email'].label = _('E-mail')
+        self.fields['phone'].label = _('Phone')
+        self.fields['notes'].label = _('Notes')
+        self.fields['status'].label = _('Status')
+        self.fields['city'].label = _('City')
+        self.fields['state'].label = _('State')
+        self.fields['country'].label = _('Country')
+        self.fields['main_branch'].label = _('Main branch')
+        self.fields['is_active'].label = _('Is active')
+        self.fields['sales_force'].label = _('Sales force')
         # control Required
         self.fields['name'].required = True
         self.fields['address_txt'].required = True
@@ -403,20 +403,103 @@ class ClientForm(forms.ModelForm):
         self.fields['main_branch'].required = False
         self.fields['is_active'].required = False
         self.fields['sales_force'].required = True
+        self.fields['corporate'].required = False
+        self.fields['avatar'].required = False
+        self.fields['slug'].required = False
         # init
-        # self.fields['notes'].widget.attrs['rows'] = 3
+        self.fields['notes'].widget.attrs['rows'] = 3
 
         # It builds a default layout with all its fields
-        # self.helper = FormHelper(self)
-        # self.helper.form_id = 'client-form-id'
-        # self.helper.form_method = 'post'
-        # self.helper.form_action = action
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'client-form-id'
+        self.helper.form_method = 'post'
+        self.helper.form_action = action
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Field('name', placeholder=_('Product name')),
+                    Field('sales_force', placeholder=_('Sales force')),
+                    Field('phone', placeholder=_('Phone')),
+                    css_class='col-md-6'
+                ),
+                Div(
+                    Field('is_active', placeholder=_('Is active')),
+                    Field('status', placeholder=_('Status')),
+                    css_class='col-md-6'
+                ),
+                css_class='row'
+            ),
+            Div(
+                css_class='divider-md',
+            ),
+            Accordion(
+                AccordionGroup(
+                    _('Address Info'),
+                    Div(
+                        Field('address_txt', placeholder=_('Address')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Field('city', placeholder=_('City')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Field('state', placeholder=_('State')),
+                        css_class='col-md-4'
+                    ),
+                    Div(
+                        Field('country', placeholder=_('Country')),
+                        css_class='col-md-4'
+                    ),
+                    Div(
+                        Field('zipcode', placeholder=_('Zipcode')),
+                        css_class='col-md-4'
+                    )
+
+                ),
+                AccordionGroup(
+                    _('Contact Info'),
+                    Div(
+                        Field('contact_title', placeholder=_('Contact Title')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Field('contact_name', placeholder=_('Contact name')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Field('website', placeholder=_('Website')),
+                        css_class='col-md-6'
+                    ),
+                    Div(
+                        Field('email', placeholder=_('E-mail')),
+                        css_class='col-md-6'
+                    ),
+                )
+
+            ),
+            Div(
+                Field('notes', placeholder=_('Notes')),
+                css_class='col-md-6'
+            ),
+            Div(
+                css_class='divider-lg clearfix'
+            ),
+
+            Div(
+                Reset(_('Cancel'), _('Cancel'), css_class='btn btn-default  btn-lg min-btn'),
+                Submit(_('Save'), _('Save'), css_class='btn btn-primary  btn-lg min-btn'),
+                css_class='text-center'
+            )
+        )
 
     # override save form
-    def save(self, user, corporate, commit=True):
+    def save(self, user, corporate, main_branch, commit=True):
         m = super(ClientForm, self).save(commit=False)
         m.created_by = user
         m.corporate = corporate
+        if main_branch:
+            m.main_branch_id = main_branch
         m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
         m.save()
         return m

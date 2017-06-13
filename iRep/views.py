@@ -12,7 +12,7 @@ from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Products import ProductManager
 from iRep.managers.SalesForce import SalesForceManager
-from iRep.models import SalesForce, Product
+from iRep.models import SalesForce, Product, Client
 
 
 @login_required
@@ -109,10 +109,26 @@ def ViewClient(request, slug):
 @login_required
 def AddClient(request, slug):
     template = 'clients/details.html'
-    form = ClientForm(request.POST or None, slug=slug)
+    form = ClientForm(request.POST or None,action=reverse('AddClient', kwargs={'slug': slug}))
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
-        m = form.save(user=request.user, corporate=corporate)
-        return redirect(reverse('productList', kwargs={'slug': slug}))
+        m = form.save(user=request.user, corporate=corporate,main_branch=None)
+        return redirect(reverse('viewClient', kwargs={'slug': slug}))
     return render(request, template_name=template, context={'form': form, 'new': True})
+
+
+@login_required
+def EditClient(request,slug):
+    template = 'clients/details.html'
+    client_instance = get_object_or_404(Client, slug=slug)
+    form = ClientForm(request.POST or None,instance=client_instance,
+                      action=reverse('EditClient', kwargs={'slug': slug}))
+    reportForm = SalesForceReportForm()
+    if form.is_valid():
+        corporate = CorpManager().get_corp_form_user_profile(request.user)
+        corporate = corporate.corporate
+        m = form.save(user=request.user, corporate=corporate, main_branch=None)
+        return redirect(reverse('viewClient', kwargs={'slug': slug}))
+    return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm})
+

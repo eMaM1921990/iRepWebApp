@@ -71,6 +71,10 @@ class SalesFunnelStatus(models.Model):
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
+
+    def __str__(self):
+        return self.status_name
+
     def __unicode__(self):
         return self.status_name
 
@@ -113,6 +117,9 @@ class SalesForce(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
+
+    def  __str__(self):
+        return self.name+"["+self.position.name+"]"
 
     class Meta:
         managed = MANAGED

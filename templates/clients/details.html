@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load i18n staticfiles crispy_forms_tags %}
+{% load i18n staticfiles crispy_forms_tags%}
 {% block extra_head %}
     <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.min.css' %}"/>
     {#    <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.print.css' %}"/>#}
@@ -43,6 +43,7 @@
                         <div class="clearfix"></div>
                     </div>
 
+                {% include 'clients/reports.html' %}
 
 
 
