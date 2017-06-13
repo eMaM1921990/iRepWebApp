@@ -6,8 +6,9 @@ from django import forms
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from iRep.api import Clients
 from iRep.managers.Tags import TagManager
-from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile
+from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client
 
 
 class SignupForm(forms.Form):
@@ -426,5 +427,5 @@ class ClientForm(forms.ModelForm):
         return m
 
     class Meta:
-        model = Product
+        model = Client
         exclude = ['created_date', 'created_by']
