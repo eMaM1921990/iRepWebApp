@@ -42,6 +42,9 @@ urlpatterns += [
     # Products
     url(r'^settings/(?P<slug>[-\w]+)/product/add/$', views.AddProduct, name='createProduct'),
     url(r'^settings/(?P<slug>[-\w]+)/product/list/$', views.ViewProduct, name='productList'),
+    url(r'^settings/product/(?P<slug>[-\w]+)/$', views.ViewEditProduct, name='editProduct'),
+    # Clients
+    url(r'^client/(?P<slug>[-\w]+)/$', views.ViewEditProduct, name='viewClient'),
 ]
 
 urlpatterns += [

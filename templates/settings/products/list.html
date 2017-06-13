@@ -32,7 +32,7 @@
                 <tbody>
                 {% for row in products %}
                     <tr>
-                        <td><a href="{% url 'editSalesForce' row.slug %}">{{ row.name }}</a></td>
+                        <td><a href="{% url 'editProduct' row.slug %}">{{ row.name }}</a></td>
                         <td>{{ row.ean_code }}</td>
                         <td>{{ row.default_price }}</td>
                         <td>{{ row.is_active }}</td>

@@ -348,14 +348,81 @@ class ProductForm(forms.ModelForm):
         )
 
     # override save form
-    def save(self, user,corporate, commit=True):
+    def save(self, user, corporate, commit=True):
         m = super(ProductForm, self).save(commit=False)
         m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
         m.corporate = corporate
         m.created_by = user
         m.save()
         # Save Tags
-        m.tag_product.create(tag__id=self.cleaned_data['tags'])
+        print self.cleaned_data['tags'].id
+        m.product_tag.create(tag_id=self.cleaned_data['tags'].id)
+        return m
+
+    class Meta:
+        model = Product
+        exclude = ['created_date', 'created_by']
+
+
+class ClientForm(forms.ModelForm):
+    # tags = forms.ModelChoiceField(queryset=None)
+
+    def __init__(self, *args, **kwargs):
+        # POP from kwargs
+        corpSlug = kwargs.pop('slug', None)
+        # Retrieve Corp Tags
+        tags = TagManager().get_corp_tags(corpSlug)
+        action = kwargs.pop('action', None)
+        super(ProductForm, self).__init__(*args, **kwargs)
+        # Input label
+        self.fields['name'] = _('Name')
+        self.fields['address_txt'] = _('Address ')
+        self.fields['zipcode'] = _('Zipcode')
+        self.fields['contact_name'] = _('Contact name')
+        self.fields['contact_title'] = _('Contant title')
+        self.fields['website'] = _('Website')
+        self.fields['email'] = _('E-mail')
+        self.fields['phone'] = _('Phone')
+        self.fields['notes'] = _('Notes')
+        self.fields['status'] = _('Status')
+        self.fields['city'] = _('City')
+        self.fields['state'] = _('State')
+        self.fields['country'] = _('Country')
+        self.fields['main_branch'] = _('Main branch')
+        self.fields['is_active'] = _('Is active')
+        self.fields['sales_force'] = _('Sales force')
+        # control Required
+        self.fields['name'].required = True
+        self.fields['address_txt'].required = True
+        self.fields['zipcode'].required = True
+        self.fields['contact_name'].required = True
+        self.fields['contact_title'].required = True
+        self.fields['website'].required = True
+        self.fields['email'].required = True
+        self.fields['phone'].required = True
+        self.fields['notes'].required = False
+        self.fields['city'].required = True
+        self.fields['state'].required = True
+        self.fields['country'].required = True
+        self.fields['main_branch'].required = False
+        self.fields['is_active'].required = False
+        self.fields['sales_force'].required = True
+        # init
+        self.fields['notes'].widget.attrs['rows'] = 3
+
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'client-form-id'
+        self.helper.form_method = 'post'
+        self.helper.form_action = action
+
+    # override save form
+    def save(self, user, corporate, commit=True):
+        m = super(ClientForm, self).save(commit=False)
+        m.created_by = user
+        m.corporate = corporate
+        m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
+        m.save()
         return m
 
     class Meta:

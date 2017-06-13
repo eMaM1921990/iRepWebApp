@@ -133,13 +133,18 @@ class Client(models.Model):
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corporate_client', db_column='corp_id')
     status = models.ForeignKey(SalesFunnelStatus, models.SET_NULL, db_column='status_id', related_name='client_status',
                                null=True)
-    city = models.ForeignKey(City, models.CASCADE, related_name='client_city', db_column='cities_light_city_id')
-    branch = models.BooleanField(default=False)
+    # city = models.ForeignKey(City, models.CASCADE, related_name='client_city', db_column='cities_light_city_id')
+    city = models.CharField(max_length=150, null=True)
+    state = models.CharField(max_length=150, null=True)
+    country = models.CharField(max_length=150, null=True)
     main_branch = models.ForeignKey('self', null=True)
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_branch',
+                                    db_column='sales_force_id',null=True)
+
 
     class Meta:
         managed = MANAGED
@@ -162,16 +167,7 @@ class Tags(models.Model):
         db_table = 'tags'
 
 
-class SalesForceBranches(models.Model):
-    branch = models.ForeignKey(Client, models.CASCADE, related_name='client_branch', db_column='branch_id')
-    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_branch',
-                                    db_column='sales_force_id')
-    created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
 
-    class Meta:
-        managed = MANAGED
-        db_table = 'sales_force_branches'
 
 
 class ClientTags(models.Model):
