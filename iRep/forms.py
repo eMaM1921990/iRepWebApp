@@ -412,10 +412,10 @@ class ClientForm(forms.ModelForm):
         # self.fields['notes'].widget.attrs['rows'] = 3
 
         # It builds a default layout with all its fields
-        self.helper = FormHelper(self)
-        self.helper.form_id = 'client-form-id'
-        self.helper.form_method = 'post'
-        self.helper.form_action = action
+        # self.helper = FormHelper(self)
+        # self.helper.form_id = 'client-form-id'
+        # self.helper.form_method = 'post'
+        # self.helper.form_action = action
 
     # override save form
     def save(self, user, corporate, commit=True):
