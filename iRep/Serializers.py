@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine
+from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
+    SalesForceSchedual
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -46,12 +47,12 @@ class ClientSerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField('get_country')
 
     def get_region(self, obj):
-        if hasattr(obj, 'city'):
-            return obj.city.region
+        if hasattr(obj, 'state'):
+            return obj.state
 
     def get_country(self, obj):
-        if hasattr(obj, 'city'):
-            return obj.city.country
+        if hasattr(obj, 'country'):
+            return obj.country
 
     class Meta:
         model = Client
@@ -69,6 +70,16 @@ class OrderLinesSerializer(serializers.ModelSerializer):
 
 class OrderSerializers(serializers.ModelSerializer):
     order_lines = OrderLinesSerializer(many=True)
+
     class Meta:
         model = Orders
-        fields = ['id', 'sales_force', 'order_date', 'total', 'notes','order_lines']
+        fields = ['id', 'sales_force', 'order_date', 'total', 'notes', 'order_lines']
+
+
+class SchedualSerializers(serializers.ModelSerializer):
+    sales_force = SalesForceSerializer(many=True)
+    branch = ClientSerializer(many=True)
+
+    class Meta:
+        model = SalesForceSchedual
+        fields = ['id', 'sales_force', 'branch', 'schedual_date', 'schedual_time', 'notes']

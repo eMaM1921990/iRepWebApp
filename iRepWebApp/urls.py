@@ -54,5 +54,11 @@ urlpatterns += [
     url(r'^api/v1/login/$', api.SalesForceLogin, name='apiLogin'),
     url(r'^api/v1/catalog/(?P<corp_id>.+)/$', api.ProductCategory, name='apiProductCatalaog'),
     url(r'^api/v1/clients/(?P<corp_id>.+)/$', api.Clients, name='apiClients'),
+    url(r'^api/v1/clients/add/$', api.AddClient, name='apiAddClients'),
     url(r'^api/v1/clients/orders/(?P<clientId>.+)/$', api.ClientsOrder, name='apiClientsOrder'),
+
+    url(r'^api/v1/schedual/sf/(?P<sales_force_id>.+)/$', api.ListSchedualerBySF, name='apiCorpSchedualBySF'),
+    url(r'^api/v1/schedual/cl/(?P<client_id>.+)/$', api.ListSchedualerByCL, name='apiCorpSchedualByCL'),
+    url(r'^api/v1/schedual/add/$', api.ListSchedualerByCL, name='apiCorpSchedualAdd'),
+
 ]
