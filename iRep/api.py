@@ -86,12 +86,13 @@ def Clients(request, corpId):
         return Response(resp)
     try:
         resp['data'] = []
-        ClientQS = Client.objects.filter(is_active=True, corporate__id=corpId)
+        ClientQS = Client.objects.filter(is_active=True, corporate__slug=corpId)
         for row in ClientQS:
             resp['data'].append(ClientSerializer(row).data)
         resp['code'] = 200
 
     except Exception as e:
+        print str(e)
         resp['msg'] = _('Can`t retrieve clients')
 
     return Response(resp)
