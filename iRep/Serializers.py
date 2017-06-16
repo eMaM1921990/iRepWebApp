@@ -44,16 +44,6 @@ class ProductGroupSerializer(serializers.ModelSerializer):
 
 
 class ClientSerializer(serializers.ModelSerializer):
-    region = serializers.SerializerMethodField('get_region')
-    country = serializers.SerializerMethodField('get_country')
-
-    def get_region(self, obj):
-        if hasattr(obj, 'state'):
-            return obj.state
-
-    def get_country(self, obj):
-        if hasattr(obj, 'country'):
-            return obj.country
 
     class Meta:
         model = Client
