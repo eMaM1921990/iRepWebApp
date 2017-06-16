@@ -5,9 +5,9 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
-    OrderSerializers, SchedualSerializers
+    OrderSerializers, SchedualSerializers, SalesFunnelSerializer
 from iRep.managers.Clients import ClientManager
-from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual
+from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus
 from django.utils.translation import ugettext_lazy as _
 import logging
 
@@ -253,5 +253,22 @@ def ListSchedualerByCL(request, client_id):
         resp['code'] = 200
     except Exception as e:
         resp['msg'] = _('Can`t retrieve clients')
+
+    return Response(resp)
+
+
+@api_view(['GET'])
+@gzip_page
+def GetSalesFunnel(request):
+    resp = {}
+    resp['code'] = 505
+    try:
+        resp['data'] = []
+        sqs = SalesFunnelStatus.objects.all()
+        for row in sqs:
+            resp['data'].append(SalesFunnelSerializer(row).data)
+        resp['code'] = 200
+    except Exception as e:
+        logger.debug('Error during retrieve sales funnel')
 
     return Response(resp)

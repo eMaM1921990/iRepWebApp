@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
-    SalesForceSchedual
+    SalesForceSchedual, SalesFunnelStatus
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -75,3 +75,10 @@ class SchedualSerializers(serializers.ModelSerializer):
     class Meta:
         model = SalesForceSchedual
         fields = ['id', 'sales_force', 'branch', 'schedual_date', 'schedual_time', 'notes']
+
+
+class SalesFunnelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SalesFunnelStatus
+        fields = ['id','status_name']
