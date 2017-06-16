@@ -9,6 +9,9 @@ from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGro
 from iRep.managers.Clients import ClientManager
 from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual
 from django.utils.translation import ugettext_lazy as _
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @gzip_page
@@ -17,20 +20,17 @@ from django.utils.translation import ugettext_lazy as _
 @parser_classes((JSONParser,))
 def SalesForceLogin(request):
     resp = {}
-    resp['code'] = None
+    resp['code'] = 505
     # validations
     if 'user_pin' not in request.data:
-        resp['code'] = None
         resp['msg'] = _('Missing user pin.')
         return Response(resp)
 
     if 'password' not in request.data:
-        resp['code'] = None
         resp['msg'] = _('Missing password')
         return Response(resp)
 
     if 'corp_id' not in request.data:
-        resp['code'] = None
         resp['msg'] = _('Missing corpId')
         return Response(resp)
 
@@ -39,12 +39,13 @@ def SalesForceLogin(request):
                                          password_pin=request.data['password'],
                                          corp_id__slug=request.data['corp_id'])
 
+        resp['code'] = 200
         resp['data'] = SalesForceSerializer(profile, context={'request': request}).data
         return Response(resp)
 
     except Exception as e:
         print str(e)
-        resp['code'] = None
+        logger.debug('Error during login for ' + str(request.data) + ' cause: ' + str(e))
         resp['msg'] = _('Invalid login credentials info ')
         return Response(resp)
 
@@ -53,23 +54,22 @@ def SalesForceLogin(request):
 @api_view(['GET'])
 def ProductCategory(request, corp_id):
     resp = {}
-    resp['code'] = None
+    resp['code'] = 505
     # Validation
     if not corp_id:
-        resp['code'] = None
         resp['msg'] = _('Missing corpID')
         return Response(resp)
 
     try:
         resp['data'] = []
-        resp['code'] = None
+
         productCatQS = ProductGroup.objects.filter(is_active=True, corporate__id=corp_id)
         for row in productCatQS:
             resp['data'].append(ProductGroupSerializer(row).data)
+        resp['code'] = 200
 
     except Exception as e:
         print str(e)
-        resp['code'] = None
         resp['msg'] = _('Can`t retrieve product catalog')
 
     return Response(resp)
@@ -79,21 +79,19 @@ def ProductCategory(request, corp_id):
 @api_view(['GET'])
 def Clients(request, corpId):
     resp = {}
-    resp['code'] = None
+    resp['code'] = 505
     # Validation
     if not corpId:
-        resp['code'] = None
         resp['msg'] = _('Missing corpID')
         return Response(resp)
     try:
         resp['data'] = []
-        resp['code'] = None
         ClientQS = Client.objects.filter(is_active=True, corporate__id=corpId)
         for row in ClientQS:
             resp['data'].append(ClientSerializer(row).data)
+        resp['code'] = 200
 
     except Exception as e:
-        resp['code'] = None
         resp['msg'] = _('Can`t retrieve clients')
 
     return Response(resp)
@@ -103,21 +101,19 @@ def Clients(request, corpId):
 @api_view(['GET'])
 def ClientsOrder(request, clientId):
     resp = {}
-    resp['code'] = None
+    resp['code'] = 505
     # Validation
     if not clientId:
-        resp['code'] = None
         resp['msg'] = _('Missing Client ID')
         return Response(resp)
     try:
-        resp['code'] = None
+
         resp['data'] = []
         ordersQS = Orders.objects.filter(branch__id=clientId)
         for raw in ordersQS:
             resp['data'].append(OrderSerializers(raw).data)
-
+        resp['code'] = 200
     except Exception as e:
-        resp['code'] = None
         resp['msg'] = _('Can`t retrieve client orders')
 
     return Response(resp)
