@@ -52,7 +52,7 @@ def SalesForceLogin(request):
 
 @gzip_page
 @api_view(['GET'])
-def ProductCategory(request, corp_id):
+def ProductCategory(request, slug):
     resp = {}
     resp['code'] = 505
     # Validation
@@ -63,7 +63,7 @@ def ProductCategory(request, corp_id):
     try:
         resp['data'] = []
 
-        productCatQS = ProductGroup.objects.filter(is_active=True, corporate__id=corp_id)
+        productCatQS = ProductGroup.objects.filter(is_active=True, corporate__slug=slug)
         for row in productCatQS:
             resp['data'].append(ProductGroupSerializer(row).data)
         resp['code'] = 200
@@ -77,7 +77,7 @@ def ProductCategory(request, corp_id):
 
 @gzip_page
 @api_view(['GET'])
-def Clients(request, corpId):
+def Clients(request, slug):
     resp = {}
     resp['code'] = 505
     # Validation
@@ -86,7 +86,7 @@ def Clients(request, corpId):
         return Response(resp)
     try:
         resp['data'] = []
-        ClientQS = Client.objects.filter(is_active=True, corporate__slug=corpId)
+        ClientQS = Client.objects.filter(is_active=True, corporate__slug=slug)
         for row in ClientQS:
             resp['data'].append(ClientSerializer(row).data)
         resp['code'] = 200

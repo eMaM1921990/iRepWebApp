@@ -52,8 +52,8 @@ urlpatterns += [
 urlpatterns += [
     # API
     url(r'^api/v1/login/$', api.SalesForceLogin, name='apiLogin'),
-    url(r'^api/v1/catalog/(?P<corp_id>.+)/$', api.ProductCategory, name='apiProductCatalaog'),
-    url(r'^api/v1/clients/(?P<corp_id>.+)/$', api.Clients, name='apiClients'),
+    url(r'^api/v1/catalog/(?P<slug>.+)/$', api.ProductCategory, name='apiProductCatalaog'),
+    url(r'^api/v1/clients/(?P<slug>.+)/$', api.Clients, name='apiClients'),
     url(r'^api/v1/clients/add/$', api.AddClient, name='apiAddClients'),
     url(r'^api/v1/clients/orders/(?P<clientId>.+)/$', api.ClientsOrder, name='apiClientsOrder'),
 
