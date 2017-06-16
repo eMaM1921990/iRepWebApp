@@ -45,9 +45,10 @@ class ProductGroupSerializer(serializers.ModelSerializer):
 
 class ClientSerializer(serializers.ModelSerializer):
 
+
     class Meta:
         model = Client
-        fields = ['id', 'name', 'address_txt', 'country', 'region', 'city', 'zipcode', 'contact_name',
+        fields = ['id', 'name', 'address_txt', 'country', 'state', 'city', 'zipcode', 'contact_name',
                   'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch']
 
 
