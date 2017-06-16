@@ -56,7 +56,7 @@ def ProductCategory(request, slug):
     resp = {}
     resp['code'] = 505
     # Validation
-    if not corp_id:
+    if not slug:
         resp['msg'] = _('Missing corpID')
         return Response(resp)
 
@@ -81,7 +81,7 @@ def Clients(request, slug):
     resp = {}
     resp['code'] = 505
     # Validation
-    if not corpId:
+    if not slug:
         resp['msg'] = _('Missing corpID')
         return Response(resp)
     try:
