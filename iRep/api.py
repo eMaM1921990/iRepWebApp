@@ -37,7 +37,7 @@ def SalesForceLogin(request):
     try:
         profile = SalesForce.objects.get(user_pin=request.data['user_pin'],
                                          password_pin=request.data['password'],
-                                         corp_id=request.data['corp_id'])
+                                         corp_id__slug=request.data['corp_id'])
 
         resp['data'] = SalesForceSerializer(profile, context={'request': request}).data
         return Response(resp)
