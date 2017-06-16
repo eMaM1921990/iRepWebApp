@@ -20,7 +20,8 @@ class SalesForceSerializer(serializers.ModelSerializer):
 
     def get_avatar_url(self, obj):
         if hasattr(obj, 'avatar'):
-            return self.context['request'].build_absolute_uri(obj.avatar.url)
+            if obj.avatar:
+                return self.context['request'].build_absolute_uri(obj.avatar.url)
         return ''
 
     class Meta:
