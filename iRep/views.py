@@ -74,7 +74,7 @@ def EditSalesForce(request, slug):
             data.append(ClientSerializer(row).data)
         data = json.dumps(data, ensure_ascii=False)
     return render(request, template_name=template,
-                  context={'form': form, 'new': False, 'reportForm': reportForm, 'clients': data})
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'clients': data, 'sales_force_id':sales_force_instance.pk})
 
 
 @login_required

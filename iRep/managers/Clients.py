@@ -40,6 +40,7 @@ class ClientManager():
             return record
 
         except Exception as e:
+            print 'Error during add new client from mobile cause ' + str(e)
             logger.debug('Error during add new client from mobile cause ' + str(e))
 
     def get_client_by_sales_force(self, slug):

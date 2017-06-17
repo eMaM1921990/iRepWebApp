@@ -15,6 +15,7 @@ function addSchedular() {
         data: vFD,
         success: function (responseText) {
             if (JSON.parse(responseText).valid) {
+                $('#myModal').modal('hide');
                 $('#schedualer-form').trigger('reset');
                 addToCalendeer('new_visit',vFD.get('dates'));
             } else {

@@ -7,7 +7,7 @@
                         aria-hidden="true">×</span></button>
                 <h4 class="modal-title" id="myModalLabel">
 
-                    <i class="glyphicon glyphicon-calendar"></i> Schedule new visit for <span class="label label-info"
+                    <i class="glyphicon glyphicon-calendar"></i> {% trans 'Schedule new visit for' %} <span class="label label-info"
                                                                                               id="dataTxt">05/17/2017</span>
 
                 </h4>
@@ -22,8 +22,7 @@
 
                             <div class="form-group">
                                 <label>{% trans 'Date' %}</label>
-                                <input type="date" class="form-control" placeholder="" disabled="" id="date"
-                                       name="dates">
+                                <input type="date" class="form-control" placeholder="" readonly id="date" name="dates">
                             </div>
                         </div>
 
@@ -50,7 +49,7 @@
                                 <label>{% trans 'Sales force' %}</label>
                                 <input type="text" class="form-control" placeholder="{% trans 'SalesRep name' %}"
                                        id="salesRepName" name="salesRepName">
-                                <input type="hidden" name="sales_force_id" id="{{ form.pk.value }}">
+                                <input type="hidden" name="sales_force_id" value="{{ sales_force_id }}">
                             </div>
 
                         </div>
