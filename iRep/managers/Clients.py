@@ -41,3 +41,11 @@ class ClientManager():
 
         except Exception as e:
             logger.debug('Error during add new client from mobile cause ' + str(e))
+
+    def get_client_by_sales_force(self, slug):
+        try:
+            return Client.objects.filter(sales_force__slug=slug)
+
+        except Exception as e:
+            logger.debug('Error during retrieve saleforce ' + str(slug) + ' clients cause ' + str(e))
+            return None

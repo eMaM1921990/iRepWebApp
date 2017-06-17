@@ -44,12 +44,16 @@ class ProductGroupSerializer(serializers.ModelSerializer):
 
 
 class ClientSerializer(serializers.ModelSerializer):
+    text = serializers.SerializerMethodField('get_text_val')
 
+    def get_text_val(self, obj):
+        if hasattr(obj, 'name'):
+            return obj.name
 
     class Meta:
         model = Client
         fields = ['id', 'name', 'address_txt', 'country', 'state', 'city', 'zipcode', 'contact_name',
-                  'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch']
+                  'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch', 'text']
 
 
 class OrderLinesSerializer(serializers.ModelSerializer):
@@ -78,7 +82,6 @@ class SchedualSerializers(serializers.ModelSerializer):
 
 
 class SalesFunnelSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = SalesFunnelStatus
-        fields = ['id','status_name']
+        fields = ['id', 'status_name']

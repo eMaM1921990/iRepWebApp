@@ -222,7 +222,7 @@ class ProductCategoryForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-    tags = forms.ModelChoiceField(queryset=None)
+    # tags = forms.ModelChoiceField(queryset=None)
 
     def __init__(self, *args, **kwargs):
         # POP from kwargs
@@ -239,7 +239,7 @@ class ProductForm(forms.ModelForm):
         self.fields['product'].label = _('Product Group')
         self.fields['unit'].label = _('Units')
         self.fields['is_active'].label = _('Is active')
-        self.fields['tags'].label = _('Tags')
+        # self.fields['tags'].label = _('Tags')
 
         # control Required
         self.fields['default_price'].required = True
@@ -249,8 +249,8 @@ class ProductForm(forms.ModelForm):
         # init
         self.fields['default_price'].initial = '0.00'
         self.fields['note'].widget.attrs['rows'] = 3
-        if tags:
-            self.fields['tags'].queryset = tags
+        # if tags:
+        #     self.fields['tags'].queryset = tags
         # It builds a default layout with all its fields
         self.helper = FormHelper(self)
         self.helper.form_id = 'product-form-id'
@@ -302,10 +302,7 @@ class ProductForm(forms.ModelForm):
                         Field('note', placeholder=_('Notes')),
                         css_class='col-md-6'
                     ),
-                    Div(
-                        Field('tags', placeholder=_('Tags')),
-                        css_class='col-md-6'
-                    ),
+
                     css_class='col-md-12'
                 ),
                 css_class='row'

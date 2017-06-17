@@ -15,14 +15,15 @@
             </div>
             <div class="modal-body">
 
-                <form>
-
+                <form id="schedualer-form">
+                    {% csrf_token %}
                     <div class="row">
                         <div class="col-md-4">
 
                             <div class="form-group">
-                                <label>Date</label>
-                                <input type="date" class="form-control" placeholder="" disabled="" id="date">
+                                <label>{% trans 'Date' %}</label>
+                                <input type="date" class="form-control" placeholder="" disabled="" id="date"
+                                       name="dates">
                             </div>
                         </div>
 
@@ -30,11 +31,11 @@
                         <div class="col-md-4">
 
                             <div class="form-group">
-                                <label>Time (optional)</label>
+                                <label>{% trans 'Time (optional)' %}</label>
 
 
                                 <div class="input-group date" id="datetimepicker3">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="times">
                                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-time"></span>
                     </span>
@@ -46,9 +47,10 @@
                         <div class="col-md-4">
 
                             <div class="form-group">
-                                <label>Representative</label>
+                                <label>{% trans 'Sales force' %}</label>
                                 <input type="text" class="form-control" placeholder="{% trans 'SalesRep name' %}"
-                                       id="salesRepName">
+                                       id="salesRepName" name="salesRepName">
+                                <input type="hidden" name="sales_force_id" id="{{ form.pk.value }}">
                             </div>
 
                         </div>
@@ -58,8 +60,8 @@
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Place</label>
-                                <input type="date" class="form-control" placeholder="{% trans 'Enter place' %}">
+                                <label>{% trans 'Place' %}</label>
+                                <select id="client" class="form-control js-example-basic-multiple" name="client_id"></select>
                             </div>
                         </div>
 
@@ -71,7 +73,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>{% trans 'Visit note (optional)' %}</label>
-                                <input type="text" class="form-control" placeholder="{% trans 'Notes' %}">
+                                <input type="text" class="form-control" placeholder="{% trans 'Notes' %}" name="notes">
                             </div>
                         </div>
 
@@ -120,8 +122,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Close' %}</button>
+                <button type="button" class="btn btn-primary" onclick="addSchedular()">{% trans 'Save changes' %}</button>
             </div>
         </div>
     </div>

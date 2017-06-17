@@ -8,7 +8,7 @@
 {% block content %}
     <div class="body bs-example">
         <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i>
-            {% if not new %}{{ form.name.value }}{% else %}{% trans 'New representative' %}{% endif %}</h1>
+            {% if not new %}{{ form.name.value }}{% else %}{% trans 'New representative' %}{% endif %} {{ form.id.value }}</h1>
         <div>
             <ul class="nav nav-tabs sales-tabs" role="tablist">
                 <li role="presentation" class="active">
@@ -63,6 +63,8 @@
     <script src="{% static 'app_js/highcharts.js' %}"></script>
     {#    <script src="{% static 'app_js/exporting.js' %}"></script>#}
     <script src="{% static 'full_calendar/fullcalendar.min.js' %}"></script>
+    <script src="{% static 'app_js/scheduler.js' %}"></script>
+    <script src="{% static 'app_js/common.js' %}"></script>
 {% endblock %}
 {% block extra_javascript %}
     <script>
@@ -118,7 +120,12 @@
         });
 
         $(document).ready(function () {
+        var data = {{ clients|safe }};
 
+            $('#client').select2({
+               placeholder:'--------',
+                data: data
+            });
             // page is now ready, initialize the calendar...
 
             $('#calendar').fullCalendar({

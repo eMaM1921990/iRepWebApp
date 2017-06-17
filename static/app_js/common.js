@@ -18,3 +18,16 @@ function changeAppLanguage(langCode){
         }
     });
 }
+
+
+function success_behavior(responseText){
+    $('#success #msg').html(JSON.parse(responseText).msg);
+    $('#success').removeAttr('style');
+    $("#success").fadeOut(3000);
+}
+
+function error_behavior(responseText){
+    $('#error #msg').html(JSON.parse(responseText).msg);
+    $('#error').removeAttr('style');
+    $("#error").fadeOut(3000);
+}

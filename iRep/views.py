@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,13 +10,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from django.urls import reverse
 
+from iRep.Serializers import ClientSerializer
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Products import ProductManager
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
 from iRep.managers.SalesForce import SalesForceManager
+from iRep.managers.Schedular import SchedulerManager
 from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders
+from django.utils.translation import ugettext_lazy as _
 
 
 @login_required
@@ -60,7 +65,16 @@ def EditSalesForce(request, slug):
     if form.is_valid():
         form.save(user=request.user)
         return redirect(reverse('index'))
-    return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm})
+    # Retreve clients
+    sqs = ClientManager().get_client_by_sales_force(slug)
+    # serialize data
+    if sqs:
+        data = []
+        for row in sqs:
+            data.append(ClientSerializer(row).data)
+        data = json.dumps(data, ensure_ascii=False)
+    return render(request, template_name=template,
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'clients': data})
 
 
 @login_required
@@ -132,6 +146,7 @@ def EditClient(request, slug):
         corporate = corporate.corporate
         m = form.save(user=request.user, corporate=corporate, main_branch=None)
         return redirect(reverse('viewClient', kwargs={'slug': slug}))
+
     return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm})
 
 
@@ -184,3 +199,22 @@ def ExportOrders(request):
         response = HttpResponse(dataset.csv, content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="schedual.csv"'
         return response
+
+
+@login_required
+def AddScheduler(request):
+    if request.POST:
+        valid = False
+        message = _('Error during save scheduler')
+        schedual_instance = SchedulerManager()
+        result = schedual_instance.add_scheduler(request.POST['client_id'], request.POST['sales_force_id'], request.POST['dates'],
+                                        request.POST['times'], request.POST['notes'])
+        if result:
+            valid = True
+            message =_('Schedual add successfully')
+
+        ret = {
+            "valid":valid,
+            "msg":message
+        }
+        return HttpResponse(json.dumps(ret, ensure_ascii=False))
