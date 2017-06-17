@@ -2,7 +2,7 @@ import logging
 
 from django.utils.text import slugify
 
-from iRep.models import Client
+from iRep.models import Client, Corporate
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class ClientManager():
             record.email = email
             record.phone = phone
             record.notes = notes
-            record.corporate_id = corporate
+            record.corporate = Corporate.objects.get(slug=corporate)
             record.status_id = status
             record.city = city
             record.state = state
