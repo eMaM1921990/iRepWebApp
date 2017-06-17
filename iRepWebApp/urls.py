@@ -57,8 +57,8 @@ urlpatterns += [
     url(r'^api/v1/salesfunnel/$', api.GetSalesFunnel, name='apiGetSalesFunnel'),
     url(r'^api/v1/catalog/(?P<slug>.+)/$', api.ProductCategory, name='apiProductCatalaog'),
     url(r'^api/v1/clients/(?P<slug>.+)/$', api.Clients, name='apiClients'),
-    url(r'^api/v1/clients/add/$', api.AddClient, name='apiAddClients'),
-    url(r'^api/v1/clients/orders/(?P<clientId>.+)/$', api.ClientsOrder, name='apiClientsOrder'),
+    url(r'^api/v1/client/add/$', api.AddClient, name='apiAddClients'),
+    url(r'^api/v1/client/orders/(?P<clientId>.+)/$', api.ClientsOrder, name='apiClientsOrder'),
 
     url(r'^api/v1/schedual/sf/(?P<sales_force_id>.+)/$', api.ListSchedualerBySF, name='apiCorpSchedualBySF'),
     url(r'^api/v1/schedual/cl/(?P<client_id>.+)/$', api.ListSchedualerByCL, name='apiCorpSchedualByCL'),
