@@ -73,8 +73,11 @@ def EditSalesForce(request, slug):
         for row in sqs:
             data.append(ClientSerializer(row).data)
         data = json.dumps(data, ensure_ascii=False)
+
+    # retrieve schedual
+    schedular = SchedulerManager().get_schedul_by_sales_force(sales_force=slug)
     return render(request, template_name=template,
-                  context={'form': form, 'new': False, 'reportForm': reportForm, 'clients': data, 'sales_force_id':sales_force_instance.pk})
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'clients': data, 'sales_force_id':sales_force_instance.pk,'schedular':schedular})
 
 
 @login_required

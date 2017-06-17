@@ -147,6 +147,17 @@
                     }
 
                 },
+                events:
+                       [{% for row in schedular %}
+                               {
+                                "start": '{{ row.schedual_date |date:"o-m-d"}}',
+                                "end": '{{ row.schedual_date |date:"o-m-d"}}',
+                                "title": '{{ row.branch.name }}',
+                                   'backgroundColor':'#378006'
+                              }
+                        {% endfor %}]
+
+
 
             });
 

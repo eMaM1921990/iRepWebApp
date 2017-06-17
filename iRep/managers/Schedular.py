@@ -22,3 +22,7 @@ class SchedulerManager():
         except Exception as e:
             logging.debug('Error during save schedual cause :'+str(e))
             return None
+
+
+    def get_schedul_by_sales_force(self, sales_force):
+        return SalesForceSchedual.objects.filter(sales_force__slug=sales_force)
