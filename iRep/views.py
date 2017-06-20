@@ -67,9 +67,9 @@ def EditSalesForce(request, slug):
         return redirect(reverse('index'))
     # Retreve clients
     sqs = ClientManager().get_client_by_sales_force(slug)
+    data = []
     # serialize data
     if sqs:
-        data = []
         for row in sqs:
             data.append(ClientSerializer(row).data)
         data = json.dumps(data, ensure_ascii=False)
