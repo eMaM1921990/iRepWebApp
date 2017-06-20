@@ -57,7 +57,7 @@
         </div>
 
     </div>
-    {% include 'schedual/schedual_visit_modal.html' %}
+    {% include 'schedual/schedual_visit_modal_clients.html' %}
 {% endblock %}
 {% block extra_js_src %}
     <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
@@ -141,6 +141,15 @@
                     }
 
                 },
+                events:
+                       [{% for row in schedular %}
+                               {
+                                "start": '{{ row.schedual_date |date:"o-m-d"}}',
+                                "end": '{{ row.schedual_date |date:"o-m-d"}}',
+                                "title": '{{ row.branch.name }}',
+                                   'backgroundColor':'#378006'
+                              }
+                        {% endfor %}]
 
             });
 

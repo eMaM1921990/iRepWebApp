@@ -26,3 +26,7 @@ class SchedulerManager():
 
     def get_schedul_by_sales_force(self, sales_force):
         return SalesForceSchedual.objects.filter(sales_force__slug=sales_force)
+
+
+    def get_scheduler_by_client(self, client_slug):
+        return SalesForceSchedual.objects.filter(branch__slug=client_slug)

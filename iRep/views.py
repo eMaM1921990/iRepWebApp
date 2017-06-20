@@ -150,7 +150,10 @@ def EditClient(request, slug):
         m = form.save(user=request.user, corporate=corporate, main_branch=None)
         return redirect(reverse('viewClient', kwargs={'slug': slug}))
 
-    return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm})
+    # retrieve schedual
+    schedular = SchedulerManager().get_scheduler_by_client(client_slug=slug)
+
+    return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm,'schedular':schedular})
 
 
 # Export
