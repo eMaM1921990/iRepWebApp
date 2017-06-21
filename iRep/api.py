@@ -5,8 +5,9 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
-    OrderSerializers, SchedualSerializers, SalesFunnelSerializer
+    OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers
 from iRep.managers.Clients import ClientManager
+from iRep.managers.SalesForce import SalesForceManager
 from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus
 from django.utils.translation import ugettext_lazy as _
 import logging
@@ -270,5 +271,51 @@ def GetSalesFunnel(request):
         resp['code'] = 200
     except Exception as e:
         logger.debug('Error during retrieve sales funnel')
+
+    return Response(resp)
+
+
+@gzip_page
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+def SalesForceTimeLine(request):
+    resp = {}
+    resp ['code'] = 500
+    if 'sales_force' not in request.data:
+        resp['msg'] = _('Sales force missed')
+        return Response(resp)
+
+    if 'time_line_date' not in request.data:
+        resp['msg'] = _('TimeLine date missed')
+        return Response(resp)
+
+    if 'start_time' not in request.data:
+        resp['msg'] = _('TimeLine start time missed')
+        return Response(resp)
+
+    if 'end_time' not in request.data:
+        resp['msg'] = _('TimeLine end time missed')
+        return Response(resp)
+
+    if 'km' not in request.data:
+        resp['msg'] = _('Km missed')
+        return Response(resp)
+
+    if 'hours' not in request.data:
+        resp['msg'] = _('Total hours missed')
+        return Response(resp)
+
+    try:
+        record = SalesForceManager().AddSalesForceTimeLine(sales_force=request.data['sales_force'],
+                                                           timeLineDate = request.data['time_line_date'],
+                                                           startTime = request.data['start_time'],
+                                                           endTime= request.data['end_time'],
+                                                           km= request.data['km'],
+                                                           hours=request.data['hours'])
+        resp['data'] = TimeLineSerializers(record).data
+
+    except Exception as e:
+        logger.debug('Error during add sales force timeline cause '+str(e))
+        resp['msg'] = _('Error during add sales force timeline , please contact system administrator')
 
     return Response(resp)

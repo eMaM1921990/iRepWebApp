@@ -71,7 +71,6 @@ class SalesFunnelStatus(models.Model):
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
-
     def __str__(self):
         return self.status_name
 
@@ -118,8 +117,8 @@ class SalesForce(models.Model):
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
-    def  __str__(self):
-        return self.name+"["+self.position.name+"]"
+    def __str__(self):
+        return self.name + "[" + self.position.name + "]"
 
     class Meta:
         managed = MANAGED
@@ -150,8 +149,7 @@ class Client(models.Model):
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_branch',
-                                    db_column='sales_force_id',null=True)
-
+                                    db_column='sales_force_id', null=True)
 
     class Meta:
         managed = MANAGED
@@ -172,9 +170,6 @@ class Tags(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'tags'
-
-
-
 
 
 class ClientTags(models.Model):
@@ -241,7 +236,7 @@ class Product(models.Model):
     note = models.TextField()
     product = models.ForeignKey(ProductGroup, models.CASCADE, related_name='group_products',
                                 db_column='product_group_id')
-    unit = models.ForeignKey(ProductUnit, models.CASCADE, related_name='product_unit', db_column='unit_id',null=True)
+    unit = models.ForeignKey(ProductUnit, models.CASCADE, related_name='product_unit', db_column='unit_id', null=True)
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_product', db_column='corp_id')
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
@@ -373,3 +368,34 @@ class OrderLine(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'order_line'
+
+
+class SalesForceTimeLine(models.Model):
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_time_line',
+                                    db_column='sales_force_id')
+    time_line_date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    km = models.DecimalField(decimal_places=3)
+    hours = models.DecimalField(decimal_places=3)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force_timeline'
+
+
+
+class SalesForceCheckInOut(models.Model):
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_check_in',
+                                    db_column='sales_force_id')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longtude = models.DecimalField(max_digits=9, decimal_places=6)
+    check_datetime = models.DateTimeField()
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id')
+    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out',db_column='visit_id')
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force_check_in_out'
+
+

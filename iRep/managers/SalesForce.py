@@ -1,4 +1,4 @@
-from iRep.models import SalesForce, UserProfile
+from iRep.models import SalesForce, UserProfile, SalesForceTimeLine
 
 
 class SalesForceManager():
@@ -20,7 +20,18 @@ class SalesForceManager():
         record.created_by = auth_user
         record.save()
 
-
-
     def ListByUserCorp(self, slug):
         return SalesForce.objects.filter(corp_id__slug=slug)
+
+    def AddSalesForceTimeLine(self, sales_force, timeLineDate, startTime, endTime, km, hours):
+        record = SalesForceTimeLine(
+            sales_force_id=sales_force,
+            time_line_date=timeLineDate,
+            start_time=startTime,
+            end_time=endTime,
+            km=km,
+            hours=hours
+        )
+
+        record.save()
+        return record
