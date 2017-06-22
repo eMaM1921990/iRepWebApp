@@ -1,4 +1,4 @@
-from iRep.models import SalesForce, UserProfile, SalesForceTimeLine
+from iRep.models import SalesForce, UserProfile, SalesForceTimeLine, SalesForceCheckInOut
 
 
 class SalesForceManager():
@@ -35,3 +35,21 @@ class SalesForceManager():
 
         record.save()
         return record
+
+
+    def CheckInOut(self,sales_force,latitude,longtude,check_date,check_time,branch,visit):
+        try:
+
+            record  = SalesForceCheckInOut(
+                sales_force_id=sales_force,
+                latitude=latitude,
+                longtude=longtude,
+                check_date=check_date,
+                check_time=check_time,
+                branch_id=branch,
+                visit=visit
+            )
+            record.save()
+            return record
+        except Exception as e:
+            return None

@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.views.decorators.cache import never_cache
 from django.views.decorators.gzip import gzip_page
 from rest_framework.decorators import api_view, parser_classes
@@ -5,10 +6,12 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
-    OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers
+    OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers
 from iRep.managers.Clients import ClientManager
 from iRep.managers.SalesForce import SalesForceManager
-from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus
+from iRep.managers.Schedular import SchedulerManager
+from iRep.managers.Visits import VisitsManager
+from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus, Visits
 from django.utils.translation import ugettext_lazy as _
 import logging
 
@@ -87,7 +90,7 @@ def Clients(request, slug):
         return Response(resp)
     try:
         resp['data'] = []
-        ClientQS = Client.objects.filter(is_active=True, corporate__slug=slug)
+        ClientQS = Client.objects.filter(is_active=True, sales_force__slug=slug)
         for row in ClientQS:
             resp['data'].append(ClientSerializer(row).data)
         resp['code'] = 200
@@ -280,12 +283,12 @@ def GetSalesFunnel(request):
 @parser_classes((JSONParser,))
 def SalesForceTimeLine(request):
     resp = {}
-    resp ['code'] = 500
+    resp['code'] = 500
     if 'sales_force' not in request.data:
         resp['msg'] = _('Sales force missed')
         return Response(resp)
 
-    if 'time_line_date' not in request.data:
+    if 'timeline_date' not in request.data:
         resp['msg'] = _('TimeLine date missed')
         return Response(resp)
 
@@ -307,15 +310,101 @@ def SalesForceTimeLine(request):
 
     try:
         record = SalesForceManager().AddSalesForceTimeLine(sales_force=request.data['sales_force'],
-                                                           timeLineDate = request.data['time_line_date'],
-                                                           startTime = request.data['start_time'],
-                                                           endTime= request.data['end_time'],
-                                                           km= request.data['km'],
+                                                           timeLineDate=request.data['timeline_date'],
+                                                           startTime=request.data['start_time'],
+                                                           endTime=request.data['end_time'],
+                                                           km=request.data['km'],
                                                            hours=request.data['hours'])
         resp['data'] = TimeLineSerializers(record).data
+        resp['code'] = 200
 
     except Exception as e:
-        logger.debug('Error during add sales force timeline cause '+str(e))
+        logger.debug('Error during add sales force timeline cause ' + str(e))
         resp['msg'] = _('Error during add sales force timeline , please contact system administrator')
+
+    return Response(resp)
+
+
+@gzip_page
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+def CheckIn(request):
+    resp = {}
+    resp['code'] = 500
+
+    if 'sales_force' not in request.data:
+        resp['msg'] = _('Sales force missed')
+        return Response(resp)
+
+    if 'latitude' not in request.data:
+        resp['msg'] = _('Latitude missed')
+        return Response(resp)
+
+    if 'longtude' not in request.data:
+        resp['msg'] = _('Longitude missed')
+        return Response(resp)
+
+    if 'check_date' not in request.data:
+        resp['msg'] = _('Check Date missed')
+        return Response(resp)
+
+    if 'check_time' not in request.data:
+        resp['msg'] = _('Check Time missed')
+        return Response(resp)
+
+    if 'client' not in request.data:
+        resp['msg'] = _('Client missed')
+        return Response(resp)
+
+    # check visit
+
+    object = SchedulerManager().get_schedular(request.data['sales_force'], request.data['client'],
+                                              request.data['check_date'])
+    if not object:
+        schedual_record = SchedulerManager().add_scheduler(client_id=request.data['client'],
+                                                           dates=request.data['check_date'],
+                                                           sales_force_id=request.data['sales_force'],
+                                                           times=request.data['check_time'],
+                                                           notes='not schedual visit')
+        if schedual_record:
+            visit_record = VisitsManager().add_visit(sales_force=request.data['sales_force'],
+                                                     branch=request.data['client'],
+                                                     visit_date=request.data['check_date'], notes=None,
+                                                     schedualed=False, schedual=schedual_record)
+            if visit_record:
+                checkInOutRecord = SalesForceManager().CheckInOut(sales_force=request.data['sales_force'],
+                                                                  longtude=request.data['longtude'],
+                                                                  latitude=request.data['latitude'],
+                                                                  check_date=request.data['check_date'],
+                                                                  check_time=request.data['check_time'],
+                                                                  branch=request.data['client'], visit=visit_record)
+                if checkInOutRecord:
+                    resp['code'] = 200
+                    resp['data'] = CheckInOutSerializers(checkInOutRecord).data
+            else:
+                resp['msg'] = _('Error during add non schedual visit , please check with system administrator')
+
+        else:
+            resp['msg'] = _('Error during add  schedual  , please check with system administrator')
+
+
+    else:
+        visit_record = VisitsManager().add_visit(sales_force=request.data['sales_force'],
+                                                 branch=request.data['client'],
+                                                 visit_date=request.data['check_date'], notes=None,
+                                                 schedualed=True, schedual=object[0].pk)
+        if visit_record:
+            checkInOutRecord = SalesForceManager().CheckInOut(sales_force=request.data['sales_force'],
+                                                              longtude=request.data['longtude'],
+                                                              latitude=request.data['latitude'],
+                                                              check_date=request.data['check_date'],
+                                                              check_time=request.data['check_time'],
+                                                              branch=request.data['client'], visit=visit_record)
+            if checkInOutRecord:
+                resp['code'] = 200
+                resp['data'] = CheckInOutSerializers(checkInOutRecord).data
+
+        else:
+            resp['msg'] = _('Error during add non schedual visit , please check with system administrator')
 
     return Response(resp)

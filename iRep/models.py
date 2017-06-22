@@ -331,8 +331,8 @@ class Visits(models.Model):
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_visits',
                                     db_column='sales_force_id')
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_visits', db_column='branch_id')
-    visit_date = models.DateTimeField(null=False)
-    notes = models.TextField()
+    visit_date = models.DateField(null=True)
+    notes = models.TextField(null=True)
     schedualed = models.BooleanField(default=True)
     schedual = models.ForeignKey(SalesForceSchedual, models.CASCADE, related_name='visit_schedual',
                                  db_column='schedual_id', null=True)
@@ -376,8 +376,8 @@ class SalesForceTimeLine(models.Model):
     time_line_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    km = models.DecimalField(decimal_places=3)
-    hours = models.DecimalField(decimal_places=3)
+    km = models.DecimalField(max_digits=9,decimal_places=3)
+    hours = models.DecimalField(max_digits=9,decimal_places=3)
 
     class Meta:
         managed = MANAGED
@@ -389,8 +389,9 @@ class SalesForceCheckInOut(models.Model):
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_check_in',
                                     db_column='sales_force_id')
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    longtude = models.DecimalField(max_digits=9, decimal_places=6)
-    check_datetime = models.DateTimeField()
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    check_in_date = models.DateField()
+    check_in_time =  models.TimeField()
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id')
     visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out',db_column='visit_id')
 

@@ -1,0 +1,3 @@
+[22/Jun/2017 17:24:43] DEBUG [iRep.api:52] Error during login for {u'user_pin': 1, u'password': 1, u'corp_id': 1} cause: SalesForce matching query does not exist.
+[22/Jun/2017 17:27:57] DEBUG [iRep.api:322] Error during add sales force timeline cause quantize result has too many digits for current context
+[22/Jun/2017 17:33:53] DEBUG [iRep.api:322] Error during add sales force timeline cause quantize result has too many digits for current context

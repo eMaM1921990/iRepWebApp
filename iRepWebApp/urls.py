@@ -63,5 +63,7 @@ urlpatterns += [
     url(r'^api/v1/schedual/sf/(?P<sales_force_id>.+)/$', api.ListSchedualerBySF, name='apiCorpSchedualBySF'),
     url(r'^api/v1/schedual/cl/(?P<client_id>.+)/$', api.ListSchedualerByCL, name='apiCorpSchedualByCL'),
     url(r'^api/v1/schedual/add/$', api.ListSchedualerByCL, name='apiCorpSchedualAdd'),
+    url(r'^api/v1/working/add/$', api.SalesForceTimeLine, name='apiSalesForceTimeLineAdd'),
+    url(r'^api/v1/check/in/$', api.CheckIn, name='apiCheckIn'),
 
 ]
