@@ -320,7 +320,7 @@ def SalesForceTimeLineEnd(request):
     resp = {}
     resp['code'] = 500
     if 'timeline_id' not in request.data:
-        resp['msg'] = _('Sales force missed')
+        resp['msg'] = _('TimelineId missed')
         return Response(resp)
 
     if 'end_time' not in request.data:
