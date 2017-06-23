@@ -375,7 +375,7 @@ class SalesForceTimeLine(models.Model):
                                     db_column='sales_force_id')
     time_line_date = models.DateField()
     start_time = models.TimeField()
-    end_time = models.TimeField()
+    end_time = models.TimeField(null=True)
     km = models.DecimalField(max_digits=9,decimal_places=3)
     hours = models.DecimalField(max_digits=9,decimal_places=3)
 

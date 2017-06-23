@@ -281,7 +281,7 @@ def GetSalesFunnel(request):
 @gzip_page
 @api_view(['POST'])
 @parser_classes((JSONParser,))
-def SalesForceTimeLine(request):
+def SalesForceTimeLineStart(request):
     resp = {}
     resp['code'] = 500
     if 'sales_force' not in request.data:
@@ -294,6 +294,33 @@ def SalesForceTimeLine(request):
 
     if 'start_time' not in request.data:
         resp['msg'] = _('TimeLine start time missed')
+        return Response(resp)
+
+    try:
+        record = SalesForceManager().AddSalesForceTimeLine(sales_force=request.data['sales_force'],
+                                                           timeLineDate=request.data['timeline_date'],
+                                                           startTime=request.data['start_time'],
+                                                           endTime=None,
+                                                           km=0,
+                                                           hours=0)
+        resp['data'] = TimeLineSerializers(record).data
+        resp['code'] = 200
+
+    except Exception as e:
+        logger.debug('Error during add sales force timeline cause ' + str(e))
+        resp['msg'] = _('Error during add sales force timeline , please contact system administrator')
+
+    return Response(resp)
+
+
+@gzip_page
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+def SalesForceTimeLineEnd(request):
+    resp = {}
+    resp['code'] = 500
+    if 'timeline_id' not in request.data:
+        resp['msg'] = _('Sales force missed')
         return Response(resp)
 
     if 'end_time' not in request.data:
@@ -309,18 +336,16 @@ def SalesForceTimeLine(request):
         return Response(resp)
 
     try:
-        record = SalesForceManager().AddSalesForceTimeLine(sales_force=request.data['sales_force'],
-                                                           timeLineDate=request.data['timeline_date'],
-                                                           startTime=request.data['start_time'],
-                                                           endTime=request.data['end_time'],
-                                                           km=request.data['km'],
-                                                           hours=request.data['hours'])
+        record = SalesForceManager().update_sales_force_timeline(id=request.data['timeline_id'],
+                                                                 endTime=request.data['end_time'],
+                                                                 km=request.data['km'],
+                                                                 hours=request.data['hours'])
         resp['data'] = TimeLineSerializers(record).data
         resp['code'] = 200
 
     except Exception as e:
         logger.debug('Error during add sales force timeline cause ' + str(e))
-        resp['msg'] = _('Error during add sales force timeline , please contact system administrator')
+        resp['msg'] = _('Error during end sales force timeline , please contact system administrator')
 
     return Response(resp)
 
