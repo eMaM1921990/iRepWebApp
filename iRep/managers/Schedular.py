@@ -20,6 +20,7 @@ class SchedulerManager():
             return record
 
         except Exception as e:
+            print str(e)
             logging.debug('Error during save schedual cause :'+str(e))
             return None
 

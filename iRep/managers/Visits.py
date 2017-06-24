@@ -10,8 +10,8 @@ class VisitsManager():
             record = Visits()
             record.branch_id=branch
             record.sales_force_id =sales_force
-            record.visit_date  = datetime.strptime(visit_date, '%b %d %Y'),
-            record.notes= notes,
+            record.visit_date  = datetime.strptime(visit_date, '%Y-%m-%d')
+            record.notes= notes
             record.schedualed = schedualed
             record.schedual_id = schedual
             record.save()

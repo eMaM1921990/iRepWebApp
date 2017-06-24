@@ -51,19 +51,20 @@ class SalesForceManager():
             return None
 
 
-    def CheckInOut(self,sales_force,latitude,longtude,check_date,check_time,branch,visit):
+    def CheckIn(self, sales_force, latitude, longtude, check_date, check_time, branch, visit):
         try:
 
             record  = SalesForceCheckInOut(
                 sales_force_id=sales_force,
                 latitude=latitude,
-                longtude=longtude,
-                check_date=check_date,
-                check_time=check_time,
+                longitude=longtude,
+                check_in_date=check_date,
+                check_in_time=check_time,
                 branch_id=branch,
                 visit=visit
             )
             record.save()
             return record
         except Exception as e:
+            print str(e)
             return None

@@ -395,14 +395,14 @@ def CheckIn(request):
             visit_record = VisitsManager().add_visit(sales_force=request.data['sales_force'],
                                                      branch=request.data['client'],
                                                      visit_date=request.data['check_date'], notes=None,
-                                                     schedualed=False, schedual=schedual_record)
+                                                     schedualed=False, schedual=schedual_record.pk)
             if visit_record:
-                checkInOutRecord = SalesForceManager().CheckInOut(sales_force=request.data['sales_force'],
-                                                                  longtude=request.data['longtude'],
-                                                                  latitude=request.data['latitude'],
-                                                                  check_date=request.data['check_date'],
-                                                                  check_time=request.data['check_time'],
-                                                                  branch=request.data['client'], visit=visit_record)
+                checkInOutRecord = SalesForceManager().CheckIn(sales_force=request.data['sales_force'],
+                                                               longtude=request.data['longtude'],
+                                                               latitude=request.data['latitude'],
+                                                               check_date=request.data['check_date'],
+                                                               check_time=request.data['check_time'],
+                                                               branch=request.data['client'], visit=visit_record)
                 if checkInOutRecord:
                     resp['code'] = 200
                     resp['data'] = CheckInOutSerializers(checkInOutRecord).data
@@ -419,15 +419,17 @@ def CheckIn(request):
                                                  visit_date=request.data['check_date'], notes=None,
                                                  schedualed=True, schedual=object[0].pk)
         if visit_record:
-            checkInOutRecord = SalesForceManager().CheckInOut(sales_force=request.data['sales_force'],
-                                                              longtude=request.data['longtude'],
-                                                              latitude=request.data['latitude'],
-                                                              check_date=request.data['check_date'],
-                                                              check_time=request.data['check_time'],
-                                                              branch=request.data['client'], visit=visit_record)
+            checkInOutRecord = SalesForceManager().CheckIn(sales_force=request.data['sales_force'],
+                                                           longtude=request.data['longtude'],
+                                                           latitude=request.data['latitude'],
+                                                           check_date=request.data['check_date'],
+                                                           check_time=request.data['check_time'],
+                                                           branch=request.data['client'], visit=visit_record)
             if checkInOutRecord:
                 resp['code'] = 200
                 resp['data'] = CheckInOutSerializers(checkInOutRecord).data
+            else:
+                resp['msg'] = _('Error during set check in , please check with system administrator')
 
         else:
             resp['msg'] = _('Error during add non schedual visit , please check with system administrator')
