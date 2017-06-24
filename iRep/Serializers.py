@@ -110,4 +110,4 @@ class CheckInOutSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = SalesForceCheckInOut
-        fields = ['id', 'latitude', 'longitude', 'check_in_date', 'check_in_time', 'branch', 'visit']
+        fields = ['id', 'latitude', 'longitude', 'check_in_date', 'check_in_time', 'branch', 'visit','check_out_date','check_out    _date']

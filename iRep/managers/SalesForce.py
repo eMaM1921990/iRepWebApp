@@ -36,8 +36,7 @@ class SalesForceManager():
         record.save()
         return record
 
-
-    def update_sales_force_timeline(self,id,endTime, km, hours):
+    def update_sales_force_timeline(self, id, endTime, km, hours):
         try:
             record = SalesForceTimeLine.objects.get(id=id)
             record.end_time = endTime
@@ -50,11 +49,10 @@ class SalesForceManager():
             print str(e)
             return None
 
-
     def CheckIn(self, sales_force, latitude, longtude, check_date, check_time, branch, visit):
         try:
 
-            record  = SalesForceCheckInOut(
+            record = SalesForceCheckInOut(
                 sales_force_id=sales_force,
                 latitude=latitude,
                 longitude=longtude,
@@ -67,4 +65,15 @@ class SalesForceManager():
             return record
         except Exception as e:
             print str(e)
+            return None
+
+    def checkOut(self, id, check_date, check_time):
+        try:
+            record = SalesForceCheckInOut.objects.get(id=id)
+            record.check_out_date = check_date
+            record.check_out_time = check_time
+            record.save()
+            return record
+
+        except Exception as e:
             return None

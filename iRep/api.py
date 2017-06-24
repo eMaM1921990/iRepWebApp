@@ -435,3 +435,33 @@ def CheckIn(request):
             resp['msg'] = _('Error during add non schedual visit , please check with system administrator')
 
     return Response(resp)
+
+
+@gzip_page
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+def CheckOut(request):
+    resp = {}
+    resp['code'] = 500
+
+
+    if 'check_date' not in request.data:
+        resp['msg'] = _('Check Date missed')
+        return Response(resp)
+
+    if 'check_time' not in request.data:
+        resp['msg'] = _('Check Time missed')
+        return Response(resp)
+
+    if 'check_in_id' not in request.data:
+        resp['msg'] = _('Check In ID missed')
+        return Response(resp)
+
+    record = SalesForceManager().checkOut(id=request.data['id'],check_date=request.data['check_date'],check_time=request.data['check_time'])
+    if record:
+        resp['code'] = 200
+        resp['data'] = CheckInOutSerializers(record).data
+    else:
+        resp['msg'] = _('Error during set check in , please check with system administrator')
+
+    return Response(resp)

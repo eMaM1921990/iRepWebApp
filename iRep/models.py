@@ -392,6 +392,8 @@ class SalesForceCheckInOut(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     check_in_date = models.DateField()
     check_in_time =  models.TimeField()
+    check_out_date = models.DateField(null=True)
+    check_out_time = models.TimeField(null=True)
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id')
     visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out',db_column='visit_id')
 
