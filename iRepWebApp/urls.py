@@ -67,5 +67,6 @@ urlpatterns += [
     url(r'^api/v1/working/end/$', api.SalesForceTimeLineEnd, name='apiSalesForceTimeLineEnd'),
     url(r'^api/v1/check/in/$', api.CheckIn, name='apiCheckIn'),
     url(r'^api/v1/check/out/$', api.CheckOut, name='apiCheckOut'),
+    url(r'^api/v1/tracking/$', api.Track, name='apiTrack'),
 
 ]

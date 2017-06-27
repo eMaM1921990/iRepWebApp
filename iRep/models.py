@@ -402,3 +402,17 @@ class SalesForceCheckInOut(models.Model):
         db_table = 'sales_force_check_in_out'
 
 
+
+class SalesForceTrack(models.Model):
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_tracking',
+                                    db_column='sales_force_id')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'sales_force_tracking'
+
+
+

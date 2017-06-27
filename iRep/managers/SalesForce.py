@@ -1,4 +1,5 @@
-from iRep.models import SalesForce, UserProfile, SalesForceTimeLine, SalesForceCheckInOut
+from iRep.models import SalesForce, UserProfile, SalesForceTimeLine, SalesForceCheckInOut, \
+    SalesForceTrack
 
 
 class SalesForceManager():
@@ -75,5 +76,17 @@ class SalesForceManager():
             record.save()
             return record
 
+        except Exception as e:
+            return None
+
+
+    def Tracking(self, sales_force, latitude, longitude):
+        try:
+            record = SalesForceTrack()
+            record.sales_force_id = sales_force
+            record.latitude = latitude
+            record.longitude = longitude
+            record.save()
+            return record
         except Exception as e:
             return None

@@ -6,7 +6,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
-    OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers
+    OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
+    SalesForceTracking
 from iRep.managers.Clients import ClientManager
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
@@ -444,7 +445,6 @@ def CheckOut(request):
     resp = {}
     resp['code'] = 500
 
-
     if 'check_date' not in request.data:
         resp['msg'] = _('Check Date missed')
         return Response(resp)
@@ -457,11 +457,43 @@ def CheckOut(request):
         resp['msg'] = _('Check In ID missed')
         return Response(resp)
 
-    record = SalesForceManager().checkOut(id=request.data['id'],check_date=request.data['check_date'],check_time=request.data['check_time'])
+    record = SalesForceManager().checkOut(id=request.data['id'], check_date=request.data['check_date'],
+                                          check_time=request.data['check_time'])
     if record:
         resp['code'] = 200
         resp['data'] = CheckInOutSerializers(record).data
     else:
         resp['msg'] = _('Error during set check in , please check with system administrator')
+
+    return Response(resp)
+
+
+@gzip_page
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+def Track(request):
+    resp = {}
+    resp['code'] = 500
+
+    if 'sales_force' not in request.data:
+        resp['msg'] = _('Sales force missed')
+        return Response(resp)
+
+    if 'latitude' not in request.data:
+        resp['msg'] = _('Latitude missed')
+        return Response(resp)
+
+    if 'longitude' not in request.data:
+        resp['msg'] = _('Longitude missed')
+        return Response(resp)
+
+    record = SalesForceManager().Tracking(request.data['sales_force'], latitude=request.data['latitude'],
+                                          longitude=request.data['longitude'])
+    if record:
+        resp['code'] = 200
+        resp['data'] = SalesForceTracking(record).data
+    else:
+
+        resp['msg'] = _('Error during set tracking , please check with system administrator')
 
     return Response(resp)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
-    SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits
+    SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits, SalesForceTrack
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -110,4 +110,13 @@ class CheckInOutSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = SalesForceCheckInOut
-        fields = ['id', 'latitude', 'longitude', 'check_in_date', 'check_in_time', 'branch', 'visit','check_out_date','check_out    _date']
+        fields = ['id', 'latitude', 'longitude', 'check_in_date', 'check_in_time', 'branch', 'visit', 'check_out_date',
+                  'check_out_time']
+
+
+class SalesForceTracking(serializers.ModelSerializer):
+    sales_force = SalesForceSerializer()
+
+    class Meta:
+        model = SalesForceTrack
+        fields = ['id', 'latitude', 'longitude', 'sales_force']
