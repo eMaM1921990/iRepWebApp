@@ -74,12 +74,11 @@ class OrderSerializers(serializers.ModelSerializer):
 
 
 class SchedualSerializers(serializers.ModelSerializer):
-    sales_force = SalesForceSerializer(many=True)
-    branch = ClientSerializer(many=True)
+    branch = ClientSerializer()
 
     class Meta:
         model = SalesForceSchedual
-        fields = ['id', 'sales_force', 'branch', 'schedual_date', 'schedual_time', 'notes']
+        fields = ['id', 'sales_force', 'branch', 'schedual_date', 'schedual_time', 'notes','is_visit']
 
 
 class SalesFunnelSerializer(serializers.ModelSerializer):

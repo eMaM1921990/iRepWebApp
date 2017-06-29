@@ -8,7 +8,7 @@ __author__ = 'eMaM'
 
 
 class SchedulerManager():
-    def add_scheduler(self, client_id, sales_force_id, dates, times, notes):
+    def add_scheduler(self, client_id, sales_force_id, dates, times, notes,is_visit=True):
         try:
             record = SalesForceSchedual()
             record.sales_force_id = sales_force_id
@@ -16,6 +16,7 @@ class SchedulerManager():
             record.schedual_date = dates
             record.schedual_time = times
             record.notes = notes
+            record.is_visit = is_visit
             record.save()
             return record
 

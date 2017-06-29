@@ -189,7 +189,8 @@ class SalesForceSchedual(models.Model):
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_schedual', db_column='branch_id')
     schedual_date = models.DateField(null=False)
     schedual_time = models.TimeField(null=False)
-    notes = models.TextField()
+    notes = models.TextField(null=True)
+    is_visit = models.BooleanField(default=True)
 
     class Meta:
         managed = MANAGED

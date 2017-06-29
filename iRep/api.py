@@ -262,6 +262,48 @@ def ListSchedualerByCL(request, client_id):
     return Response(resp)
 
 
+@gzip_page
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+def addSchedual(request):
+    resp = {}
+    resp['code'] = 505
+
+    if 'sales_force' not in request.data or not request.data['sales_force']:
+        resp['msg'] = _('Missing sales force')
+        return Response(resp)
+
+    if 'client' not in request.data or not request.data['client']:
+        resp['msg'] = _('Missing client id')
+        return Response(resp)
+
+    if 'date' not in request.data or not request.data['date']:
+        resp['msg'] = _('Missing date')
+        return Response(resp)
+
+    if 'time' not in request.data or not request.data['time']:
+        resp['msg'] = _('Missing time')
+        return Response(resp)
+
+    if 'is_visit' not in request.data or not request.data['is_visit']:
+        resp['msg'] = _('Missing type')
+        return Response(resp)
+
+    record = SchedulerManager().add_scheduler(client_id=request.data['client'], sales_force_id=request.data['sales_force'],
+                                     dates=request.data['date'], times=request.data['time'],
+                                     notes=request.data['notes'] if 'notes' in request.data else None, is_visit=request.data['is_visit'])
+
+    if record:
+        resp['code'] = 200
+        resp['data'] = SchedualSerializers(record).data
+
+    else:
+        resp['msg'] = _('Error during add schedual , contact system administrator')
+
+    return Response(resp)
+
+
+
 @api_view(['GET'])
 @gzip_page
 def GetSalesFunnel(request):
