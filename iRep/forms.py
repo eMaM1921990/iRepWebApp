@@ -75,19 +75,19 @@ class SalesForceForm(forms.ModelForm):
         super(SalesForceForm, self).__init__(*args, **kwargs)
         # init data
         self.fields['company_id'].initial = corp_instance.slug
-        self.fields['user_pin'].initial = user_instance.id
+        # self.fields['user_pin'].initial = user_instance.id
         # control Required
         self.fields['avatar'].required = False
         self.fields['name'].required = True
-        self.fields['password_pin'].required = False
-        self.fields['user_pin'].required = False
+        self.fields['password_pin'].required = True
+        self.fields['user_pin'].required = True
         self.fields['notes'].required = False
-        self.fields['company_id'].required = False
+        self.fields['company_id'].required = True
         self.fields['position'].required = True
 
         # control readOnly
         self.fields['company_id'].widget.attrs['readonly'] = True
-        self.fields['user_pin'].widget.attrs['readonly'] = True
+        self.fields['user_pin'].widget.attrs['readonly'] = False
 
         # input name
         self.fields['avatar'].label = _('Upload Image')
