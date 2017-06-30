@@ -123,6 +123,7 @@ class SalesForce(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'sales_force'
+        unique_together = ['user_pin','corp_id']
 
 
 class Client(models.Model):
