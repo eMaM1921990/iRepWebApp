@@ -36,7 +36,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductGroupSerializer(serializers.ModelSerializer):
-    group_products = ProductSerializer(many=True)
+    group_products = ProductSerializer()
 
     class Meta:
         model = ProductGroup
