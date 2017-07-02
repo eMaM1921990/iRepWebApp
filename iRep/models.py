@@ -353,7 +353,7 @@ class Orders(models.Model):
     total = models.FloatField()
     created_form_visit = models.ForeignKey(Visits, models.CASCADE, related_name='order_visits', db_column='visit_id',
                                            null=True)
-    notes = models.TextField()
+    notes = models.TextField(null=True)
     created_date = models.DateTimeField(default=timezone.now)
 
     class Meta:

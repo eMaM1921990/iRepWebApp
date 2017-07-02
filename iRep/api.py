@@ -539,3 +539,19 @@ def Track(request):
         resp['msg'] = _('Error during set tracking , please check with system administrator')
 
     return Response(resp)
+
+@gzip_page
+@api_view(['POST'])
+@parser_classes((JSONParser,))
+def OrderCreate(request):
+    resp = {}
+    resp['code'] = 500
+
+    if 'sales_force' not in request.data:
+        resp['msg'] = _('Sales force missed')
+        return Response(resp)
+
+    if 'client' not in request.data:
+        resp['msg'] = _('Client missed')
+        return Response(resp)
+

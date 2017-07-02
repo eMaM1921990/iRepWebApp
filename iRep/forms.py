@@ -353,8 +353,8 @@ class ProductForm(forms.ModelForm):
         m.created_by = user
         m.save()
         # Save Tags
-        print self.cleaned_data['tags'].id
-        m.product_tag.create(tag_id=self.cleaned_data['tags'].id)
+        # print self.cleaned_data['tags'].id
+        # m.product_tag.create(tag_id=self.cleaned_data['tags'].id)
         return m
 
     class Meta:
@@ -504,3 +504,47 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         exclude = ['created_date', 'created_by']
+
+
+
+class TrackingVisitFormByClient(BaseReportForm):
+    clients =  forms.ModelChoiceField(queryset=None)
+    def __init__(self, *args, **kwargs):
+        super(TrackingVisitFormByClient, self).__init__(*args, **kwargs)
+        # initial
+        self.fields['date_from'].initial = datetime.datetime.today()
+        self.fields['date_to'].initial = datetime.datetime.today()
+
+        # override label
+        self.fields['date_from'].label = ''
+        self.fields['date_to'].label = ''
+        self.fields['static_range'].label = ''
+
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'sales-force-form-id'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'javascript:add()'
+        self.helper.layout = Layout(
+            Div(
+                AppendedText('date_from',
+                             '<span class="glyphicon glyphicon-calendar"></span>',
+                             placeholder=_('Start date'))
+                , css_class='col-md-3'
+            ),
+            Div(
+                AppendedText('date_to',
+                             '<span class="glyphicon glyphicon-calendar"></span>',
+                             placeholder=_('Start date'))
+                , css_class='col-md-3'
+            ),
+            Div(
+                Field('static_range', placeholder=_('Start date'))
+                , css_class='col-md-3'
+            ),
+            Div(
+                Submit(_('Apply'), _('Apply'), css_class='bbtn btn-primary btn-md'),
+                css_class='col-md-3'
+            )
+
+        )

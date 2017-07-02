@@ -15,6 +15,7 @@ from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseRe
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Products import ProductManager
+from iRep.managers.Reports import TrackingReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
@@ -224,3 +225,19 @@ def AddScheduler(request):
             "msg":message
         }
         return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+
+
+###################
+# REPORTS
+####################
+@login_required
+def TrackingVisitReportByClient(request):
+    if request.POST:
+        trackingInstance = TrackingReports(start_date=request.POST['id_date_from'],end_date=request.POST['id_date_to'])
+        result = trackingInstance.visits_by_client(client_id=request.POST['client_id'])
+        ret = {
+            "data":result
+        }
+
+        return HttpResponse(json.dumps(ret,ensure_ascii=False))
