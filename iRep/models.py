@@ -27,7 +27,6 @@ class Corporate(models.Model):
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
-
     def __unicode__(self):
         return self.corporate_name
 
@@ -127,7 +126,7 @@ class SalesForce(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'sales_force'
-        unique_together = ['user_pin','corp_id']
+        unique_together = ['user_pin', 'corp_id']
 
 
 class Client(models.Model):
@@ -382,13 +381,12 @@ class SalesForceTimeLine(models.Model):
     time_line_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField(null=True)
-    km = models.DecimalField(max_digits=9,decimal_places=3)
-    hours = models.DecimalField(max_digits=9,decimal_places=3)
+    km = models.DecimalField(max_digits=9, decimal_places=3)
+    hours = models.DecimalField(max_digits=9, decimal_places=3)
 
     class Meta:
         managed = MANAGED
         db_table = 'sales_force_timeline'
-
 
 
 class SalesForceCheckInOut(models.Model):
@@ -397,16 +395,15 @@ class SalesForceCheckInOut(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     check_in_date = models.DateField()
-    check_in_time =  models.TimeField()
+    check_in_time = models.TimeField()
     check_out_date = models.DateField(null=True)
     check_out_time = models.TimeField(null=True)
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id')
-    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out',db_column='visit_id')
+    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out', db_column='visit_id')
 
     class Meta:
         managed = MANAGED
         db_table = 'sales_force_check_in_out'
-
 
 
 class SalesForceTrack(models.Model):
@@ -419,6 +416,3 @@ class SalesForceTrack(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'sales_force_tracking'
-
-
-
