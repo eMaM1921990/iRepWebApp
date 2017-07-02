@@ -27,6 +27,10 @@ class Corporate(models.Model):
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
 
+
+    def __unicode__(self):
+        return self.corporate_name
+
     class Meta:
         managed = MANAGED
         db_table = 'corporates'
