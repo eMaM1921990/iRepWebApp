@@ -36,11 +36,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductGroupSerializer(serializers.ModelSerializer):
-    group_products = ProductSerializer()
+    product = ProductSerializer(source='group_products', many=True)
 
     class Meta:
         model = ProductGroup
-        fields = ['id', 'name', 'group_products']
+        fields = ['id', 'name', 'product']
 
 
 class ClientSerializer(serializers.ModelSerializer):
