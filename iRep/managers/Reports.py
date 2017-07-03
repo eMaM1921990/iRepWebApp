@@ -10,7 +10,7 @@ class TrackingReports():
 
     def visits_by_sales_force(self, sales_force_id):
         return SalesForceCheckInOut.objects.prefetch_related().filter(sales_force__id=sales_force_id,
-                                                                      check_in_date__lte=self.from_date,
+                                                                      check_in_date__lte=self.to_date,
                                                                       check_in_date__gte=self.from_date)
 
     def visits_by_client(self, client_id):

@@ -49,6 +49,9 @@ urlpatterns += [
     url(r'^client/(?P<slug>[-\w]+)/add/$', views.AddClient, name='AddClient'),
     # schedual
     url(r'^scheduler/add/$', views.AddScheduler, name='AddScheduler'),
+
+    # Report
+    url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce, name='TrackingVisitReportBySalesForce'),
 ]
 
 urlpatterns += [

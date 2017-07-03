@@ -171,22 +171,28 @@ class SalesForceForm(forms.ModelForm):
 
 
 class SalesForceReportForm(BaseReportForm):
+    sales_force = forms.CharField()
+
     def __init__(self, *args, **kwargs):
+        sales_force_id = kwargs.pop('sales_force', None)
         super(SalesForceReportForm, self).__init__(*args, **kwargs)
         # initial
         self.fields['date_from'].initial = datetime.datetime.today()
         self.fields['date_to'].initial = datetime.datetime.today()
+        self.fields['sales_force'].widget = forms.HiddenInput()
+        if sales_force_id:
+            self.fields['sales_force'].initial = str(sales_force_id)
 
         # override label
         self.fields['date_from'].label = ''
         self.fields['date_to'].label = ''
-        self.fields['static_range'].label = ''
+        # self.fields['static_range'].label = ''
 
         # It builds a default layout with all its fields
         self.helper = FormHelper(self)
-        self.helper.form_id = 'sales-force-form-id'
+        self.helper.form_id = 'sales-force-form-report-id'
         self.helper.form_method = 'post'
-        self.helper.form_action = 'javascript:add()'
+        self.helper.form_action = None
         self.helper.layout = Layout(
             Div(
                 AppendedText('date_from',
@@ -200,14 +206,12 @@ class SalesForceReportForm(BaseReportForm):
                              placeholder=_('Start date'))
                 , css_class='col-md-3'
             ),
+
             Div(
-                Field('static_range', placeholder=_('Start date'))
-                , css_class='col-md-3'
-            ),
-            Div(
-                Submit(_('Apply'), _('Apply'), css_class='bbtn btn-primary btn-md'),
+                Button(_('Apply'), _('Apply'), css_class='bbtn btn-primary btn-md'),
                 css_class='col-md-3'
-            )
+            ),
+            Field('sales_force')
 
         )
 
@@ -506,9 +510,9 @@ class ClientForm(forms.ModelForm):
         exclude = ['created_date', 'created_by']
 
 
-
 class TrackingVisitFormByClient(BaseReportForm):
-    clients =  forms.ModelChoiceField(queryset=None)
+    clients = forms.ModelChoiceField(queryset=None)
+
     def __init__(self, *args, **kwargs):
         super(TrackingVisitFormByClient, self).__init__(*args, **kwargs)
         # initial

@@ -1,0 +1,49 @@
+{% load  i18n %}
+<div class="col-md-12"><h1 class="sub-titile"> {% trans 'Track visits' %}</h1></div>
+<div class="row" id="tracking">
+
+
+    <div class="col-md-12">
+        <div class="track-rus"> {% trans 'Result: from' %} <span class="label label-default" id="from_date"></span> {% trans 'to' %}
+            <span class="label label-default " id="to_date"></span>
+        </div>
+        <div class="divider-md"></div>
+
+        <fieldset class="track-visit">
+
+
+{#            <legend>#}
+{#                <h4 class="label label-primary">Day <span>5-6-2017</span> with#}
+{#                    <span class="small ">3 activites</span>#}
+{#                </h4>#}
+{#            </legend>#}
+
+            <table class="table tracking-table" id="tracking">
+
+
+                <thead>
+                <tr>
+                    <th>{% trans 'CheckIn Date - Time' %}</th>
+                    <th>{% trans 'CheckOut Date - Time' %}</th>
+                    <th>{% trans 'Client' %}</th>
+                    <th>{% trans 'Location' %}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                </tbody>
+
+
+
+            </table>
+
+
+        </fieldset>
+
+
+    </div>
+</div>
+
+<div class="divider-lg"></div>

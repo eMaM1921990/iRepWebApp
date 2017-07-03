@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
+from django.template.loader import render_to_string
 from django.urls import reverse
 
 from iRep.Serializers import ClientSerializer
@@ -62,7 +63,7 @@ def EditSalesForce(request, slug):
                           instance=sales_force_instance,
                           corp_instance=corp,
                           action=reverse('editSalesForce', kwargs={'slug': slug}))
-    reportForm = SalesForceReportForm()
+    reportForm = SalesForceReportForm(sales_force= sales_force_instance.id)
     if form.is_valid():
         form.save(user=request.user)
         return redirect(reverse('index'))
@@ -234,10 +235,29 @@ def AddScheduler(request):
 @login_required
 def TrackingVisitReportByClient(request):
     if request.POST:
+        template = 'sales_force/visits_track_rows.html'
         trackingInstance = TrackingReports(start_date=request.POST['id_date_from'],end_date=request.POST['id_date_to'])
         result = trackingInstance.visits_by_client(client_id=request.POST['client_id'])
         ret = {
             "data":result
+        }
+
+        return HttpResponse(json.dumps(ret,ensure_ascii=False))
+
+@login_required
+def TrackingVisitReportBySalesForce(request):
+    if request.POST:
+        valid = False
+        template = 'sales_force/visit_track_rows.html'
+        trackingInstance = TrackingReports(start_date=request.POST['date_from'],end_date=request.POST['date_to'])
+        result = trackingInstance.visits_by_sales_force(sales_force_id=request.POST['sales_force'])
+        html = None
+        if result:
+            valid = True
+            html = render_to_string(template_name=template,context={'tracking':result})
+        ret = {
+            "html":html,
+            "valid":valid
         }
 
         return HttpResponse(json.dumps(ret,ensure_ascii=False))
