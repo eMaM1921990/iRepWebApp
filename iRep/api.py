@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
     OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
-    SalesForceTracking
+    SalesForceTracking, MemberSerializer
 from iRep.managers.Clients import ClientManager
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
@@ -45,7 +45,7 @@ def SalesForceLogin(request):
                                          corp_id__slug=request.data['corp_id'])
 
         resp['code'] = 200
-        resp['data'] = SalesForceSerializer(profile, context={'request': request}).data
+        resp['data'] = MemberSerializer(profile, context={'request': request}).data
         return Response(resp)
 
     except Exception as e:

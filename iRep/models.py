@@ -119,6 +119,7 @@ class SalesForce(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
+    report_to = models.ForeignKey('self',models.CASCADE, related_name='reporting_to', db_column='report_to', null=True)
 
     def __str__(self):
         return self.name + "[" + self.position.name + "]"

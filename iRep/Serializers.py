@@ -29,6 +29,22 @@ class SalesForceSerializer(serializers.ModelSerializer):
         fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug']
 
 
+class MemberSerializer(serializers.ModelSerializer):
+    u_avatar = serializers.SerializerMethodField('get_avatar_url')
+
+    def get_avatar_url(self, obj):
+        if hasattr(obj, 'avatar'):
+            if obj.avatar:
+                return self.context['request'].build_absolute_uri(obj.avatar.url)
+        return ''
+
+    members = SalesForceSerializer(source='reporting_to',many=True)
+
+    class Meta:
+        model = SalesForce
+        fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug','members']
+
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -78,7 +94,7 @@ class SchedualSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = SalesForceSchedual
-        fields = ['id', 'sales_force', 'branch', 'schedual_date', 'schedual_time', 'notes','is_visit']
+        fields = ['id', 'sales_force', 'branch', 'schedual_date', 'schedual_time', 'notes', 'is_visit']
 
 
 class SalesFunnelSerializer(serializers.ModelSerializer):

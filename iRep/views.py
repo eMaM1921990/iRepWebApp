@@ -35,12 +35,11 @@ def AddSalesForce(request):
     template = 'sales_force/details.html'
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
-    print corp
     form = SalesForceForm(request.POST or None, request.FILES or None, user_instance=request.user, corp_instance=corp,
                           action=reverse('createSalesForce'))
     if form.is_valid():
         form.save(user=request.user)
-        return redirect(reverse('index'))
+        return redirect(reverse('viewSalesForceByUser', kwargs={'slug': corp.slug}))
     return render(request, template_name=template, context={'form': form, 'new': True})
 
 
@@ -66,7 +65,7 @@ def EditSalesForce(request, slug):
     reportForm = SalesForceReportForm(sales_force= sales_force_instance.id)
     if form.is_valid():
         form.save(user=request.user)
-        return redirect(reverse('index'))
+        return redirect(reverse('viewSalesForceByUser',kwargs={'slug':corp.slug}))
     # Retreve clients
     sqs = ClientManager().get_client_by_sales_force(slug)
     data = []

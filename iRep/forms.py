@@ -84,6 +84,7 @@ class SalesForceForm(forms.ModelForm):
         self.fields['notes'].required = False
         self.fields['company_id'].required = True
         self.fields['position'].required = True
+        self.fields['report_to'].required = False
 
         # control readOnly
         self.fields['company_id'].widget.attrs['readonly'] = True
@@ -101,6 +102,7 @@ class SalesForceForm(forms.ModelForm):
         self.fields['is_active'].label = _('active sales force')
         self.fields['company_id'].label = _('Company ID')
         self.fields['position'].label = _('Position')
+        self.fields['report_to'].label = _('Reporting to')
 
         # If you pass FormHelper constructor a form instance
         # It builds a default layout with all its fields
@@ -124,6 +126,7 @@ class SalesForceForm(forms.ModelForm):
                         Field('position', empty_label=_('Enter e-mail address')),
                         Field('profile_language', empty_label=_('Select profile language')),
                         Field('is_active'),
+                        Field('report_to', empty_label=_('Reporting to')),
                         css_class='col-md-6'
                     ),
                     Div(css_class='clearfix'),
