@@ -9,6 +9,7 @@ from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGro
     OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
     SalesForceTracking, MemberSerializer
 from iRep.managers.Clients import ClientManager
+from iRep.managers.Orders import OrderManager
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
 from iRep.managers.Visits import VisitsManager
@@ -289,9 +290,11 @@ def addSchedual(request):
         resp['msg'] = _('Missing type')
         return Response(resp)
 
-    record = SchedulerManager().add_scheduler(client_id=request.data['client'], sales_force_id=request.data['sales_force'],
-                                     dates=request.data['date'], times=request.data['time'],
-                                     notes=request.data['notes'] if 'notes' in request.data else None, is_visit=request.data['is_visit'])
+    record = SchedulerManager().add_scheduler(client_id=request.data['client'],
+                                              sales_force_id=request.data['sales_force'],
+                                              dates=request.data['date'], times=request.data['time'],
+                                              notes=request.data['notes'] if 'notes' in request.data else None,
+                                              is_visit=request.data['is_visit'])
 
     if record:
         resp['code'] = 200
@@ -301,7 +304,6 @@ def addSchedual(request):
         resp['msg'] = _('Error during add schedual , contact system administrator')
 
     return Response(resp)
-
 
 
 @api_view(['GET'])
@@ -540,6 +542,7 @@ def Track(request):
 
     return Response(resp)
 
+
 @gzip_page
 @api_view(['POST'])
 @parser_classes((JSONParser,))
@@ -551,7 +554,40 @@ def OrderCreate(request):
         resp['msg'] = _('Sales force missed')
         return Response(resp)
 
-    if 'client' not in request.data:
+    if 'client_id' not in request.data:
         resp['msg'] = _('Client missed')
         return Response(resp)
 
+    if 'order_date' not in request.data:
+        resp['msg'] = _('Order date missed')
+        return Response(resp)
+
+    if 'total' not in request.data:
+        resp['msg'] = _('Total amount missed')
+        return Response(resp)
+
+    if 'sub_total' not in request.data:
+        resp['msg'] = _('Subtotal amount missed')
+        return Response(resp)
+
+    if 'discount' not in request.data:
+        resp['msg'] = _('Discount amount missed')
+        return Response(resp)
+
+    if 'items' not in request.data:
+        resp['msg'] = _('Order Item missed')
+        return Response(resp)
+
+    orderInstance = OrderManager()
+
+    order_instance = orderInstance.save_order(sales_force_id=request.data['sales_force'],
+                                              branch_id=request.data['client_id'],
+                                              order_date=request.data['order_date'],
+                                              total=request.data['total'], sub_total=request.data['sub_total'],
+                                              discount=request.data['discount'], visit_id=request.data['visit_id'] if 'visit_id' in request.data else None,
+                                              notes=request.data['notes'] if 'notes' in request.data else None, items=request.data['items'])
+    if order_instance:
+        resp['code'] = 200
+        resp['data'] = OrderSerializers(order_instance).data
+
+    return Response(resp)

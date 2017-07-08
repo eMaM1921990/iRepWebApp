@@ -74,11 +74,11 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 class OrderLinesSerializer(serializers.ModelSerializer):
-    order_product = ProductSerializer(many=True)
+    product = ProductSerializer()
 
     class Meta:
         model = OrderLine
-        fields = ['order_product', 'quantity', 'price']
+        fields = ['product', 'quantity', 'price']
 
 
 class OrderSerializers(serializers.ModelSerializer):
@@ -86,7 +86,7 @@ class OrderSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Orders
-        fields = ['id', 'sales_force', 'order_date', 'total', 'notes', 'order_lines']
+        fields = ['id', 'sales_force', 'order_date', 'total','sub_total','discount', 'notes', 'order_lines']
 
 
 class SchedualSerializers(serializers.ModelSerializer):

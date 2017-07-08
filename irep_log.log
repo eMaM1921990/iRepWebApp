@@ -1,3 +1,4 @@
 [22/Jun/2017 17:24:43] DEBUG [iRep.api:52] Error during login for {u'user_pin': 1, u'password': 1, u'corp_id': 1} cause: SalesForce matching query does not exist.
 [22/Jun/2017 17:27:57] DEBUG [iRep.api:322] Error during add sales force timeline cause quantize result has too many digits for current context
 [22/Jun/2017 17:33:53] DEBUG [iRep.api:322] Error during add sales force timeline cause quantize result has too many digits for current context
+[05/Jul/2017 18:09:06] DEBUG [iRep.api:53] Error during login for {u'user_pin': u'1', u'password': u'0122308791', u'corp_id': u'pharama-1'} cause: It is redundant to specify `get_team` on SerializerMethodField 'team' in serializer 'SalesForceSerializer', because it is the same as the default method name. Remove the `method_name` argument.

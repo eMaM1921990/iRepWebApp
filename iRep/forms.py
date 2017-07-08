@@ -7,6 +7,7 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from iRep.api import Clients
+from iRep.managers.Products import ProductManager
 from iRep.managers.Tags import TagManager
 from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client
 
@@ -238,6 +239,8 @@ class ProductForm(forms.ModelForm):
         tags = TagManager().get_corp_tags(corpSlug)
         action = kwargs.pop('action', None)
         super(ProductForm, self).__init__(*args, **kwargs)
+        # init
+        self.fields['product'].queryset = ProductManager().get_corp_category(corpSlug)
         # input label
         self.fields['name'].label = _('Name')
         self.fields['ean_code'].label = _('EAN')

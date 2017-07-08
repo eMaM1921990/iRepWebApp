@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import uuid
+
 from cities_light.models import City, Region, Country
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -355,8 +357,11 @@ class Orders(models.Model):
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_order', db_column='branch_id')
     order_date = models.DateTimeField(null=False)
     total = models.FloatField()
+    sub_total = models.FloatField()
+    discount = models.DecimalField(max_digits=9, decimal_places=3)
     created_form_visit = models.ForeignKey(Visits, models.CASCADE, related_name='order_visits', db_column='visit_id',
                                            null=True)
+    order_number = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4)
     notes = models.TextField(null=True)
     created_date = models.DateTimeField(default=timezone.now)
 
