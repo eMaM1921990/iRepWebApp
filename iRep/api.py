@@ -286,7 +286,7 @@ def addSchedual(request):
         resp['msg'] = _('Missing time')
         return Response(resp)
 
-    if 'is_visit' not in request.data or not request.data['is_visit']:
+    if 'is_visit' not in request.data :
         resp['msg'] = _('Missing type')
         return Response(resp)
 
