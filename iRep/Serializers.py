@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
-    SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits, SalesForceTrack
+    SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits, SalesForceTrack, ClientTags
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -38,11 +38,11 @@ class MemberSerializer(serializers.ModelSerializer):
                 return self.context['request'].build_absolute_uri(obj.avatar.url)
         return ''
 
-    members = SalesForceSerializer(source='reporting_to',many=True)
+    members = SalesForceSerializer(source='reporting_to', many=True)
 
     class Meta:
         model = SalesForce
-        fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug','members']
+        fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug', 'members']
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -59,7 +59,14 @@ class ProductGroupSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'product']
 
 
+class ClientTagSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = ClientTags
+        fields = ['tags']
+
+
 class ClientSerializer(serializers.ModelSerializer):
+    branch_tags = ClientTagSerialzer(many=True)
     text = serializers.SerializerMethodField('get_text_val')
     sales_force = SalesForceSerializer()
 
@@ -70,7 +77,8 @@ class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['id', 'name', 'address_txt', 'country', 'state', 'city', 'zipcode', 'contact_name',
-                  'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch', 'text', 'sales_force']
+                  'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch', 'text', 'sales_force',
+                  'branch_tags']
 
 
 class OrderLinesSerializer(serializers.ModelSerializer):
@@ -86,7 +94,7 @@ class OrderSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Orders
-        fields = ['id', 'sales_force', 'order_date', 'total','sub_total','discount', 'notes', 'order_lines']
+        fields = ['id', 'sales_force', 'order_date', 'total', 'sub_total', 'discount', 'notes', 'order_lines']
 
 
 class SchedualSerializers(serializers.ModelSerializer):

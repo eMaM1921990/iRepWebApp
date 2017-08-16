@@ -181,7 +181,7 @@ class Tags(models.Model):
 
 class ClientTags(models.Model):
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_tags', db_column='branch_id')
-    tags = models.ForeignKey(Tags, models.CASCADE, related_name='tags', db_column='tag_id')
+    tags = models.ForeignKey(Tags, models.CASCADE, related_name='client_tags', db_column='tag_id')
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
 
