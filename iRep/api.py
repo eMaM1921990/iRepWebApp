@@ -7,13 +7,13 @@ from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
     OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
-    SalesForceTracking, MemberSerializer
+    SalesForceTracking, MemberSerializer, TagSerlizers
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Orders import OrderManager
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
 from iRep.managers.Visits import VisitsManager
-from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus, Visits
+from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus, Visits, Tags
 from django.utils.translation import ugettext_lazy as _
 import logging
 
@@ -589,5 +589,27 @@ def OrderCreate(request):
     if order_instance:
         resp['code'] = 200
         resp['data'] = OrderSerializers(order_instance).data
+
+    return Response(resp)
+
+
+
+@gzip_page
+@api_view(['GET'])
+def ListTags(request, slug):
+    resp = {}
+    resp['code'] = 505
+    # Validation
+    if not slug:
+        resp['msg'] = _('Missing corporate')
+        return Response(resp)
+    try:
+        resp['data'] = []
+        sqs = Tags.objects.filter(corporate__slug=slug)
+        for row in sqs:
+            resp['data'].append(TagSerlizers(row).data)
+        resp['code'] = 200
+    except Exception as e:
+        resp['msg'] = _('Can`t retrieve Tags')
 
     return Response(resp)

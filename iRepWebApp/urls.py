@@ -51,7 +51,8 @@ urlpatterns += [
     url(r'^scheduler/add/$', views.AddScheduler, name='AddScheduler'),
 
     # Report
-    url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce, name='TrackingVisitReportBySalesForce'),
+    url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce,
+        name='TrackingVisitReportBySalesForce'),
 ]
 
 urlpatterns += [
@@ -73,5 +74,7 @@ urlpatterns += [
     url(r'^api/v1/check/in/$', api.CheckIn, name='apiCheckIn'),
     url(r'^api/v1/check/out/$', api.CheckOut, name='apiCheckOut'),
     url(r'^api/v1/tracking/$', api.Track, name='apiTrack'),
+
+    url(r'^api/v1/tags/(?P<slug>.+)/$', api.ListTags, name='apiListTags'),
 
 ]

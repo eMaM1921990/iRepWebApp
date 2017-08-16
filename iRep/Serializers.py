@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
-    SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits, SalesForceTrack, ClientTags
+    SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits, SalesForceTrack, \
+    ClientTags, \
+    Tags
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -65,8 +67,14 @@ class ClientTagSerialzer(serializers.ModelSerializer):
         fields = ['tags']
 
 
+class TagSerlizers(serializers.ModelSerializer):
+    class Meta:
+        model = Tags
+        fields = ['id', 'name']
+
+
 class ClientSerializer(serializers.ModelSerializer):
-    branch_tags = ClientTagSerialzer(many=True)
+    client_tags = ClientTagSerialzer(many=True)
     text = serializers.SerializerMethodField('get_text_val')
     sales_force = SalesForceSerializer()
 
@@ -78,7 +86,7 @@ class ClientSerializer(serializers.ModelSerializer):
         model = Client
         fields = ['id', 'name', 'address_txt', 'country', 'state', 'city', 'zipcode', 'contact_name',
                   'contact_title', 'website', 'email', 'phone', 'notes', 'status', 'main_branch', 'text', 'sales_force',
-                  'branch_tags']
+                  'client_tags']
 
 
 class OrderLinesSerializer(serializers.ModelSerializer):
