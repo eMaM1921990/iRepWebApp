@@ -16,7 +16,7 @@ class ClientManager():
             return None
 
     def CreateClientFromAPI(self, name, address_txt, zipcode, contact_name, contact_title, website, email, phone, notes,
-                            corporate, status, city, state, country, sales_force):
+                            corporate, status, city, state, country, sales_force, tags):
         try:
             record = Client()
             record.name = name
@@ -37,6 +37,8 @@ class ClientManager():
             record.created_by_id = 1
             record.slug = slugify('%s %s' % (name, 1), allow_unicode=True)
             record.save()
+            for tag in tags:
+                record.client_tags.create(tags__id=tag)
             return record
 
         except Exception as e:

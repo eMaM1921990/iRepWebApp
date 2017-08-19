@@ -208,7 +208,8 @@ def AddClient(request):
         city=request.data['city'],
         state=request.data['state'],
         country=request.data['country'],
-        sales_force=request.data['sales_force']
+        sales_force=request.data['sales_force'],
+        tags=request.data['tags'] if 'tags' in request.data else None
 
     )
 
