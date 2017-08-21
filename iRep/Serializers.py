@@ -61,16 +61,18 @@ class ProductGroupSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'product']
 
 
-class ClientTagSerialzer(serializers.ModelSerializer):
-    class Meta:
-        model = ClientTags
-        fields = ['tags']
-
-
 class TagSerlizers(serializers.ModelSerializer):
     class Meta:
         model = Tags
         fields = ['id', 'name']
+
+
+class ClientTagSerialzer(serializers.ModelSerializer):
+    tags = TagSerlizers()
+
+    class Meta:
+        model = ClientTags
+        fields = ['tags']
 
 
 class ClientSerializer(serializers.ModelSerializer):
