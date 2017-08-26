@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
@@ -48,17 +49,17 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    # logo = serializers.SerializerMethodField('get_avatar_url')
+    logo = serializers.SerializerMethodField('get_avatar_url')
 
-    # def get_avatar_url(self, obj):
-    #     if hasattr(obj, 'image'):
-    #         if obj.image:
-    #             return (obj.image.url)
-    #     return ''
+    def get_avatar_url(self, obj):
+        if hasattr(obj, 'image'):
+            if obj.image:
+                return self.context['request'].META['HTTP_HOST']+'/'+settings.MEDIA_ROOT+str(obj.image)
+        return ''
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'unit','image']
+        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'unit','logo']
 
 
 class ProductGroupSerializer(serializers.ModelSerializer):

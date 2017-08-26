@@ -78,3 +78,4 @@ urlpatterns += [
     url(r'^api/v1/tags/(?P<slug>.+)/$', api.ListTags, name='apiListTags'),
 
 ]
+
