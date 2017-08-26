@@ -2344,7 +2344,7 @@ div.uploader {
 
 .bg-dark.dk,
 .bg-dark > .dk {
-  background-color: #fff !important;
+  background-color: #fff !important;  min-height: 570px;
 }
 .bg-dark.lt,
 .bg-dark > .lt {
@@ -2635,3 +2635,12 @@ body.error .logo h1 {
     width: 100% !important;
 
 }
+
+
+.total, .total:hover{ color: #fff}
+.total .badge{ background-color:  #283e4b }
+
+.label-default{ background-color: #f5f5f5 !important;}
+
+.rep-report li{ margin-bottom: 7px}
+.rep-report li .badge{  float: right}

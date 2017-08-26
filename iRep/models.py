@@ -423,3 +423,24 @@ class SalesForceTrack(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'sales_force_tracking'
+
+
+class Forms(models.Model):
+    form_name = models.CharField(max_length=100)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_forms', db_column='corp_id')
+    is_active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'forms'
+
+
+class FormQuestions(models.Model):
+    form = models.ForeignKey(Forms, models.CASCADE, related_name='form_questions', db_column= 'form_id')
+    question = models.CharField(max_length=100)
+    created_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'forms_questions'
