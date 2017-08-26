@@ -249,6 +249,7 @@ class Product(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
+    image = models.ImageField(upload_to=settings.PRODUCT_DIR)
     slug = models.SlugField()
 
     class Meta:

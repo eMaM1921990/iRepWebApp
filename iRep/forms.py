@@ -236,12 +236,12 @@ class ProductForm(forms.ModelForm):
         # POP from kwargs
         corpSlug = kwargs.pop('slug', None)
         # Retrieve Corp Tags
-        tags = TagManager().get_corp_tags(corpSlug)
         action = kwargs.pop('action', None)
         super(ProductForm, self).__init__(*args, **kwargs)
         # init
         self.fields['product'].queryset = ProductManager().get_corp_category(corpSlug)
         # input label
+        self.fields['image'].label = _('Logo')
         self.fields['name'].label = _('Name')
         self.fields['ean_code'].label = _('EAN')
         self.fields['default_price'].label = _('Default price')
@@ -252,6 +252,7 @@ class ProductForm(forms.ModelForm):
         # self.fields['tags'].label = _('Tags')
 
         # control Required
+        self.fields['image'].required = False
         self.fields['default_price'].required = True
         self.fields['corporate'].required = False
         self.fields['unit'].required = False
@@ -267,6 +268,7 @@ class ProductForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.form_action = action
         self.helper.layout = Layout(
+            Field('image', css_class=''),
             Div(
                 css_class='divider-md'
             ),
@@ -326,13 +328,13 @@ class ProductForm(forms.ModelForm):
                         Field('product', placeholder=_('Product category')),
                         css_class='col-md-6'
                     ),
-                    Div(
-                        Div(
-                            css_class='divider-md'
-                        ),
-                        Button(_('Custom Group'), _('Custom Group'), css_class="btn btn-lg btn-default"),
-                        css_class='col-md-6'
-                    ),
+                    # Div(
+                    #     Div(
+                    #         css_class='divider-md'
+                    #     ),
+                    #     Button(_('Custom Group'), _('Custom Group'), css_class="btn btn-lg btn-default"),
+                    #     css_class='col-md-6'
+                    # ),
                     Div(
                         css_class='clearfix'
                     ),
@@ -362,9 +364,6 @@ class ProductForm(forms.ModelForm):
         m.corporate = corporate
         m.created_by = user
         m.save()
-        # Save Tags
-        # print self.cleaned_data['tags'].id
-        # m.product_tag.create(tag_id=self.cleaned_data['tags'].id)
         return m
 
     class Meta:

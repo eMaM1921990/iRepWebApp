@@ -48,9 +48,17 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    # logo = serializers.SerializerMethodField('get_avatar_url')
+
+    # def get_avatar_url(self, obj):
+    #     if hasattr(obj, 'image'):
+    #         if obj.image:
+    #             return (obj.image.url)
+    #     return ''
+
     class Meta:
         model = Product
-        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'unit']
+        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'unit','image']
 
 
 class ProductGroupSerializer(serializers.ModelSerializer):

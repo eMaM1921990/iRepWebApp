@@ -71,7 +71,7 @@ def ProductCategory(request, slug):
 
         productCatQS = ProductGroup.objects.prefetch_related().filter(is_active=True, corporate__slug=slug)
         for row in productCatQS:
-            resp['data'].append(ProductGroupSerializer(row).data)
+            resp['data'].append(ProductGroupSerializer(row,context={"request": request}).data)
         resp['code'] = 200
 
     except Exception as e:

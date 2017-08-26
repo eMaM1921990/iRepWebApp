@@ -84,7 +84,7 @@ def EditSalesForce(request, slug):
 @login_required
 def AddProduct(request, slug):
     template = 'settings/products/details.html'
-    form = ProductForm(request.POST or None, slug=slug, action=reverse('createProduct', kwargs={'slug': slug}))
+    form = ProductForm(request.POST or None,request.FILES or None, slug=slug, action=reverse('createProduct', kwargs={'slug': slug}))
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
@@ -106,7 +106,7 @@ def ViewProduct(request, slug):
 def ViewEditProduct(request, slug):
     template = 'settings/products/details.html'
     product_instance = get_object_or_404(Product, slug=slug)
-    form = ProductForm(request.POST or None, slug=slug,
+    form = ProductForm(request.POST or None,request.FILES or None, slug=slug,
                        instance=product_instance,
                        action=reverse('editProduct', kwargs={'slug': slug}))
 
