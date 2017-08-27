@@ -37,8 +37,9 @@ class ClientManager():
             record.created_by_id = 1
             record.slug = slugify('%s %s' % (name, 1), allow_unicode=True)
             record.save()
-            for tag in tags:
-                record.client_tags.create(tags_id=tag)
+            if tags:
+                for tag in tags:
+                    record.client_tags.create(tags_id=tag)
             return record
 
         except Exception as e:
