@@ -3,7 +3,10 @@ from __future__ import unicode_literals
 
 import json
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+from django.db import transaction
 from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,16 +17,16 @@ from django.urls import reverse
 
 from iRep.Serializers import ClientSerializer
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
-    BaseQuestionFormSet
+    BaseQuestionFormSet, FormsForm
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
-from iRep.managers.Forms import Forms
+from iRep.managers.Forms import Forms, IForm
 from iRep.managers.Products import ProductManager
 from iRep.managers.Reports import TrackingReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
-from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders
+from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders, FormQuestions
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -234,15 +237,52 @@ def AddScheduler(request):
 def ViewForms(request, slug):
     template = 'forms/list.html'
     context = {
-        'formList': Forms.getFormList(slug=slug)
+        'formList': IForm(slug=slug).getFormList()
     }
     return render(request, template_name=template, context=context)
 
-def CreateOrEditForms(request,slug):
+@login_required
+def CreateOrEditForms(request,slug, id=None):
+    template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
     QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
 
     # Get our existing  data for this user.  This is used as initial data.
+    form_questions = IForm(slug=slug).getFormQuestions(id)
+    if form_questions:
+        question_data = [{'question': l.question}
+                     for l in form_questions]
+
+    formsForm = FormsForm(request.POST or None, user=request.user)
+    QuestionFormSetform  = QuestionFormSet(request.POST or None,initial=form_questions)
+
+    if formsForm.is_valid():
+        m = formsForm.save()
+
+        # Now save the data for each form in the formset
+        new_questions = []
+        for question_form in QuestionFormSetform:
+            new_questions.append(FormQuestions(form= m,question=question_form.cleaned_data.get('question')))
+
+        try:
+            with transaction.atomic():
+                # Replace the old with the new
+                FormQuestions.objects.filter(form__id=id).delete()
+                FormQuestions.objects.bulk_create(new_questions)
+
+                # And notify our users that it worked
+                messages.success(request, 'You have updated your form.')
+
+        except IntegrityError:  # If the transaction failed
+            messages.error(request, 'There was an error saving your form.')
+
+    context = {
+        'formsForm': formsForm,
+        'QuestionFormSetform': QuestionFormSetform,
+    }
+
+    return render(request, template, context)
+
 
 ###################
 # REPORTS

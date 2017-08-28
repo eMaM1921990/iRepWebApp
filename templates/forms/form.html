@@ -1,10 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
+{% load staticfiles i18n %}
+{% block content %}
+    <div class="body bs-example">
 
-</body>
-</html>
+        <h1 class="sub-titile"><i class="glyphicon glyphicon-list-alt"></i> Add new forms
+
+
+            <div class="clearfix"></div>
+        </h1>
+
+
+        <!-- new -->
+
+
+        <div class="outer">
+
+            <form method="post" action="{% url 'addForms' user.corp_users.get.slug %}">
+                {% csrf_token %}
+                <div class="col-md-12">
+
+
+                    <div class="row">
+
+                        <div class="col-md-12 form-inline">
+                            <label>{{ formsForm.form_name.label }}</label>
+                            <div class="clearfix"></div>
+                            <div class="form-group sizeinput ">
+
+
+                                {{ formsForm.form_name }}
+                            </div>
+
+                            <div class="form-group ">
+                                <label>{{ formsForm.active.label }}</label>
+                                {#                            <input checked data-toggle="toggle" type="checkbox">#}
+                                {{ formsForm.active }}
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="divider-md"></div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <label for="exampleInputEmail1">Description</label>
+                            {{ formsForm.description }}
+
+                        </div>
+                    </div>
+
+
+                    <!-- build form-->
+                    <h3> {% trans 'Questions' %} </h3>
+                    <hr>
+
+                    <!-- build form end-->
+                    {{ QuestionFormSetform.management_form }}
+
+
+                    {% for question_form in QuestionFormSetform %}
+                        <div class="question-formset">
+                        <div class="input-group ">
+                            <span class="input-group-addon" id="basic-addon2"><strong>?</strong> </span>
+                            {{ question_form.question }}
+
+                        </div>
+                        </div>
+                    {% endfor %}
+
+
+                </div>
+
+            </form>
+        </div>
+
+
+
+        <!--form start end-->
+
+        <!---->
+
+
+        <div class="divider-md"></div>
+
+    </div>
+{% endblock %}
+{% block extra_js_src %}
+{#    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>#}
+    <script src="{% static 'app_js/jquery.formset.js' %}"/>
+     <script>
+
+    </script>
+
+{% endblock %}
+
+{% block extra_javascript %}
+        <script>
+        $(document).ready(function () {
+            $('.question-formset').formset({
+                addText: "{% trans 'Add Question' %}",
+                deleteText: 'Remove',
+                addCssClass:'btn btn-success btn-lg ',
+
+            });
+        });
+
+
+
+
+    </script>
+
+{% endblock %}

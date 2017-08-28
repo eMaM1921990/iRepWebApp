@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from iRep.api import Clients
 from iRep.managers.Products import ProductManager
 from iRep.managers.Tags import TagManager
-from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client
+from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client, Forms
 
 
 class SignupForm(forms.Form):
@@ -565,26 +565,44 @@ class QuestionForm(forms.Form):
         max_length=200,
         widget=forms.TextInput(attrs={
             'placeholder': _('Enter your questions'),
+            'class': 'form-control',
+            'aria-describedby': 'basic-addon2'
         }),
         required=False)
 
 
 class FormsForm(forms.Form):
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super(FormsForm, self).__init__(*args, **kwargs)
         self.fields['form_name'] = forms.CharField(
             max_length=30,
             initial=self.user.first_name,
             widget=forms.TextInput(attrs={
                 'placeholder': _('Form name'),
+                'class': 'form-control sizeinput-int'
             }))
         self.fields['description'] = forms.CharField(
             max_length=30,
             initial=self.user.last_name,
-            widget=forms.TextInput(attrs={
+            widget=forms.Textarea(attrs={
                 'placeholder': _('Description'),
+                'class': 'form-control'
             }))
-        self.fields['active'] = forms.CheckboxInput()
+        self.fields['active'] = forms.BooleanField(
+            widget=forms.CheckboxInput(
+                attrs={
+                    'data-toggle': 'toggle'
+                }
+            )
+        )
+
+    def save(self, commit=True):
+        m = Forms()
+        m.form_name = self.cleaned_data['form_name']
+        m.description = self.cleaned_data['description']
+        m.is_active = self.cleaned_data['active']
+        m.save()
 
 
 class BaseQuestionFormSet(BaseFormSet):

@@ -85,7 +85,7 @@
                                 <i class="glyphicon glyphicon-sunglasses"></i> {% trans 'Forms' %}
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu top-align user-align animated fadeIn">
-                                <li><a href="#"><i class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Form' %}
+                                <li><a href="{% url 'addForms' user.corp_users.get.slug %}"><i class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Form' %}
                                 </a></li>
 
 
@@ -201,3 +201,5 @@
     <!-- /.head -->
 </div>
 <!-- /#top -->
+
+  {% include 'help.html' %}
