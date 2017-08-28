@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -12,7 +13,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from iRep.Serializers import ClientSerializer
-from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm
+from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
+    BaseQuestionFormSet
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Forms import Forms
@@ -236,6 +238,11 @@ def ViewForms(request, slug):
     }
     return render(request, template_name=template, context=context)
 
+def CreateOrEditForms(request,slug):
+    # Create the formset, specifying the form and formset we want to use.
+    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
+
+    # Get our existing  data for this user.  This is used as initial data.
 
 ###################
 # REPORTS

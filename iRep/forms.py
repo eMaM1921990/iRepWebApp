@@ -3,6 +3,7 @@ from crispy_forms.bootstrap import PrependedText, AppendedText, Accordion, Accor
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Field, Fieldset, Div, HTML, Button
 from django import forms
+from django.forms.formsets import BaseFormSet
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
@@ -557,3 +558,65 @@ class TrackingVisitFormByClient(BaseReportForm):
             )
 
         )
+
+
+class QuestionForm(forms.Form):
+    question = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={
+            'placeholder': _('Enter your questions'),
+        }),
+        required=False)
+
+
+class FormsForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(FormsForm, self).__init__(*args, **kwargs)
+        self.fields['form_name'] = forms.CharField(
+            max_length=30,
+            initial=self.user.first_name,
+            widget=forms.TextInput(attrs={
+                'placeholder': _('Form name'),
+            }))
+        self.fields['description'] = forms.CharField(
+            max_length=30,
+            initial=self.user.last_name,
+            widget=forms.TextInput(attrs={
+                'placeholder': _('Description'),
+            }))
+        self.fields['active'] = forms.CheckboxInput()
+
+
+class BaseQuestionFormSet(BaseFormSet):
+    def clean(self):
+        """
+               Adds validation to check that no two links have the same anchor or URL
+               and that all links have both an anchor and URL.
+               """
+        if any(self.errors):
+            return
+
+        questions = []
+        duplicates = False
+
+        for form in self.forms:
+            if form.cleaned_data:
+                question = form.cleaned_data['question']
+
+                # Check that no two links have the same anchor or URL
+                if question:
+                    if question in questions:
+                        duplicates = True
+                    questions.append(question)
+
+                if duplicates:
+                    raise forms.ValidationError(
+                        'Question must have unique ',
+                        code='duplicate_question'
+                    )
+
+                if not question:
+                    raise forms.ValidationError(
+                        'All links must have a URL.',
+                        code='missing_question'
+                    )

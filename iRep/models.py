@@ -121,7 +121,7 @@ class SalesForce(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
-    report_to = models.ForeignKey('self',models.CASCADE, related_name='reporting_to', db_column='report_to', null=True)
+    report_to = models.ForeignKey('self', models.CASCADE, related_name='reporting_to', db_column='report_to', null=True)
 
     def __str__(self):
         return self.name + "[" + self.position.name + "]"
@@ -166,7 +166,7 @@ class Client(models.Model):
 class Tags(models.Model):
     name = models.CharField(max_length=150, null=False)
     created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id',null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id', null=True)
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_tags', db_column='corp_id')
@@ -183,7 +183,7 @@ class ClientTags(models.Model):
     client_tags = models.ForeignKey(Client, models.CASCADE, related_name='client_tags', db_column='branch_id')
     tags = models.ForeignKey(Tags, models.CASCADE, related_name='client_tags', db_column='tag_id')
     created_date = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id',null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id', null=True)
 
     class Meta:
         managed = MANAGED
@@ -427,6 +427,7 @@ class SalesForceTrack(models.Model):
 
 class Forms(models.Model):
     form_name = models.CharField(max_length=100)
+    description = models.TextField()
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_forms', db_column='corp_id')
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now)
@@ -437,7 +438,7 @@ class Forms(models.Model):
 
 
 class FormQuestions(models.Model):
-    form = models.ForeignKey(Forms, models.CASCADE, related_name='form_questions', db_column= 'form_id')
+    form = models.ForeignKey(Forms, models.CASCADE, related_name='form_questions', db_column='form_id')
     question = models.CharField(max_length=100)
     created_date = models.DateTimeField(default=timezone.now)
 
