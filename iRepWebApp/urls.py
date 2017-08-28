@@ -50,6 +50,9 @@ urlpatterns += [
     # schedual
     url(r'^scheduler/add/$', views.AddScheduler, name='AddScheduler'),
 
+    # Froms
+    url(r'^forms/(?P<slug>[-\w]+)/$', views.ViewForms, name='ViewForms'),
+
     # Report
     url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce,
         name='TrackingVisitReportBySalesForce'),

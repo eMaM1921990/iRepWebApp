@@ -1,0 +1,18 @@
+{% load staticfiles i18n %}
+<div class="form-sample">
+
+    <div class="pull-right"><a class="btn btn-default" type="submit"><span
+            class="glyphicon glyphicon-pencil"></span>{% trans 'Edit' %}</a>
+        <div class="toggle btn btn-primary" data-toggle="toggle" style="width: 58px; height: 34px;">
+            <input checked="" data-toggle="toggle" type="checkbox">
+            <div class="toggle-group"><label class="btn btn-primary toggle-on">On</label><label
+                    class="btn btn-default active toggle-off">Off</label><span
+                    class="toggle-handle btn btn-default"></span></div>
+        </div>
+    </div>
+    <blockquote>
+        <p>{{ from.form_name }} </p>
+        <footer>{{ from.created_date }} </footer>
+    </blockquote>
+
+</div>

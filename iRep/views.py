@@ -15,6 +15,7 @@ from iRep.Serializers import ClientSerializer
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
+from iRep.managers.Forms import Forms
 from iRep.managers.Products import ProductManager
 from iRep.managers.Reports import TrackingReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
@@ -226,6 +227,14 @@ def AddScheduler(request):
         }
         return HttpResponse(json.dumps(ret, ensure_ascii=False))
 
+## FROMS
+@login_required
+def ViewForms(request, slug):
+    template = 'forms/list.html'
+    context = {
+        'formList': Forms.getFormList(slug=slug)
+    }
+    return render(request, template_name=template, context=context)
 
 
 ###################
