@@ -78,7 +78,7 @@ urlpatterns += [
     url(r'^api/v1/tags/(?P<slug>.+)/$', api.ListTags, name='apiListTags'),
 
     # serve media
-    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, },name='media'),
 
 ]
 

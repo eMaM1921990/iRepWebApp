@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.urls.base import reverse
 from rest_framework import serializers
 
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
@@ -54,7 +55,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_avatar_url(self, obj):
         if hasattr(obj, 'image'):
             if obj.image:
-                return self.context['request'].META['HTTP_HOST']+'/'+settings.MEDIA_ROOT+str(obj.image)
+                return self.context['request'].META['HTTP_HOST']+'/'+obj.image.url
         return ''
 
     class Meta:
