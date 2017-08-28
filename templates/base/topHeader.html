@@ -36,9 +36,17 @@
                                 <li><a href="{% url 'createSalesForce' %}"><i
                                         class=" glyphicon glyphicon-plus-sign"></i> {% trans 'Create Sales force' %}</a>
                                 </li>
+                                <li><a href="#"><i
+                                        class=" glyphicon glyphicon-tasks"></i> {% trans 'Manage sales accounts' %}</a>
+                                </li>
+                                <li><a href="#"><i
+                                        class=" glyphicon glyphicon-check"></i> {% trans 'Custom performance' %}</a>
+                                </li>
 
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'viewSalesForceByUser' user.corp_users.get.slug %}">{% trans 'View all' %}</a></li>
+                                <li>
+                                    <a href="{% url 'viewSalesForceByUser' user.corp_users.get.slug %}">{% trans 'View all' %}</a>
+                                </li>
 
                             </ul>
                         </li>
@@ -50,13 +58,48 @@
                                 <i class="glyphicon glyphicon-sunglasses"></i> {% trans 'Clients' %}
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu top-align user-align animated fadeIn">
-                                <li><a href="{% url 'AddClient' user.corp_users.get.slug %}"><i class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Client' %}
+                                <li><a href="{% url 'AddClient' user.corp_users.get.slug %}"><i
+                                        class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Client' %}
+                                </a></li>
+
+                                <li><a href="#"><i class="  glyphicon glyphicon-calendar"></i> {% trans 'Schedual' %}
+                                </a></li>
+
+                                <li><a href="#"><i class=" glyphicon glyphicon-calendar"></i> {% trans 'Dashboard' %}
+                                </a></li>
+
+                                <li><a href="#"><i class="  glyphicon glyphicon-copy "></i> {% trans 'Orders' %}
                                 </a></li>
 
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'viewClient' user.corp_users.get.slug %}">{% trans 'View all' %}</a></li>
+                                <li><a href="{% url 'viewClient' user.corp_users.get.slug %}">{% trans 'View all' %}</a>
+                                </li>
 
                             </ul>
+                        </li>
+
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="glyphicon glyphicon-sunglasses"></i> {% trans 'Forms' %}
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu top-align user-align animated fadeIn">
+                                <li><a href="#"><i class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Form' %}
+                                </a></li>
+
+
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">{% trans 'View all' %}</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li class="help-btn">
+                            <a href="" data-toggle="modal" data-target="#myModal">
+                                <i class="     glyphicon glyphicon-question-sign"></i> {% trans 'Need help?' %}
+                            </a>
+
                         </li>
 
 

@@ -606,3 +606,17 @@ ul.manage_actions li a span {
 }
 
 .questin-addon{ background-color: #3986c3 ; color: #fff}
+.navbar-nav-links > .help-btn > a{ color:#5bc0de !important }
+
+.divider{ border-bottom: 1px solid #ccc}
+
+.float-statistic{    bottom: 60px;
+    position: absolute;
+    z-index: 5000;  margin-left: 20px;}
+
+.float-statistic li{background: rgba(255,255,255,0.3) ; border-radius: 5px }
+.float-statistic li a{   padding: 5px 11px;}
+
+#summery, #clients, #Activities {  display: none}
+
+

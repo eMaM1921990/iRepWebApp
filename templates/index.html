@@ -1,131 +1,242 @@
 {% extends 'base/base.html' %}
 {% block content %}
 
-       <!--content-->
+    <!--content-->
 
     <div class="body bs-example">
 
-        <div  class="top-controlbar">
-
-              <div class="col-lg-3" style="z-index: 4000">
-        <select id="lunch" class="selectpicker show-menu-arrow form-control" multiple data-max-options="4" title="Please select a section to filter ...">
-          <option>Forms (all)</option>
-          <option>Photos</option>
-          <option> Time & Mileage tracking</option>
-          <option> Place Visits</option>
-
-        </select>
-      </div>
+        <div class="top-controlbar">
+            <div class="col-lg-4" style="z-index: 50">
 
 
-    <div class="col-md-3">
-
-    <div class="form-group">
-    <div class='input-group date' id='datetimepicker1'>
-    <input type='text' class="form-control" />
-    <span class="input-group-addon">
-    <span class="glyphicon glyphicon-calendar"></span>
-    </span>
-    </div>
-
-    </div>
+                <select id="lunchoption" class="selectpicker show-menu-arrow form-control bottom-align"
+                        title="Please select a section to filter ...">
 
 
-    </div>
-
-               <div class="col-md-3">
-
-    <div class="form-group">
-    <div class='input-group date' id='datetimepicker2'>
-    <input type='text' class="form-control" />
-    <span class="input-group-addon">
-    <span class="glyphicon glyphicon-calendar"></span>
-    </span>
-    </div>
-
-    </div>
+                    <option value="0">Summary</option>
+                    <option value="1"> Clients</option>
+                    <option value="2"> activities</option>
 
 
-    </div>
-
-                         <div class="col-md-3">
-
-    <div class="form-group">
-  <a href="" class="addmore" data-toggle="modal" data-target="#myModal">Add more filter<i class="glyphicon glyphicon-option-vertical"></i></a>
-   <a href="#" class="btn btn-primary btn-md" title="" >Apply</a>
+                </select>
+            </div>
 
 
-   <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><i class="glyphicon glyphicon-sort-by-attributes-alt"></i>Add more filter</h4>
-      </div>
-      <div class="modal-body">
+            <div class="col-md-4" style="z-index: 50">
+
+                <!--multiple data-max-options="4"-->
+                <select id="lunch2" class="selectpicker show-menu-arrow form-control bottom-align"
+                        title="Please select Governor ...">
 
 
-          <form>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Filter by place</label>
-    <input type="text" class="form-control"  placeholder="Place">
-  </div>
-
-    <div class="form-group">
-    <label for="exampleInputEmail1">Filter by places tags</label>
-    <input type="text" class="form-control"  placeholder="places tags">
-  </div>
-
-</form>
+                    <option>Cairo</option>
+                    <option> Alexandria</option>
+                    <option> qalyobia</option>
+                    <option> sharqya</option>
+                    <option> giza</option>
 
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-      <!-- Modal end -->
-
-    </div>
+                </select>
 
 
-    </div>
+            </div>
 
+            <div class="col-md-4" style="z-index: 50">
+
+                <select id="lunch2" class="selectpicker show-menu-arrow form-control bottom-align" multiple
+                        data-max-options="4" title="Please select City ...">
+
+
+                    <option>Maadi</option>
+                    <option> Helwan</option>
+                    <option> misr el qadima</option>
+                    <option> sharqya</option>
+                    <option> giza</option>
+
+
+                </select>
+            </div>
 
 
             <div class="clearfix"></div>
         </div>
 
-        <hr>
+        <div class="clearfix"></div>
 
-    <div class="flowArea">
+        <div class="cl-md-12">
 
-    <div class="col-md-12">
-    <div class="col-md-3 col-xs-6 ">
-    <p class="flow-data">
-    <span>Active reps</span><span class="pull-right">0</span>
-    </p>
+            <form class="form-vertical">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+
+                        <div class='input-group date' id='datetimepicker1'>
+
+                            <input type='text' class="form-control" placeholder="Date From"/>
+                            <span class="input-group-addon">
+    <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+
+                        <div class='input-group date' id='datetimepicker2'>
+
+
+                            <input type='text' class="form-control" placeholder="Date to"/>
+                            <span class="input-group-addon">
+    <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="form-group">
+
+                        <a href="#" class="btn btn-primary btn-md" title="">Apply</a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="clearfix"></div>
+
+
+        <ul class="nav nav-pills float-statistic" role="tablist" id="summery">
+            <li role="presentation"><a href="#">Active Reps <span class="badge">42</span></a></li>
+            <li role="presentation"><a href="#">Places <span class="badge">2</span></a></li>
+            <li role="presentation"><a href="#">Orders <span class="badge">10</span></a></li>
+            <li role="presentation"><a href="#">Money Amount <span class="badge">10</span></a></li>
+        </ul>
+
+        <ul class="nav nav-pills float-statistic" role="tablist" id="clients">
+            <li role="presentation"><a href="#">New client <span class="badge">42</span></a></li>
+            <li role="presentation"><a href="#">Qualifying <span class="badge">2</span></a></li>
+            <li role="presentation"><a href="#">Follow-up <span class="badge">10</span></a></li>
+
+        </ul>
+
+
+        <ul class="nav nav-pills float-statistic" role="tablist" id="Activities">
+            <li role="presentation"><a href="#">Planned <span class="badge">42</span></a></li>
+            <li role="presentation"><a href="#">Achieved <span class="badge">2</span></a></li>
+            <li role="presentation"><a href="#">Missed <span class="badge">10</span></a></li>
+
+        </ul>
+        <div id="map"></div>
+
+
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+        </script>
+
+
+    </div>
+
+    <!--content end -->
+
+    <div class="clearfix"></div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="cl-md-12">
+
+        <form class="form-vertical">
+
+            <div class="col-md-4">
+                <div class="form-group">
+
+                    <div class='input-group date' id='datetimepicker1'>
+
+                        <input type='text' class="form-control" placeholder="Date From"/>
+                        <span class="input-group-addon">
+    <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+
+                    <div class='input-group date' id='datetimepicker2'>
+
+
+                        <input type='text' class="form-control" placeholder="Date to"/>
+                        <span class="input-group-addon">
+    <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="form-group">
+
+                    <a href="#" class="btn btn-primary btn-md" title="">Apply</a>
+
+                </div>
+
+            </div>
+
+        </form>
+
     </div>
 
 
 
-    <div class="col-md-3 col-xs-6"><p class="flow-data"><span>Visits </span><span class="pull-right">0</span></p></div>
-    <div class="col-md-3 col-xs-6"><p class="flow-data"><span>Activities </span><span class="pull-right">0</span></p></div>
-    <div class="text-center col-md-3 col-xs-6"><p class="flow-data"><span class="amount" ><strong>$0.00</strong></span></p></div>
-
-    <!--   <li >Bootply <span class="pull-right">     <input checked data-toggle="toggle" type="checkbox"></span></li> -->
+    <div class="clearfix"></div>
 
 
-    </div>
-    </div>
+    <ul class="nav nav-pills float-statistic" role="tablist" id="summery">
+        <li role="presentation"><a href="#">Active Reps <span class="badge">42</span></a></li>
+        <li role="presentation"><a href="#">Places <span class="badge">2</span></a></li>
+        <li role="presentation"><a href="#">Orders <span class="badge">10</span></a></li>
+        <li role="presentation"><a href="#">Money Amount <span class="badge">10</span></a></li>
+    </ul>
 
-<div class="map-responsive">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d386950.6511603643!2d-73.70231446529533!3d40.738882125234106!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNueva+York!5e0!3m2!1ses-419!2sus!4v1445032011908" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-</div>
+    <ul class="nav nav-pills float-statistic" role="tablist" id="clients">
+        <li role="presentation"><a href="#">New client <span class="badge">42</span></a></li>
+        <li role="presentation"><a href="#">Qualifying <span class="badge">2</span></a></li>
+        <li role="presentation"><a href="#">Follow-up <span class="badge">10</span></a></li>
+
+    </ul>
+
+
+
+    <ul class="nav nav-pills float-statistic" role="tablist" id="Activities">
+        <li role="presentation"><a href="#">Planned <span class="badge">42</span></a></li>
+        <li role="presentation"><a href="#">Achieved <span class="badge">2</span></a></li>
+        <li role="presentation"><a href="#">Missed <span class="badge">10</span></a></li>
+
+    </ul>
+    <div id="map"></div>
+
+
+
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+    </script>
+
+
+
 
 
     </div>
@@ -134,38 +245,42 @@
 
 
 
+    <!--content end -->
 
+
+
+{% include 'help.html' %}
 {% endblock %}
 {% block extra_javascript %}
     <script>
-  $(document).ready(function () {
-    var mySelect = $('#first-disabled2');
+        $(document).ready(function () {
+            var mySelect = $('#first-disabled2');
 
-    $('#special').on('click', function () {
-      mySelect.find('option:selected').prop('disabled', true);
-      mySelect.selectpicker('refresh');
-    });
-
-    $('#special2').on('click', function () {
-      mySelect.find('option:disabled').prop('disabled', false);
-      mySelect.selectpicker('refresh');
-    });
-
-    $('#basic2').selectpicker({
-      liveSearch: true,
-      maxOptions: 1
-    });
-  });
-</script>
-     <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-                 $('#datetimepicker2').datetimepicker();
+            $('#special').on('click', function () {
+                mySelect.find('option:selected').prop('disabled', true);
+                mySelect.selectpicker('refresh');
             });
 
-                 $('#myModal').on('shown.bs.modal', function () {
-  $('#myInput').focus()
-})
+            $('#special2').on('click', function () {
+                mySelect.find('option:disabled').prop('disabled', false);
+                mySelect.selectpicker('refresh');
+            });
 
-        </script>
+            $('#basic2').selectpicker({
+                liveSearch: true,
+                maxOptions: 1
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker1').datetimepicker();
+            $('#datetimepicker2').datetimepicker();
+        });
+
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        })
+
+    </script>
 {% endblock %}
