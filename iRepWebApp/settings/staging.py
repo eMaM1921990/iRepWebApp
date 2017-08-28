@@ -20,7 +20,7 @@ STATICFILES_DIRS = (
 )
 
 # Media
-# MEDIA_ROOT = '/opt/bitnami/apps/django/django_projects/iRepWebApp/media/'
+MEDIA_ROOT = '/opt/bitnami/apps/django/django_projects/iRepWebApp/media/'
 
 
 
