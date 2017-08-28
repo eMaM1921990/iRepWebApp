@@ -21,8 +21,7 @@ $("#button-id-apply").click(function (event) {
             $('#to_date').text(vFD.get('date_to'));
                if(JSON.parse(responseText).valid){
                    $('#tracking tr:last').after(JSON.parse(responseText).html);
-               }else {
-
+                   $('#totalVisits').text(JSON.parse(responseText).totalVisits);
                }
         },
         error: function (xhr, errmsg, err) {

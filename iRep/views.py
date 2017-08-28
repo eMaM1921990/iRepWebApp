@@ -306,13 +306,15 @@ def TrackingVisitReportBySalesForce(request):
         template = 'sales_force/visit_track_rows.html'
         trackingInstance = TrackingReports(start_date=request.POST['date_from'],end_date=request.POST['date_to'])
         result = trackingInstance.visits_by_sales_force(sales_force_id=request.POST['sales_force'])
+        totalVisits = trackingInstance.countTotalPlaceVisited(sales_force_id=request.POST['sales_force'])
         html = None
         if result:
             valid = True
             html = render_to_string(template_name=template,context={'tracking':result})
         ret = {
             "html":html,
-            "valid":valid
+            "valid":valid,
+            "totalVisits":totalVisits
         }
 
         return HttpResponse(json.dumps(ret,ensure_ascii=False))
