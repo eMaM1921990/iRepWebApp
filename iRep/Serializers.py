@@ -55,7 +55,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_avatar_url(self, obj):
         if hasattr(obj, 'image'):
             if obj.image:
-                return self.context['request'].META['HTTP_HOST']+'/'+obj.image
+                return self.context['request'].META['HTTP_HOST']+'/'+reverse('media',{'path':obj.image.url})
         return ''
 
     class Meta:
