@@ -227,14 +227,14 @@ def ExportOrders(request):
 def AddScheduler(request):
     if request.POST:
         valid = False
-        message = _('Error during save scheduler')
+        message = 'Error during save scheduler'
         schedual_instance = SchedulerManager()
         result = schedual_instance.add_scheduler(request.POST['client_id'], request.POST['sales_force_id'],
                                                  request.POST['dates'],
                                                  request.POST['times'], request.POST['notes'])
         if result:
             valid = True
-            message = _('Schedual add successfully')
+            message = 'Scheduler add successfully'
 
         ret = {
             "valid": valid,
