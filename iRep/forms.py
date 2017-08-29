@@ -1,5 +1,6 @@
 import datetime
-from crispy_forms.bootstrap import PrependedText, AppendedText, Accordion, AccordionGroup
+from crispy_forms.bootstrap import PrependedText, AppendedText, Accordion, AccordionGroup, FieldWithButtons, \
+    StrictButton
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Field, Fieldset, Div, HTML, Button
 from django import forms
@@ -224,10 +225,22 @@ class SalesForceReportForm(BaseReportForm):
 class ProductCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductCategoryForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder']= _('Category name')
+        self.fields['name'].widget.attrs['class'] = 'form-control'
+        self.fields['is_active'].widget.attrs['data-toggle'] = 'toggle'
+
+    def save(self, user, corporate, commit=True):
+        m = super(ProductCategoryForm, self).save(commit=False)
+        m.created_by = user
+        m.corporate = corporate
+        m.save()
+        return m
+
+
 
     class Meta:
         model = ProductGroup
-        exclude = ['created_date', 'created_by']
+        exclude = ['created_date', 'created_by','corporate']
 
 
 class ProductForm(forms.ModelForm):
@@ -326,7 +339,8 @@ class ProductForm(forms.ModelForm):
             Div(
                 Div(
                     Div(
-                        Field('product', placeholder=_('Product category')),
+                        FieldWithButtons('product', StrictButton("Add new!", css_class=".newcategory",css_id='newCategory'),
+                                         placeholder=_('Product category')),
                         css_class='col-md-6'
                     ),
                     # Div(
@@ -481,7 +495,7 @@ class ClientForm(forms.ModelForm):
                     Div(
                         Field('email', placeholder=_('E-mail')),
                         css_class='col-md-6'
-                    ),
+                    )
                 )
 
             ),

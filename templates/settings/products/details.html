@@ -11,7 +11,7 @@
             {% if not new %}{{ form.name.value }}{% else %}{% trans 'New product' %}{% endif %}</h1>
         <div>
 
-         {% if form.errors %}
+            {% if form.errors %}
                 <!-- Error messaging -->
                 <div id="errors">
                     <div class="alert alert-danger ">
@@ -46,17 +46,18 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="info">
                     <div class="divider-md"></div>
                     {% crispy form %}
+
                 </div>
                 <div role="tabpanel" class="tab-pane fade in active" id="report">
                     <div class="divider-md"></div>
                     <div class="top-controlbar">
                         {% if reportForm %}
-                        {% crispy reportForm %}
+                            {% crispy reportForm %}
                         {% endif %}
                         <div class="clearfix"></div>
                     </div>
 
-{#                    {% include 'sales_force/reports.html' %}#}
+                    {#                    {% include 'sales_force/reports.html' %}#}
 
 
                 </div>
@@ -66,12 +67,14 @@
         </div>
 
     </div>
+    {% include 'settings/products/category.html' %}
 {% endblock %}
 {% block extra_js_src %}
     <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
     <script src="{% static 'app_js/highcharts.js' %}"></script>
     {#    <script src="{% static 'app_js/exporting.js' %}"></script>#}
     <script src="{% static 'full_calendar/fullcalendar.min.js' %}"></script>
+    <script src="{% static 'app_js/product.js' %}"></script>
 {% endblock %}
 {% block extra_javascript %}
     <script>
@@ -85,11 +88,22 @@
         });
 
 
-{#    #}
+        {#    #}
 
         $(document).ready(function () {
 
             // page is now ready, initialize the calendar...
+
+            console.log('asas');
+
+            $('#newCategory').click(function () {
+                console.log('jere');
+                $('#productCategory').modal('show');
+            });
+
+
+
+
 
             $('#calendar').fullCalendar({
                 header: {

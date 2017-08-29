@@ -15,9 +15,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-from iRep.Serializers import ClientSerializer
+from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
-    BaseQuestionFormSet, FormsForm
+    BaseQuestionFormSet, FormsForm, ProductCategoryForm
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Forms import Forms, IForm
@@ -68,10 +68,10 @@ def EditSalesForce(request, slug):
                           instance=sales_force_instance,
                           corp_instance=corp,
                           action=reverse('editSalesForce', kwargs={'slug': slug}))
-    reportForm = SalesForceReportForm(sales_force= sales_force_instance.id)
+    reportForm = SalesForceReportForm(sales_force=sales_force_instance.id)
     if form.is_valid():
         form.save(user=request.user)
-        return redirect(reverse('viewSalesForceByUser',kwargs={'slug':corp.slug}))
+        return redirect(reverse('viewSalesForceByUser', kwargs={'slug': corp.slug}))
     # Retreve clients
     sqs = ClientManager().get_client_by_sales_force(slug)
     data = []
@@ -84,19 +84,23 @@ def EditSalesForce(request, slug):
     # retrieve schedual
     schedular = SchedulerManager().get_schedul_by_sales_force(sales_force=slug)
     return render(request, template_name=template,
-                  context={'form': form, 'new': False, 'reportForm': reportForm, 'clients': data, 'sales_force_id':sales_force_instance.pk,'schedular':schedular})
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'clients': data,
+                           'sales_force_id': sales_force_instance.pk, 'schedular': schedular})
 
 
 @login_required
 def AddProduct(request, slug):
     template = 'settings/products/details.html'
-    form = ProductForm(request.POST or None,request.FILES or None, slug=slug, action=reverse('createProduct', kwargs={'slug': slug}))
+    form = ProductForm(request.POST or None, request.FILES or None, slug=slug,
+                       action=reverse('createProduct', kwargs={'slug': slug}))
+
+    categoryForm = ProductCategoryForm(request.POST or None)
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
         m = form.save(user=request.user, corporate=corporate)
         return redirect(reverse('productList', kwargs={'slug': slug}))
-    return render(request, template_name=template, context={'form': form, 'new': True})
+    return render(request, template_name=template, context={'form': form, 'new': True, 'categoryForm': categoryForm})
 
 
 @login_required
@@ -112,15 +116,19 @@ def ViewProduct(request, slug):
 def ViewEditProduct(request, slug):
     template = 'settings/products/details.html'
     product_instance = get_object_or_404(Product, slug=slug)
-    form = ProductForm(request.POST or None,request.FILES or None, slug=slug,
+    form = ProductForm(request.POST or None, request.FILES or None, slug=slug,
                        instance=product_instance,
                        action=reverse('editProduct', kwargs={'slug': slug}))
+
+    categoryForm = ProductCategoryForm(request.POST or None)
 
     reportForm = BaseReportForm()
     if form.is_valid():
         form.save(user=request.user, corporate=product_instance.corporate)
         return redirect(reverse('productList', kwargs={'slug': product_instance.corporate.slug}))
-    return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm})
+
+    return render(request, template_name=template,
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'categoryForm': categoryForm})
 
 
 @login_required
@@ -160,7 +168,8 @@ def EditClient(request, slug):
     # retrieve schedual
     schedular = SchedulerManager().get_scheduler_by_client(client_slug=slug)
 
-    return render(request, template_name=template, context={'form': form, 'new': False, 'reportForm': reportForm,'schedular':schedular})
+    return render(request, template_name=template,
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'schedular': schedular})
 
 
 # Export
@@ -220,17 +229,40 @@ def AddScheduler(request):
         valid = False
         message = _('Error during save scheduler')
         schedual_instance = SchedulerManager()
-        result = schedual_instance.add_scheduler(request.POST['client_id'], request.POST['sales_force_id'], request.POST['dates'],
-                                        request.POST['times'], request.POST['notes'])
+        result = schedual_instance.add_scheduler(request.POST['client_id'], request.POST['sales_force_id'],
+                                                 request.POST['dates'],
+                                                 request.POST['times'], request.POST['notes'])
         if result:
             valid = True
-            message =_('Schedual add successfully')
+            message = _('Schedual add successfully')
 
         ret = {
-            "valid":valid,
-            "msg":message
+            "valid": valid,
+            "msg": message
         }
         return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+
+# product category
+@login_required
+def AddCategory(request):
+    if request.POST:
+        valid = False
+        user = request.user
+        categoryForm = ProductCategoryForm(request.POST or None)
+        if categoryForm.is_valid():
+            corporate = CorpManager().get_corp_by_user(request.user)
+            result = categoryForm.save(user=user, corporate=corporate)
+            if result:
+                valid = True
+                objects = ProductGroupWithoutProductSerialziers(result).data
+
+        ret = {
+            "valid": valid,
+            "objects": objects
+        }
+        return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
 
 ## FROMS
 @login_required
@@ -241,8 +273,9 @@ def ViewForms(request, slug):
     }
     return render(request, template_name=template, context=context)
 
+
 @login_required
-def CreateOrEditForms(request,slug, id=None):
+def CreateOrEditForms(request, slug, id=None):
     template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
     QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
@@ -251,10 +284,10 @@ def CreateOrEditForms(request,slug, id=None):
     form_questions = IForm(slug=slug).getFormQuestions(id)
     if form_questions:
         question_data = [{'question': l.question}
-                     for l in form_questions]
+                         for l in form_questions]
 
     formsForm = FormsForm(request.POST or None, user=request.user)
-    QuestionFormSetform  = QuestionFormSet(request.POST or None,initial=form_questions)
+    QuestionFormSetform = QuestionFormSet(request.POST or None, initial=form_questions)
 
     if formsForm.is_valid():
         m = formsForm.save()
@@ -262,7 +295,7 @@ def CreateOrEditForms(request,slug, id=None):
         # Now save the data for each form in the formset
         new_questions = []
         for question_form in QuestionFormSetform:
-            new_questions.append(FormQuestions(form= m,question=question_form.cleaned_data.get('question')))
+            new_questions.append(FormQuestions(form=m, question=question_form.cleaned_data.get('question')))
 
         try:
             with transaction.atomic():
@@ -291,30 +324,31 @@ def CreateOrEditForms(request,slug, id=None):
 def TrackingVisitReportByClient(request):
     if request.POST:
         template = 'sales_force/visits_track_rows.html'
-        trackingInstance = TrackingReports(start_date=request.POST['id_date_from'],end_date=request.POST['id_date_to'])
+        trackingInstance = TrackingReports(start_date=request.POST['id_date_from'], end_date=request.POST['id_date_to'])
         result = trackingInstance.visits_by_client(client_id=request.POST['client_id'])
         ret = {
-            "data":result
+            "data": result
         }
 
-        return HttpResponse(json.dumps(ret,ensure_ascii=False))
+        return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
 
 @login_required
 def TrackingVisitReportBySalesForce(request):
     if request.POST:
         valid = False
         template = 'sales_force/visit_track_rows.html'
-        trackingInstance = TrackingReports(start_date=request.POST['date_from'],end_date=request.POST['date_to'])
+        trackingInstance = TrackingReports(start_date=request.POST['date_from'], end_date=request.POST['date_to'])
         result = trackingInstance.visits_by_sales_force(sales_force_id=request.POST['sales_force'])
         totalVisits = trackingInstance.countTotalPlaceVisited(sales_force_id=request.POST['sales_force'])
         html = None
         if result:
             valid = True
-            html = render_to_string(template_name=template,context={'tracking':result})
+            html = render_to_string(template_name=template, context={'tracking': result})
         ret = {
-            "html":html,
-            "valid":valid,
-            "totalVisits":totalVisits
+            "html": html,
+            "valid": valid,
+            "totalVisits": totalVisits
         }
 
-        return HttpResponse(json.dumps(ret,ensure_ascii=False))
+        return HttpResponse(json.dumps(ret, ensure_ascii=False))

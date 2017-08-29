@@ -71,6 +71,13 @@ class ProductGroupSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'product']
 
 
+class ProductGroupWithoutProductSerialziers(serializers.ModelSerializer):
+    class Meta:
+        model = ProductGroup
+        fields = ['id', 'name']
+
+
+
 class TagSerlizers(serializers.ModelSerializer):
     class Meta:
         model = Tags
