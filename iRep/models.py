@@ -408,6 +408,10 @@ class SalesForceCheckInOut(models.Model):
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id')
     visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out', db_column='visit_id')
 
+    @property
+    def getTimeDiff(self):
+        return self.check_out_time - self.check_in_time
+
     class Meta:
         managed = MANAGED
         db_table = 'sales_force_check_in_out'

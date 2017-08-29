@@ -22,6 +22,14 @@ $("#button-id-apply").click(function (event) {
                if(JSON.parse(responseText).valid){
                    $('#tracking tr:last').after(JSON.parse(responseText).html);
                    $('#totalVisits').text(JSON.parse(responseText).totalVisits);
+                   $('#totalOrder').text(JSON.parse(responseText).totalOrder);
+                   $('#totalVisitGroupByBranch').text(JSON.parse(responseText).totalVisitGroupByBranch);
+                   $('#hr').text(JSON.parse(responseText).hr);
+                   $('#km').text(JSON.parse(responseText).km);
+                   $('#countDay').text(JSON.parse(responseText).countDay);
+                   $('#totalTimePlace').text(JSON.parse(responseText).totalTimePlace);
+
+
                }
         },
         error: function (xhr, errmsg, err) {

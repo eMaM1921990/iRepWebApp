@@ -1,4 +1,8 @@
-from iRep.models import SalesForceCheckInOut, Visits
+from django.db.models import Count, Sum, fields
+from django.db.models import ExpressionWrapper
+from django.db.models import F
+
+from iRep.models import SalesForceCheckInOut, Visits, Orders, SalesForceTimeLine
 
 __author__ = 'eMaM'
 
@@ -19,6 +23,25 @@ class TrackingReports():
                                                                       check_in_date__gte=self.from_date)
 
     def countTotalPlaceVisited(self, sales_force_id):
-        return Visits.objects.filter(sales_force__id=sales_force_id,visit_date__lte=self.from_date,visit_date__gte=self.to_date)
+        return Visits.objects.filter(sales_force__id=sales_force_id, visit_date__lte=self.to_date,
+                                     visit_date__gte=self.from_date).count()
 
+    def countNumberOfOrders(self, sales_force_id):
+        return Orders.objects.filter(sales_force__id=sales_force_id).count()
 
+    def countTotalPlaceVisitedGroupByBranch(self, sales_force_id):
+        return Visits.objects.filter(sales_force__id=sales_force_id, visit_date__lte=self.to_date,
+                                     visit_date__gte=self.from_date) \
+            .values('branch').annotate(totalVistitBranch=Count('branch'))
+
+    def countSalesForceTimeAndMile(self, sales_force_id):
+        return SalesForceTimeLine.objects.filter(sales_force__id=sales_force_id, time_line_date__lte=self.to_date,
+                                                 time_line_date__gte=self.from_date) \
+            .values('sales_force').annotate(totalKm=Sum('km'), totalHr=Sum('hours'), totalDay=Count('sales_force'))
+
+    def countTimeinPlace(self, sales_force_id):
+        duration = ExpressionWrapper(F('check_out_time') - F('check_in_time'), output_field=fields.DurationField())
+
+        return SalesForceCheckInOut.objects.filter(sales_force__id=sales_force_id, check_in_date__lte=self.to_date,
+                                                   check_in_date__gte=self.from_date).values('sales_force').annotate(
+            totalTime=Sum(duration))

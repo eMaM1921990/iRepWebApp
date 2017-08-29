@@ -341,6 +341,23 @@ def TrackingVisitReportBySalesForce(request):
         trackingInstance = TrackingReports(start_date=request.POST['date_from'], end_date=request.POST['date_to'])
         result = trackingInstance.visits_by_sales_force(sales_force_id=request.POST['sales_force'])
         totalVisits = trackingInstance.countTotalPlaceVisited(sales_force_id=request.POST['sales_force'])
+        totalOrder = trackingInstance.countNumberOfOrders(sales_force_id=request.POST['sales_force'])
+        totalVisitGroupByBranch = trackingInstance.countTotalPlaceVisitedGroupByBranch(
+            sales_force_id=request.POST['sales_force'])
+        totalHrAndMile = trackingInstance.countSalesForceTimeAndMile(sales_force_id=request.POST['sales_force'])
+        totalTimeInPlace= trackingInstance.countTimeinPlace(sales_force_id=request.POST['sales_force'])
+        if not totalVisitGroupByBranch:
+            totalVisitGroupByBranch = 0
+
+        if not totalHrAndMile:
+            hr = 0
+            km = 0
+            countDay = 0
+        else:
+            hr = float(totalHrAndMile[0]['totalHr'])
+            km = float(totalHrAndMile[0]['totalKm'])
+            countDay = totalHrAndMile[0]['totalDay']
+
         html = None
         if result:
             valid = True
@@ -348,7 +365,14 @@ def TrackingVisitReportBySalesForce(request):
         ret = {
             "html": html,
             "valid": valid,
-            "totalVisits": totalVisits
+            "totalVisits": totalVisits,
+            "totalOrder": totalOrder,
+            "totalVisitGroupByBranch": totalVisitGroupByBranch[0]['totalVistitBranch'],
+            "hr": hr,
+            "km": km,
+            "countDay":countDay,
+            "totalTimePlace":str(totalTimeInPlace[0]['totalTime'])
+
         }
 
         return HttpResponse(json.dumps(ret, ensure_ascii=False))
