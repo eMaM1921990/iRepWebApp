@@ -589,7 +589,7 @@ def OrderCreate(request):
                                               notes=request.data['notes'] if 'notes' in request.data else None, items=request.data['items'])
     if order_instance:
         resp['code'] = 200
-        resp['data'] = OrderSerializers(order_instance).data
+        resp['data'] = OrderSerializers(order_instance,context={"request": request}).data
 
     return Response(resp)
 
