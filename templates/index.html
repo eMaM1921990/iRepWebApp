@@ -222,7 +222,7 @@
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng({{ location.latitude }}, {{ location.longitude }}),
                     map: map,
-                    icon: '{{ location.sales_force.avatar }}'
+                    icon: '{{ location.sales_force.avatar.url }}'
                 });
                 flightPlanCoordinates.push(marker.getPosition());
                 bounds.extend(marker.position);
