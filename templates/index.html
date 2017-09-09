@@ -237,7 +237,7 @@
                 bounds.extend(marker.position);
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
-                        infoWindow.setContent('{{ location.sales_force.name }}');
+                        infoWindow.setContent('<img src="{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}"/>{{ location.sales_force.name }}');
                         infoWindow.open(map, marker);
                     }
                 })(marker, {{ forloop.counter0 }}));
