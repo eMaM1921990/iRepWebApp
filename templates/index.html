@@ -183,6 +183,8 @@
 
     <script>
         var map, infoWindow;
+        // Location
+        var flightPlanCoordinates = {};
         function initMap() {
             // Create a map object and specify the DOM element for display.
             map = new google.maps.Map(document.getElementById('map'), {
@@ -215,11 +217,9 @@
             }
 
 
-            // Location
-            var flightPlanCoordinates = [];
             var bounds = new google.maps.LatLngBounds();
-
             {% for location in locations %}
+
                 var icon = {
                     url: "{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}", // url
                     scaledSize: new google.maps.Size(60, 60), // scaled size
@@ -233,25 +233,37 @@
                     {#                    icon: icon,#}
                     label: '{{ location.sales_force.name }}'
                 });
-                flightPlanCoordinates.push(marker.getPosition());
+                {#                flightPlanCoordinates.push(marker.getPosition());#}
+
+                addToflightDict({{ location.sales_force.id }},marker.getPosition());
                 bounds.extend(marker.position);
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
-                        infoWindow.setContent('<img width="50px" height="50px" src="{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}"/><h3>{{ location.sales_force.name }}</h3><h4>{{ location.sales_force.phone }}</h4>');
+                        infoWindow.setContent('<img width="50px" height="50px" src="{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}"/><b>{{ location.sales_force.name }}</b><br><b>{{ location.sales_force.phone }}</b>');
                         infoWindow.open(map, marker);
                     }
                 })(marker, {{ forloop.counter0 }}));
+
+
             {% endfor %}
 
             map.fitBounds(bounds);
-
-            var flightPath = new google.maps.Polyline({
-                map: map,
-                path: flightPlanCoordinates,
-                strokeColor: "#FF0000",
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-            });
+            for (var key in flightPlanCoordinates) {
+                new google.maps.Polyline({
+                    map: map,
+                    path: flightPlanCoordinates[key],
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                });
+            }
+            {#            var flightPath = new google.maps.Polyline({#}
+            {#                map: map,#}
+            {#                path: flightPlanCoordinates,#}
+            {#                strokeColor: "#FF0000",#}
+            {#                strokeOpacity: 1.0,#}
+            {#                strokeWeight: 2#}
+            {#            });#}
         }
 
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -260,6 +272,15 @@
                     'Error: The Geolocation service failed.' :
                     'Error: Your browser doesn\'t support geolocation.');
             infoWindow.open(map);
+        }
+
+
+        function addToflightDict(key, val) {
+            if (flightPlanCoordinates.hasOwnProperty(key)) {
+                flightPlanCoordinates[key].push(val);
+            } else {
+                flightPlanCoordinates[key] = [val];
+            }
         }
 
 
