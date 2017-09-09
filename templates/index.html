@@ -222,7 +222,7 @@
             {% for location in locations %}
                 var icon = {
                     url: "{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}", // url
-                    scaledSize: new google.maps.Size(50, 50), // scaled size
+                    scaledSize: new google.maps.Size(60, 60), // scaled size
                     origin: new google.maps.Point(0, 0), // origin
                     anchor: new google.maps.Point(0, 0) // anchor
                 };
