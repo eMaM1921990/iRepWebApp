@@ -230,14 +230,14 @@
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng({{ location.latitude }}, {{ location.longitude }}),
                     map: map,
-{#                    icon: icon,#}
-                    label:'{{ location.sales_force.name }}'
+                    {#                    icon: icon,#}
+                    label: '{{ location.sales_force.name }}'
                 });
                 flightPlanCoordinates.push(marker.getPosition());
                 bounds.extend(marker.position);
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
-                        infoWindow.setContent('<img src="{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}"/>{{ location.sales_force.name }}');
+                        infoWindow.setContent('<img width="50px" height="50px" src="{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}"/><h3>{{ location.sales_force.name }}</h3><h4>{{ location.sales_force.phone }}</h4>');
                         infoWindow.open(map, marker);
                     }
                 })(marker, {{ forloop.counter0 }}));
