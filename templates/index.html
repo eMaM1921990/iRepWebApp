@@ -235,11 +235,11 @@
                 });
                 {#                flightPlanCoordinates.push(marker.getPosition());#}
 
-                addToflightDict({{ location.sales_force.id }},marker.getPosition());
+                addToflightDict({{ location.sales_force.id }}, marker.getPosition());
                 bounds.extend(marker.position);
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
-                        infoWindow.setContent('<img width="50px" height="50px" src="{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}"/><b>{{ location.sales_force.name }}</b><br><b>{{ location.sales_force.phone }}</b>');
+                        infoWindow.setContent('<img width="50px" height="50px" src="{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}"/><b>{{ location.sales_force.name }}</b><br/><b>{{ location.sales_force.phone }}</b><br/>{{ location.created_date }}');
                         infoWindow.open(map, marker);
                     }
                 })(marker, {{ forloop.counter0 }}));
@@ -257,13 +257,7 @@
                     strokeWeight: 2
                 });
             }
-            {#            var flightPath = new google.maps.Polyline({#}
-            {#                map: map,#}
-            {#                path: flightPlanCoordinates,#}
-            {#                strokeColor: "#FF0000",#}
-            {#                strokeOpacity: 1.0,#}
-            {#                strokeWeight: 2#}
-            {#            });#}
+
         }
 
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
