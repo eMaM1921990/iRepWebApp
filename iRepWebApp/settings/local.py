@@ -4,7 +4,7 @@ STATICFILES_DIRS = (
 )
 
 
-MEDIA_URL = os.path.join(BASE_DIR, '..')+'/'
+# MEDIA_URL = os.path.join(BASE_DIR, '..')+'/'
 
 #
 # DATABASES = {

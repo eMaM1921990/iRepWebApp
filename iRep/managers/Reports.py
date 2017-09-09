@@ -2,7 +2,7 @@ from django.db.models import Count, Sum, fields
 from django.db.models import ExpressionWrapper
 from django.db.models import F
 
-from iRep.models import SalesForceCheckInOut, Visits, Orders, SalesForceTimeLine
+from iRep.models import SalesForceCheckInOut, Visits, Orders, SalesForceTimeLine, SalesForceTrack
 
 __author__ = 'eMaM'
 
@@ -45,3 +45,6 @@ class TrackingReports():
         return SalesForceCheckInOut.objects.filter(sales_force__id=sales_force_id, check_in_date__lte=self.to_date,
                                                    check_in_date__gte=self.from_date).values('sales_force').annotate(
             totalTime=Sum(duration))
+
+    def tracking_sales_force_by_corp(self, slug):
+        return SalesForceTrack.objects.filter(sales_force__corp_id=slug)

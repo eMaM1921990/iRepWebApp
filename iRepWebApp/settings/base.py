@@ -92,6 +92,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
+                'iRep.context_processors.google_map'
                 # 'allauth.account.context_processors.account',
             ],
         },
@@ -135,9 +136,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR,'..', 'locale'),
+    os.path.join(BASE_DIR, '..', 'locale'),
 )
-
 
 TIME_ZONE = 'UTC'
 
@@ -155,7 +155,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-
 # ALLAUTH AUTHENTICATION
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
@@ -167,7 +166,6 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 3
 ACCOUNT_SIGNUP_FORM_CLASS = 'iRep.forms.SignupForm'
-
 
 # LOGGING
 LOGGING = {
@@ -208,3 +206,6 @@ PRODUCT_DIR = 'product/'
 
 # Media
 MEDIA_ROOT = 'media/'
+
+# MAP
+GOOGLE_MAP_KEY = 'AIzaSyDzQ9-_-5ivk_jjiSTduNebi7tyjP3-fv0'

@@ -32,8 +32,12 @@ from django.utils.translation import ugettext_lazy as _
 
 @login_required
 def home(request):
+    context = {}
     template = 'index.html'
-    return render(request, template_name=template)
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    context['locations'] = TrackingReports(None,None).tracking_sales_force_by_corp(corp)
+    return render(request, template_name=template, context=context)
 
 
 @login_required
