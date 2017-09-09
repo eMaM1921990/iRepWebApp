@@ -21,6 +21,7 @@ from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseRe
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Forms import Forms, IForm
+from iRep.managers.Orders import OrderManager
 from iRep.managers.Products import ProductManager
 from iRep.managers.Reports import TrackingReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
@@ -155,6 +156,11 @@ def AddClient(request, slug):
         return redirect(reverse('viewClient', kwargs={'slug': slug}))
     return render(request, template_name=template, context={'form': form, 'new': True})
 
+@login_required
+def viewOrder(request, slug):
+    template = 'orders/details.html'
+    orders = OrderManager().get_corp_orders(slug=slug)
+    return render(request, template_name=template, context={'orders': orders})
 
 @login_required
 def EditClient(request, slug):

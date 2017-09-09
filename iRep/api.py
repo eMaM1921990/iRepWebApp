@@ -118,7 +118,7 @@ def ClientsOrder(request, clientId):
         resp['data'] = []
         ordersQS = Orders.objects.filter(branch__id=clientId)
         for raw in ordersQS:
-            resp['data'].append(OrderSerializers(raw).data)
+            resp['data'].append(OrderSerializers(raw,context={"request": request}).data)
         resp['code'] = 200
     except Exception as e:
         resp['msg'] = _('Can`t retrieve client orders')
@@ -589,7 +589,7 @@ def OrderCreate(request):
                                               notes=request.data['notes'] if 'notes' in request.data else None, items=request.data['items'])
     if order_instance:
         resp['code'] = 200
-        resp['data'] = OrderSerializers(order_instance).data
+        resp['data'] = OrderSerializers(order_instance,context={"request": request}).data
 
     return Response(resp)
 

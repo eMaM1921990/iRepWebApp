@@ -29,3 +29,7 @@ class OrderManager():
         except Exception as e:
             logging.error('error during save order for sales_force_id' + str(sales_force_id) + ' cause: ' + str(e))
             return None
+
+
+    def get_corp_orders(self, slug):
+        return Orders.objects.prefetch_related('branch').filter(sales_force__corp_id__slug=slug)
