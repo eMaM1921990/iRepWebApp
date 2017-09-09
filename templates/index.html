@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load staticfiles %}
 {% block content %}
 
     <!--content-->
@@ -185,7 +186,7 @@
         function initMap() {
             // Create a map object and specify the DOM element for display.
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 30.8025, lng:26.8206 },
+                center: {lat: 30.8025, lng: 26.8206},
                 zoom: 10,
                 zoomControl: false,
                 scaleControl: true
@@ -219,10 +220,17 @@
             var bounds = new google.maps.LatLngBounds();
 
             {% for location in locations %}
+                var icon = {
+                    url: "{% if location.sales_force.avatar %}{{ location.sales_force.avatar.url }}{% else %}{% static  'img/user.gif'%}{% endif %}", // url
+                    scaledSize: new google.maps.Size(50, 50), // scaled size
+                    origin: new google.maps.Point(0, 0), // origin
+                    anchor: new google.maps.Point(0, 0) // anchor
+                };
+
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng({{ location.latitude }}, {{ location.longitude }}),
                     map: map,
-                    icon: '{{ location.sales_force.avatar.url }}'
+                    icon: icon
                 });
                 flightPlanCoordinates.push(marker.getPosition());
                 bounds.extend(marker.position);
