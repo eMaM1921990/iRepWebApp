@@ -230,7 +230,8 @@
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng({{ location.latitude }}, {{ location.longitude }}),
                     map: map,
-                    icon: icon
+{#                    icon: icon,#}
+                    label:'{{ location.sales_force.name }}'
                 });
                 flightPlanCoordinates.push(marker.getPosition());
                 bounds.extend(marker.position);
