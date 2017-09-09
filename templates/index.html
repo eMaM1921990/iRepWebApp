@@ -124,14 +124,14 @@
 
 
         <ul class="nav nav-pills float-statistic" role="tablist" id="summery">
-            <li role="presentation"><a href="#">Active Reps <span class="badge">42</span></a></li>
-            <li role="presentation"><a href="#">Places <span class="badge">2</span></a></li>
-            <li role="presentation"><a href="#">Orders <span class="badge">10</span></a></li>
+            <li role="presentation"><a href="#">Active Reps <span class="badge">{{ activeRep|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">Places <span class="badge">{{ clientCount|default:0  }}</span></a></li>
+            <li role="presentation"><a href="#">Orders <span class="badge">{{ total_order|default:0  }}</span></a></li>
             <li role="presentation"><a href="#">Money Amount <span class="badge">10</span></a></li>
         </ul>
 
         <ul class="nav nav-pills float-statistic" role="tablist" id="clients">
-            <li role="presentation"><a href="#">New client <span class="badge">42</span></a></li>
+            <li role="presentation"><a href="#">New client <span class="badge">{{ clientCount|default:0  }}</span></a></li>
             <li role="presentation"><a href="#">Qualifying <span class="badge">2</span></a></li>
             <li role="presentation"><a href="#">Follow-up <span class="badge">10</span></a></li>
 
@@ -285,8 +285,16 @@
 
     <script type="text/javascript">
         $(function () {
-            $('#datetimepicker1').datetimepicker();
-            $('#datetimepicker2').datetimepicker();
+            $('#datetimepicker1').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                defaultDate:new Date()
+                    }
+            );
+            $('#datetimepicker2').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                 defaultDate:new Date()
+                    }
+            );
         });
 
         $('#myModal').on('shown.bs.modal', function () {

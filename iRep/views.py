@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import json
 
+import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -23,7 +24,7 @@ from iRep.managers.Corp import CorpManager
 from iRep.managers.Forms import Forms, IForm
 from iRep.managers.Orders import OrderManager
 from iRep.managers.Products import ProductManager
-from iRep.managers.Reports import TrackingReports
+from iRep.managers.Reports import TrackingReports, DashBoardReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
@@ -37,7 +38,12 @@ def home(request):
     template = 'index.html'
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
-    context['locations'] = TrackingReports(None,None).tracking_sales_force_by_corp(corp)
+    context['locations'] = TrackingReports(datetime.datetime.today().strftime('%Y-%m-%d')
+                                           , datetime.datetime.today().strftime('%Y-%m-%d')
+                                           ).tracking_sales_force_by_corp(corp)
+    context = DashBoardReports(datetime.datetime.today().strftime('%Y-%m-%d'),
+                               datetime.datetime.today().strftime('%Y-%m-%d'), None, corp,
+                               context).get_dashboard_statistics()
     return render(request, template_name=template, context=context)
 
 
@@ -156,11 +162,13 @@ def AddClient(request, slug):
         return redirect(reverse('viewClient', kwargs={'slug': slug}))
     return render(request, template_name=template, context={'form': form, 'new': True})
 
+
 @login_required
 def viewOrder(request, slug):
     template = 'orders/details.html'
     orders = OrderManager().get_corp_orders(slug=slug)
     return render(request, template_name=template, context={'orders': orders})
+
 
 @login_required
 def EditClient(request, slug):
@@ -355,7 +363,7 @@ def TrackingVisitReportBySalesForce(request):
         totalVisitGroupByBranch = trackingInstance.countTotalPlaceVisitedGroupByBranch(
             sales_force_id=request.POST['sales_force'])
         totalHrAndMile = trackingInstance.countSalesForceTimeAndMile(sales_force_id=request.POST['sales_force'])
-        totalTimeInPlace= trackingInstance.countTimeinPlace(sales_force_id=request.POST['sales_force'])
+        totalTimeInPlace = trackingInstance.countTimeinPlace(sales_force_id=request.POST['sales_force'])
         if not totalVisitGroupByBranch:
             totalVisitGroupByBranch = 0
 
@@ -380,8 +388,8 @@ def TrackingVisitReportBySalesForce(request):
             "totalVisitGroupByBranch": totalVisitGroupByBranch[0]['totalVistitBranch'],
             "hr": hr,
             "km": km,
-            "countDay":countDay,
-            "totalTimePlace":str(totalTimeInPlace[0]['totalTime'])
+            "countDay": countDay,
+            "totalTimePlace": str(totalTimeInPlace[0]['totalTime'])
 
         }
 

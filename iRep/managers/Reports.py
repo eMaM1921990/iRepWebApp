@@ -1,8 +1,9 @@
+from django.conf.global_settings import DATE_FORMAT, DATE_INPUT_FORMATS
 from django.db.models import Count, Sum, fields
 from django.db.models import ExpressionWrapper
 from django.db.models import F
-
-from iRep.models import SalesForceCheckInOut, Visits, Orders, SalesForceTimeLine, SalesForceTrack
+import datetime
+from iRep.models import SalesForceCheckInOut, Visits, Orders, SalesForceTimeLine, SalesForceTrack, Client
 
 __author__ = 'eMaM'
 
@@ -48,3 +49,32 @@ class TrackingReports():
 
     def tracking_sales_force_by_corp(self, slug):
         return SalesForceTrack.objects.filter(sales_force__corp_id=slug)
+
+
+class DashBoardReports():
+    def __init__(self, start_date, end_date, city, corp, context):
+        self.from_date = start_date
+        self.to_date = end_date
+        self.city = city
+        self.corp = corp
+        self.context = context
+
+    def get_dashboard_statistics(self):
+        self.context['activeRep'] = self.get_active_salesforce_count()
+        self.context['clientCount'] = self.get_create_clients_count()
+        self.context['total_order'] = self.get_total_orders()
+
+    def get_active_salesforce_count(self):
+        return SalesForceTimeLine.objects.filter(time_line_date=self.from_date, end_time__isnull=True,
+                                                 sales_force__corp_id=self.corp).count()
+
+    def get_create_clients_count(self):
+        start_date = datetime.datetime.strptime(self.from_date, DATE_INPUT_FORMATS[0])
+        return Client.objects.filter(created_date__day=start_date.day,
+                                     created_date__month=start_date.month,
+                                     created_date__year=start_date.year, corporate=self.corp).count()
+
+    def get_total_orders(self):
+        start_date = datetime.datetime.strptime(self.from_date, DATE_INPUT_FORMATS[0])
+        return Orders.objects.filter(sales_force__corp_id=self.corp, order_date__day=start_date.day,
+                                     order_date__month=start_date.month, order_date__year=start_date.year).count()
