@@ -89,7 +89,7 @@ def EditSalesForce(request, slug):
     # serialize data
     if sqs:
         for row in sqs:
-            data.append(ClientSerializer(row).data)
+            data.append(ClientSerializer(row, context={'request':request}).data)
         data = json.dumps(data, ensure_ascii=False)
 
     # retrieve schedual
