@@ -385,11 +385,11 @@ def TrackingVisitReportBySalesForce(request):
             "valid": valid,
             "totalVisits": totalVisits,
             "totalOrder": totalOrder,
-            "totalVisitGroupByBranch": totalVisitGroupByBranch[0]['totalVistitBranch'],
+            "totalVisitGroupByBranch": totalVisitGroupByBranch[0]['totalVistitBranch'] if totalVisitGroupByBranch else None,
             "hr": hr,
             "km": km,
             "countDay": countDay,
-            "totalTimePlace": str(totalTimeInPlace[0]['totalTime'])
+            "totalTimePlace": str(totalTimeInPlace[0]['totalTime']) if totalTimeInPlace else None
 
         }
 
