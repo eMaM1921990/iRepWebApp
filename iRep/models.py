@@ -124,7 +124,7 @@ class SalesForce(models.Model):
     report_to = models.ForeignKey('self', models.CASCADE, related_name='reporting_to', db_column='report_to', null=True)
 
     def __str__(self):
-        return self.name + "[" + self.position.name + "]"
+        return "[" + self.position.name + "] " + self.name
 
     class Meta:
         managed = MANAGED

@@ -77,7 +77,9 @@ class SalesForceForm(forms.ModelForm):
         action = kwargs.pop('action', None)
         super(SalesForceForm, self).__init__(*args, **kwargs)
         # init data
-        self.fields['company_id'].initial = corp_instance.slug
+        if corp_instance:
+            self.fields['company_id'].initial = corp_instance.slug
+            self.fields['report_to'].initial = SalesForce.objects.filter(corp_id=corp_instance)
         # self.fields['user_pin'].initial = user_instance.id
         # control Required
         self.fields['avatar'].required = False
