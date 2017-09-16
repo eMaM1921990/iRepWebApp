@@ -392,6 +392,7 @@ class ClientForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # POP from kwargs
         action = kwargs.pop('action', None)
+        corp_instance = kwargs.pop('corp_instance', None)
         super(ClientForm, self).__init__(*args, **kwargs)
         # Input label
         self.fields['name'].label = _('Name')
@@ -431,6 +432,8 @@ class ClientForm(forms.ModelForm):
         self.fields['slug'].required = False
         # init
         self.fields['notes'].widget.attrs['rows'] = 3
+        if corp_instance:
+            self.fields['sales_force'].queryset = SalesForce.objects.filter(corp_id=corp_instance)
 
         # It builds a default layout with all its fields
         self.helper = FormHelper(self)

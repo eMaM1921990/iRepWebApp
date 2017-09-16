@@ -89,7 +89,7 @@ def EditSalesForce(request, slug):
     # serialize data
     if sqs:
         for row in sqs:
-            data.append(ClientSerializer(row, context={'request':request}).data)
+            data.append(ClientSerializer(row, context={'request': request}).data)
         data = json.dumps(data, ensure_ascii=False)
 
     # retrieve schedual
@@ -154,7 +154,9 @@ def ViewClient(request, slug):
 @login_required
 def AddClient(request, slug):
     template = 'clients/details.html'
-    form = ClientForm(request.POST or None, action=reverse('AddClient', kwargs={'slug': slug}))
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    form = ClientForm(request.POST or None, action=reverse('AddClient', corp_instance=corp, kwargs={'slug': slug}))
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
@@ -173,8 +175,10 @@ def viewOrder(request, slug):
 @login_required
 def EditClient(request, slug):
     template = 'clients/details.html'
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
     client_instance = get_object_or_404(Client, slug=slug)
-    form = ClientForm(request.POST or None, instance=client_instance,
+    form = ClientForm(request.POST or None, instance=client_instance,corp_instance=corp,
                       action=reverse('EditClient', kwargs={'slug': slug}))
     reportForm = SalesForceReportForm()
     if form.is_valid():
@@ -385,7 +389,8 @@ def TrackingVisitReportBySalesForce(request):
             "valid": valid,
             "totalVisits": totalVisits,
             "totalOrder": totalOrder,
-            "totalVisitGroupByBranch": totalVisitGroupByBranch[0]['totalVistitBranch'] if totalVisitGroupByBranch else None,
+            "totalVisitGroupByBranch": totalVisitGroupByBranch[0][
+                'totalVistitBranch'] if totalVisitGroupByBranch else None,
             "hr": hr,
             "km": km,
             "countDay": countDay,
