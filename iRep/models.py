@@ -430,6 +430,7 @@ class SalesForceTrack(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'sales_force_tracking'
+        ordering = ['-created_date']
 
 
 class Forms(models.Model):
