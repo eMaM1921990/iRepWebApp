@@ -424,6 +424,9 @@ class SalesForceTrack(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     created_date = models.DateTimeField(default=timezone.now)
 
+    def __unicode__(self):
+        return self.sales_force.name + '-- Corp '+ self.sales_force.corp_id.corporate_name
+
     class Meta:
         managed = MANAGED
         db_table = 'sales_force_tracking'
