@@ -7,8 +7,8 @@
 
         <h1 class="sub-titile"><i class="glyphicon glyphicon-list-alt"></i> {% trans 'Forms' %} <span class="pull-right">
 
-        <button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#new-announcement"><i
-            class="glyphicon glyphicon-plus-sign coloring1"></i> New Form </button></span>
+        <a href="{% url 'addForms' user.corp_users.get.slug %}"  class="btn btn-primary btn-lg " data-toggle="modal" data-target="#new-announcement"><i
+            class="glyphicon glyphicon-plus-sign coloring1"></i> {% trans 'New Form' %} </a></span>
 
             <div class="clearfix"></div>
         </h1>

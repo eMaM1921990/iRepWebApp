@@ -40,10 +40,14 @@ def SalesForceLogin(request):
         resp['msg'] = _('Missing corpId')
         return Response(resp)
 
+    if 'phone' not in request.data:
+        resp['msg'] = _('Missing phone')
+        return Response(resp)
+
     try:
         profile = SalesForce.objects.get(user_pin=request.data['user_pin'],
                                          password_pin=request.data['password'],
-                                         corp_id__slug=request.data['corp_id'])
+                                         corp_id__slug=request.data['corp_id'],phone=request.data['phone'])
 
         resp['code'] = 200
         resp['data'] = MemberSerializer(profile, context={'request': request}).data
