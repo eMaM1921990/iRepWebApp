@@ -16,6 +16,7 @@ from iRep.managers.Visits import VisitsManager
 from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus, Visits, Tags
 from django.utils.translation import ugettext_lazy as _
 import logging
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -355,6 +356,15 @@ def SalesForceTimeLineStart(request):
                                                            hours=0)
         resp['data'] = TimeLineSerializers(record).data
         resp['code'] = 200
+
+        # add activity
+        try:
+            lastActivity = SalesForce.objects.get(id=request.data['sales_force'])
+            lastActivity.last_activity = datetime.datetime.now()
+            lastActivity.save()
+        except :
+            pass
+
 
     except Exception as e:
         logger.debug('Error during add sales force timeline cause ' + str(e))
