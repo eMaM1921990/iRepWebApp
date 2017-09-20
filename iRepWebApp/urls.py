@@ -54,7 +54,7 @@ urlpatterns += [
 
     # Froms
     url(r'^forms/(?P<slug>[-\w]+)/$', views.ViewForms, name='ViewForms'),
-    url(r'^addForms/add/(?P<slug>[-\w]+)/add$', views.CreateOrEditForms, name='addForms'),
+    url(r'^addForms/(?P<slug>[-\w]+)/add$', views.CreateOrEditForms, name='addForms'),
     url(r'^Forms/edit/(?P<slug>[-\w]+)/(?P<id>[-\w]+)', views.CreateOrEditForms, name='editForms'),
 
     # Report

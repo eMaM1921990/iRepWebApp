@@ -38,12 +38,14 @@ def home(request):
     template = 'index.html'
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
+
+    DashBoardReports(datetime.datetime.today().strftime('%Y-%m-%d'),
+                               datetime.datetime.today().strftime('%Y-%m-%d'), None, corp,
+                               context).get_dashboard_statistics()
+
     context['locations'] = TrackingReports(datetime.datetime.today().strftime('%Y-%m-%d')
                                            , datetime.datetime.today().strftime('%Y-%m-%d')
                                            ).tracking_sales_force_by_corp(corp)
-    context = DashBoardReports(datetime.datetime.today().strftime('%Y-%m-%d'),
-                               datetime.datetime.today().strftime('%Y-%m-%d'), None, corp,
-                               context).get_dashboard_statistics()
     return render(request, template_name=template, context=context)
 
 
