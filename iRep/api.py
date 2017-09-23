@@ -46,9 +46,13 @@ def SalesForceLogin(request):
         return Response(resp)
 
     try:
-        profile = SalesForce.objects.get(user_pin=request.data['user_pin'],
-                                         password_pin=request.data['password'],
-                                         corp_id__slug=request.data['corp_id'],phone=request.data['phone'])
+        for phone in request.data['phone']:
+            profile = SalesForce.objects.filter(phone=phone)
+
+        profile = profile.filter(user_pin=request.data['user_pin'],
+                                 password_pin=request.data['password'],
+                                 corp_id__slug=request.data['corp_id'])
+        profile = profile.first()
 
         resp['code'] = 200
         resp['data'] = MemberSerializer(profile, context={'request': request}).data
@@ -76,7 +80,7 @@ def ProductCategory(request, slug):
 
         productCatQS = ProductGroup.objects.prefetch_related().filter(is_active=True, corporate__slug=slug)
         for row in productCatQS:
-            resp['data'].append(ProductGroupSerializer(row,context={"request": request}).data)
+            resp['data'].append(ProductGroupSerializer(row, context={"request": request}).data)
         resp['code'] = 200
 
     except Exception as e:
@@ -123,7 +127,7 @@ def ClientsOrder(request, clientId):
         resp['data'] = []
         ordersQS = Orders.objects.filter(branch__id=clientId)
         for raw in ordersQS:
-            resp['data'].append(OrderSerializers(raw,context={"request": request}).data)
+            resp['data'].append(OrderSerializers(raw, context={"request": request}).data)
         resp['code'] = 200
     except Exception as e:
         resp['msg'] = _('Can`t retrieve client orders')
@@ -292,7 +296,7 @@ def addSchedual(request):
         resp['msg'] = _('Missing time')
         return Response(resp)
 
-    if 'is_visit' not in request.data :
+    if 'is_visit' not in request.data:
         resp['msg'] = _('Missing type')
         return Response(resp)
 
@@ -362,7 +366,7 @@ def SalesForceTimeLineStart(request):
             lastActivity = SalesForce.objects.get(id=request.data['sales_force'])
             lastActivity.last_activity = datetime.datetime.now()
             lastActivity.save()
-        except :
+        except:
             pass
 
 
@@ -599,14 +603,15 @@ def OrderCreate(request):
                                               branch_id=request.data['client_id'],
                                               order_date=request.data['order_date'],
                                               total=request.data['total'], sub_total=request.data['sub_total'],
-                                              discount=request.data['discount'], visit_id=request.data['visit_id'] if 'visit_id' in request.data else None,
-                                              notes=request.data['notes'] if 'notes' in request.data else None, items=request.data['items'])
+                                              discount=request.data['discount'],
+                                              visit_id=request.data['visit_id'] if 'visit_id' in request.data else None,
+                                              notes=request.data['notes'] if 'notes' in request.data else None,
+                                              items=request.data['items'])
     if order_instance:
         resp['code'] = 200
-        resp['data'] = OrderSerializers(order_instance,context={"request": request}).data
+        resp['data'] = OrderSerializers(order_instance, context={"request": request}).data
 
     return Response(resp)
-
 
 
 @gzip_page
