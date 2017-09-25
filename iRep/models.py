@@ -122,6 +122,7 @@ class SalesForce(models.Model):
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(db_index=True)
     report_to = models.ForeignKey('self', models.CASCADE, related_name='reporting_to', db_column='report_to', null=True)
+    serial_number = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return "[" + self.position.name + "] " + self.name
