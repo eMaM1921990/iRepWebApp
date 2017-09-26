@@ -145,7 +145,7 @@ class SalesForceForm(forms.ModelForm):
                                  PrependedText('password_pin', '<i class="fa fa-key" aria-hidden="true"></i>',
                                                css_class='col-md-6',
                                                placeholder=_('App Password')),
-                                 ),
+
                         PrependedText('serial_number', '<i class="fa fa-key" aria-hidden="true"></i>',
                                       css_class='col-md-6',
                                       placeholder=_('Device Serial')),
@@ -165,22 +165,21 @@ class SalesForceForm(forms.ModelForm):
                 css_class='panel-body'
             ),
             css_class='panel panel-default'
-        )
+        ))
 
+    # override save form
+    def save(self, user, commit=True):
+        m = super(SalesForceForm, self).save(commit=False)
+        m.corp_id = Corporate.objects.get(slug=self.cleaned_data['company_id'])
+        m.created_by = user
+        m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
+        m.save()
+        return m
 
+    class Meta:
+        model = SalesForce
+        exclude = ['last_activity', 'created_date', 'created_by', 'corp_id', 'slug']
 
-        # override save form
-        def save(self, user, commit=True):
-            m = super(SalesForceForm, self).save(commit=False)
-            m.corp_id = Corporate.objects.get(slug=self.cleaned_data['company_id'])
-            m.created_by = user
-            m.slug = slugify('%s %s' % (m.name, user.id), allow_unicode=True)
-            m.save()
-            return m
-
-        class Meta:
-            model = SalesForce
-            exclude = ['last_activity', 'created_date', 'created_by', 'corp_id', 'slug']
 
 class SalesForceReportForm(BaseReportForm):
     sales_force = forms.CharField()
@@ -227,6 +226,7 @@ class SalesForceReportForm(BaseReportForm):
 
         )
 
+
 class ProductCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductCategoryForm, self).__init__(*args, **kwargs)
@@ -244,6 +244,7 @@ class ProductCategoryForm(forms.ModelForm):
     class Meta:
         model = ProductGroup
         exclude = ['created_date', 'created_by', 'corporate']
+
 
 class ProductForm(forms.ModelForm):
     # tags = forms.ModelChoiceField(queryset=None)
@@ -387,6 +388,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         exclude = ['created_date', 'created_by']
+
 
 class ClientForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -534,6 +536,7 @@ class ClientForm(forms.ModelForm):
         model = Client
         exclude = ['created_date', 'created_by']
 
+
 class TrackingVisitFormByClient(BaseReportForm):
     clients = forms.ModelChoiceField(queryset=None)
 
@@ -577,6 +580,7 @@ class TrackingVisitFormByClient(BaseReportForm):
 
         )
 
+
 class QuestionForm(forms.Form):
     question = forms.CharField(
         max_length=200,
@@ -586,6 +590,7 @@ class QuestionForm(forms.Form):
             'aria-describedby': 'basic-addon2'
         }),
         required=False)
+
 
 class FormsForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -619,6 +624,7 @@ class FormsForm(forms.Form):
         m.description = self.cleaned_data['description']
         m.is_active = self.cleaned_data['active']
         m.save()
+
 
 class BaseQuestionFormSet(BaseFormSet):
     def clean(self):
