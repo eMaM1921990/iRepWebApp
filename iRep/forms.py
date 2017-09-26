@@ -145,7 +145,7 @@ class SalesForceForm(forms.ModelForm):
                                  PrependedText('password_pin', '<i class="fa fa-key" aria-hidden="true"></i>',
                                                css_class='col-md-6',
                                                placeholder=_('App Password')),
-                                 ),
+
                         PrependedText('serial_number', '<i class="fa fa-key" aria-hidden="true"></i>',
                                       css_class='col-md-6',
                                       placeholder=_('Device Serial')),
