@@ -165,7 +165,7 @@ class SalesForceForm(forms.ModelForm):
                 css_class='panel-body'
             ),
             css_class='panel panel-default'
-        )
+        ))
 
     # override save form
     def save(self, user, commit=True):
