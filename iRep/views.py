@@ -158,7 +158,7 @@ def AddClient(request, slug):
     template = 'clients/details.html'
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
-    form = ClientForm(request.POST or None, action=reverse('AddClient', corp_instance=corp, kwargs={'slug': slug}))
+    form = ClientForm(request.POST or None, action=reverse('AddClient', kwargs={'slug': slug}),corp_instance=corp)
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
