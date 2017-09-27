@@ -48,7 +48,9 @@ class TrackingReports():
             totalTime=Sum(duration))
 
     def tracking_sales_force_by_corp(self, slug):
-        return SalesForceTrack.objects.filter(sales_force__corp_id=slug)
+        currentDate = datetime.datetime.strptime(self.from_date, DATE_INPUT_FORMATS[0])
+        return SalesForceTrack.objects.filter(sales_force__corp_id=slug,created_date__day=currentDate.day,
+                                              created_date__month=currentDate.month,created_date__year=currentDate.year)
 
 
 class DashBoardReports():
