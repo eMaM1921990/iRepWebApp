@@ -85,5 +85,5 @@ class DashBoardReports():
 
     def get_total_amount(self):
         start_date = datetime.datetime.strptime(self.from_date, DATE_INPUT_FORMATS[0])
-        return Orders.objects.filter(sales_force__corp_id=self.corp, order_date__day=start_date.day,
-                                     order_date__month=start_date.month, order_date__year=start_date.year).aggregate(Sum('total'))
+        return (Orders.objects.filter(sales_force__corp_id=self.corp, order_date__day=start_date.day,
+                                     order_date__month=start_date.month, order_date__year=start_date.year).aggregate(Sum('total')))['total__sum']
