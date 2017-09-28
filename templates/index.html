@@ -127,7 +127,7 @@
             <li role="presentation"><a href="#">Active Reps <span class="badge">{{ activeRep|default:0 }}</span></a></li>
             <li role="presentation"><a href="#">Places <span class="badge">{{ clientCount|default:0  }}</span></a></li>
             <li role="presentation"><a href="#">Orders <span class="badge">{{ total_order|default:0  }}</span></a></li>
-            <li role="presentation"><a href="#">Money Amount <span class="badge">10</span></a></li>
+            <li role="presentation"><a href="#">Money Amount <span class="badge">{{ total_amount|default:0 }}</span></a></li>
         </ul>
 
         <ul class="nav nav-pills float-statistic" role="tablist" id="clients">

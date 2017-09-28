@@ -65,6 +65,7 @@ class DashBoardReports():
         self.context['activeRep'] = self.get_active_salesforce_count()
         self.context['clientCount'] = self.get_create_clients_count()
         self.context['total_order'] = self.get_total_orders()
+        self.context['total_amount']  = self.get_total_amount()
 
     def get_active_salesforce_count(self):
         return SalesForceTimeLine.objects.filter(time_line_date=self.from_date, end_time__isnull=True,
@@ -80,3 +81,9 @@ class DashBoardReports():
         start_date = datetime.datetime.strptime(self.from_date, DATE_INPUT_FORMATS[0])
         return Orders.objects.filter(sales_force__corp_id=self.corp, order_date__day=start_date.day,
                                      order_date__month=start_date.month, order_date__year=start_date.year).count()
+
+
+    def get_total_amount(self):
+        start_date = datetime.datetime.strptime(self.from_date, DATE_INPUT_FORMATS[0])
+        return Orders.objects.filter(sales_force__corp_id=self.corp, order_date__day=start_date.day,
+                                     order_date__month=start_date.month, order_date__year=start_date.year).aggregate(Sum('total'))
