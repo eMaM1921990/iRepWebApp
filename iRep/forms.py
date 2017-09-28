@@ -595,17 +595,16 @@ class QuestionForm(forms.Form):
 class FormsForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        self.corp = kwargs.pop('corp', None)
         super(FormsForm, self).__init__(*args, **kwargs)
         self.fields['form_name'] = forms.CharField(
             max_length=30,
-            initial=self.user.first_name,
             widget=forms.TextInput(attrs={
                 'placeholder': _('Form name'),
                 'class': 'form-control sizeinput-int'
             }))
         self.fields['description'] = forms.CharField(
             max_length=30,
-            initial=self.user.last_name,
             widget=forms.Textarea(attrs={
                 'placeholder': _('Description'),
                 'class': 'form-control'
@@ -623,7 +622,9 @@ class FormsForm(forms.Form):
         m.form_name = self.cleaned_data['form_name']
         m.description = self.cleaned_data['description']
         m.is_active = self.cleaned_data['active']
+        m.corporate = self.corp
         m.save()
+        return m
 
 
 class BaseQuestionFormSet(BaseFormSet):

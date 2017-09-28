@@ -426,7 +426,7 @@ class SalesForceTrack(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     def __unicode__(self):
-        return self.sales_force.name + '-- Corp '+ self.sales_force.corp_id.corporate_name
+        return self.sales_force.name + '-- Corp ' + self.sales_force.corp_id.corporate_name
 
     class Meta:
         managed = MANAGED
@@ -454,3 +454,13 @@ class FormQuestions(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'forms_questions'
+
+
+class QuestionAnswer(models.Model):
+    question = models.ForeignKey(FormQuestions, models.CASCADE, related_name='questions_answer',
+                                 db_column='question_id')
+    answer = models.TextField(null=False)
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'question_answer'

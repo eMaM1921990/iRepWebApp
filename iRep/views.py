@@ -300,6 +300,11 @@ def ViewForms(request, slug):
 
 @login_required
 def CreateOrEditForms(request, slug, id=None):
+
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+
+
     template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
     QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
@@ -310,8 +315,8 @@ def CreateOrEditForms(request, slug, id=None):
         question_data = [{'question': l.question}
                          for l in form_questions]
 
-    formsForm = FormsForm(request.POST or None, user=request.user)
-    QuestionFormSetform = QuestionFormSet(request.POST or None, initial=form_questions)
+    formsForm = FormsForm(request.POST or None, user=request.user, corp=corp)
+    QuestionFormSetform = QuestionFormSet(request.POST or None, initial=form_questions )
 
     if formsForm.is_valid():
         m = formsForm.save()

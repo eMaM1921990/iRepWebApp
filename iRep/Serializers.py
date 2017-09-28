@@ -5,7 +5,7 @@ from rest_framework import serializers
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
     SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits, SalesForceTrack, \
     ClientTags, \
-    Tags
+    Tags, Forms, FormQuestions
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -55,12 +55,12 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_avatar_url(self, obj):
         if hasattr(obj, 'image'):
             if obj.image:
-                return self.context['request'].META['HTTP_HOST']+'/'+obj.image.url
+                return self.context['request'].META['HTTP_HOST'] + '/' + obj.image.url
         return ''
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'unit','logo']
+        fields = ['id', 'name', 'ean_code', 'default_price', 'note', 'unit', 'logo']
 
 
 class ProductGroupSerializer(serializers.ModelSerializer):
@@ -75,7 +75,6 @@ class ProductGroupWithoutProductSerialziers(serializers.ModelSerializer):
     class Meta:
         model = ProductGroup
         fields = ['id', 'name']
-
 
 
 class TagSerlizers(serializers.ModelSerializer):
@@ -170,3 +169,17 @@ class SalesForceTracking(serializers.ModelSerializer):
     class Meta:
         model = SalesForceTrack
         fields = ['id', 'latitude', 'longitude', 'sales_force']
+
+
+class FormQuestionsSerializets(serializers.ModelSerializer):
+    class Meta:
+        model = FormQuestions
+        fields = ['id', 'question']
+
+
+class FormsSerializers(serializers.ModelSerializer):
+    form_questions = FormQuestionsSerializets(many=True)
+
+    class Meta:
+        model = Forms
+        fields = ['id', 'form_name', 'description', 'form_questions']

@@ -7,13 +7,14 @@ from rest_framework.response import Response
 
 from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
     OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
-    SalesForceTracking, MemberSerializer, TagSerlizers
+    SalesForceTracking, MemberSerializer, TagSerlizers, FormsSerializers
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Orders import OrderManager
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
 from iRep.managers.Visits import VisitsManager
-from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus, Visits, Tags
+from iRep.models import SalesForce, ProductGroup, Client, Orders, SalesForceSchedual, SalesFunnelStatus, Visits, Tags, \
+    Forms
 from django.utils.translation import ugettext_lazy as _
 import logging
 import datetime
@@ -629,3 +630,29 @@ def ListTags(request, slug):
         resp['msg'] = _('Can`t retrieve Tags')
 
     return Response(resp)
+
+
+@gzip_page
+@api_view(['GET'])
+def ListForms(request, slug):
+    resp = {}
+    resp['code'] = 505
+    # Validation
+    if not slug:
+        resp['msg'] = _('Missing corporate')
+        return Response(resp)
+
+    try:
+        resp['data'] = []
+        sqs = Forms.objects.prefetch_related('form_questions').filter(corporate__slug=slug, is_active=True)
+        for row in sqs:
+            resp['data'].append(FormsSerializers(row).data)
+        resp['code'] = 200
+    except Exception as e:
+        resp['msg'] = _('Can`t retrieve Forms')
+
+    return Response(resp)
+
+
+
+
