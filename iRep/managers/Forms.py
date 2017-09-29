@@ -10,3 +10,6 @@ class IForm():
 
     def getFormQuestions(self,id):
         return FormQuestions.objects.filter(form__id=id)
+
+    def getFormInfo(self,id):
+        return Forms.objects.get(id=id)

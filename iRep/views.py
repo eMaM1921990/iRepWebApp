@@ -40,8 +40,8 @@ def home(request):
     corp = CorpManager().get_corp_by_user(request.user)
 
     DashBoardReports(datetime.datetime.today().strftime('%Y-%m-%d'),
-                               datetime.datetime.today().strftime('%Y-%m-%d'), None, corp,
-                               context).get_dashboard_statistics()
+                     datetime.datetime.today().strftime('%Y-%m-%d'), None, corp,
+                     context).get_dashboard_statistics()
 
     context['locations'] = TrackingReports(datetime.datetime.today().strftime('%Y-%m-%d')
                                            , datetime.datetime.today().strftime('%Y-%m-%d')
@@ -158,7 +158,7 @@ def AddClient(request, slug):
     template = 'clients/details.html'
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
-    form = ClientForm(request.POST or None, action=reverse('AddClient', kwargs={'slug': slug}),corp_instance=corp)
+    form = ClientForm(request.POST or None, action=reverse('AddClient', kwargs={'slug': slug}), corp_instance=corp)
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
@@ -180,7 +180,7 @@ def EditClient(request, slug):
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
     client_instance = get_object_or_404(Client, slug=slug)
-    form = ClientForm(request.POST or None, instance=client_instance,corp_instance=corp,
+    form = ClientForm(request.POST or None, instance=client_instance, corp_instance=corp,
                       action=reverse('EditClient', kwargs={'slug': slug}))
     reportForm = SalesForceReportForm()
     if form.is_valid():
@@ -299,24 +299,74 @@ def ViewForms(request, slug):
 
 
 @login_required
-def CreateOrEditForms(request, slug, id=None):
-
+def CreateForms(request, slug):
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
-
 
     template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
     QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
 
     # Get our existing  data for this user.  This is used as initial data.
+    # question_data = None
+    # form_questions = IForm(slug=slug).getFormQuestions(id)
+    # if form_questions:
+    #     question_data = [{'question': l.question}
+    #                      for l in form_questions]
+
+
+    formsForm = FormsForm(request.POST or None, user=request.user, corp=corp)
+
+    QuestionFormSetform = QuestionFormSet(request.POST or None)
+
+    if formsForm.is_valid():
+        m = formsForm.save()
+
+        # Now save the data for each form in the formset
+        new_questions = []
+        for question_form in QuestionFormSetform:
+            print question_form
+            new_questions.append(FormQuestions(form=m, question=question_form.cleaned_data.get('question')))
+
+        try:
+            with transaction.atomic():
+                # Replace the old with the new
+                FormQuestions.objects.filter(form=m).delete()
+                FormQuestions.objects.bulk_create(new_questions)
+
+                # And notify our users that it worked
+                messages.success(request, 'You have updated your form.')
+
+        except IntegrityError:  # If the transaction failed
+            messages.error(request, 'There was an error saving your form.')
+
+    context = {
+        'formsForm': formsForm,
+        'QuestionFormSetform': QuestionFormSetform,
+    }
+
+    return render(request, template, context)
+
+
+@login_required
+def EditForms(request, slug, id):
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+
+    template = 'forms/form.html'
+    # Create the formset, specifying the form and formset we want to use.
+    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
+
+    # Get our existing  data for this user.  This is used as initial data.
+    question_data = None
     form_questions = IForm(slug=slug).getFormQuestions(id)
     if form_questions:
         question_data = [{'question': l.question}
                          for l in form_questions]
 
-    formsForm = FormsForm(request.POST or None, user=request.user, corp=corp)
-    QuestionFormSetform = QuestionFormSet(request.POST or None, initial=form_questions )
+    formsForm = FormsForm(request.POST or None, user=request.user, corp=corp, instance=IForm(slug).getFormInfo(id=id))
+
+    QuestionFormSetform = QuestionFormSet(request.POST or None, initial=question_data)
 
     if formsForm.is_valid():
         m = formsForm.save()
@@ -329,7 +379,7 @@ def CreateOrEditForms(request, slug, id=None):
         try:
             with transaction.atomic():
                 # Replace the old with the new
-                FormQuestions.objects.filter(form__id=id).delete()
+                FormQuestions.objects.filter(form=m).delete()
                 FormQuestions.objects.bulk_create(new_questions)
 
                 # And notify our users that it worked
@@ -341,6 +391,8 @@ def CreateOrEditForms(request, slug, id=None):
     context = {
         'formsForm': formsForm,
         'QuestionFormSetform': QuestionFormSetform,
+        'edit':True,
+        'id':id
     }
 
     return render(request, template, context)

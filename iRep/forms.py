@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from iRep.api import Clients
 from iRep.managers.Products import ProductManager
 from iRep.managers.Tags import TagManager
-from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client, Forms
+from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client, Forms, FormQuestions
 
 
 class SignupForm(forms.Form):
@@ -146,26 +146,26 @@ class SalesForceForm(forms.ModelForm):
                                                css_class='col-md-6',
                                                placeholder=_('App Password')),
 
-                        PrependedText('serial_number', '<i class="fa fa-key" aria-hidden="true"></i>',
-                                      css_class='col-md-6',
-                                      placeholder=_('Device Serial')),
-                        ),
-                    css_class='col-md-6')
-                ,
+                                 PrependedText('serial_number', '<i class="fa fa-key" aria-hidden="true"></i>',
+                                               css_class='col-md-6',
+                                               placeholder=_('Device Serial')),
+                                 ),
+                        css_class='col-md-6')
+                    ,
 
-                Div(
-                    Fieldset(_('Other'), Field('notes', placeholder=_('Write some notes about sales force'))),
-                    css_class='col-md-6')
-                ,
-                Div(
-                    Reset(_('Cancel'), _('Cancel'), css_class='btn btn-default  btn-lg min-btn'),
-                    Submit(_('Save'), _('Save'), css_class='btn btn-primary  btn-lg min-btn'),
-                    css_class='text-center'
+                    Div(
+                        Fieldset(_('Other'), Field('notes', placeholder=_('Write some notes about sales force'))),
+                        css_class='col-md-6')
+                    ,
+                    Div(
+                        Reset(_('Cancel'), _('Cancel'), css_class='btn btn-default  btn-lg min-btn'),
+                        Submit(_('Save'), _('Save'), css_class='btn btn-primary  btn-lg min-btn'),
+                        css_class='text-center'
+                    ),
+                    css_class='panel-body'
                 ),
-                css_class='panel-body'
-            ),
-            css_class='panel panel-default'
-        ))
+                css_class='panel panel-default'
+            ))
 
     # override save form
     def save(self, user, commit=True):
@@ -581,7 +581,7 @@ class TrackingVisitFormByClient(BaseReportForm):
         )
 
 
-class QuestionForm(forms.Form):
+class QuestionForm(forms.ModelForm):
     question = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
@@ -589,10 +589,14 @@ class QuestionForm(forms.Form):
             'class': 'form-control',
             'aria-describedby': 'basic-addon2'
         }),
-        required=False)
+        required=True)
+
+    class Meta:
+        model = FormQuestions
+        exclude = ['created_date', 'form']
 
 
-class FormsForm(forms.Form):
+class FormsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         self.corp = kwargs.pop('corp', None)
@@ -609,22 +613,23 @@ class FormsForm(forms.Form):
                 'placeholder': _('Description'),
                 'class': 'form-control'
             }))
-        self.fields['active'] = forms.BooleanField(
-            widget=forms.CheckboxInput(
-                attrs={
-                    'data-toggle': 'toggle'
-                }
-            )
+        self.fields['is_active'] = forms.BooleanField(
+            widget=forms.CheckboxInput()
         )
+        self.fields['is_active'].label = _('Is active')
 
     def save(self, commit=True):
         m = Forms()
         m.form_name = self.cleaned_data['form_name']
         m.description = self.cleaned_data['description']
-        m.is_active = self.cleaned_data['active']
+        m.is_active = self.cleaned_data['is_active']
         m.corporate = self.corp
         m.save()
         return m
+
+    class Meta:
+        model = Forms
+        exclude = ['created_date', 'corporate']
 
 
 class BaseQuestionFormSet(BaseFormSet):

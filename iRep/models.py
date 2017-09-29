@@ -435,7 +435,7 @@ class SalesForceTrack(models.Model):
 
 
 class Forms(models.Model):
-    form_name = models.CharField(max_length=100)
+    form_name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_forms', db_column='corp_id')
     is_active = models.BooleanField(default=True)
