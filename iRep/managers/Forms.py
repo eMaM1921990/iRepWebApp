@@ -16,11 +16,11 @@ class IForm():
         return Forms.objects.get(id=id)
 
 
-    def saveFormQuestionAnswer(self, question_id,sales_force_id, answer):
+    def saveFormQuestionAnswer(self, question_id,sales_force, answer):
         try:
             record = QuestionAnswer()
             record.question_id = question_id
-            record.sales_force_id = sales_force_id
+            record.sales_force_id = sales_force
             record.answer = answer
             record.save()
             return record
