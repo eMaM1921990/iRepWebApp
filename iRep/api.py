@@ -679,7 +679,7 @@ def QuestionAnswer(request):
             return Response(resp)
 
         status = iForm.saveFormQuestionAnswer(question_id=raw['question_id'],
-                                              sales_force_id=request.data['sales_force'], answer=raw['answer'])
+                                              sales_force=request.data['sales_force'], answer=raw['answer'])
 
         if status:
             resp['data'] = _('Saved')
