@@ -26,4 +26,5 @@ class IForm():
             return record
         except Exception as e:
             logging.debug('Error during save question answer cause '+str(e))
+            print str(e)
             return None
