@@ -355,7 +355,7 @@ def EditForms(request, slug, id):
 
     template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
-    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
+    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet, min_num=0 , can_delete=False)
 
     # Get our existing  data for this user.  This is used as initial data.
     question_data = None
