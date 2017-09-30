@@ -419,8 +419,8 @@ class ClientForm(forms.ModelForm):
         self.fields['zipcode'].required = True
         self.fields['contact_name'].required = True
         self.fields['contact_title'].required = True
-        self.fields['website'].required = True
-        self.fields['email'].required = True
+        self.fields['website'].required = False
+        self.fields['email'].required = False
         self.fields['phone'].required = True
         self.fields['notes'].required = False
         self.fields['city'].required = True
