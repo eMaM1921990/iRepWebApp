@@ -460,6 +460,8 @@ class QuestionAnswer(models.Model):
     question = models.ForeignKey(FormQuestions, models.CASCADE, related_name='questions_answer',
                                  db_column='question_id')
     answer = models.TextField(null=False)
+    sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_question',
+                                    db_column='sales_force_id')
 
     class Meta:
         managed = MANAGED

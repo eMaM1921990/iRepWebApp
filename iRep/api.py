@@ -9,6 +9,7 @@ from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGro
     OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
     SalesForceTracking, MemberSerializer, TagSerlizers, FormsSerializers
 from iRep.managers.Clients import ClientManager
+from iRep.managers.Forms import IForm
 from iRep.managers.Orders import OrderManager
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
@@ -654,5 +655,36 @@ def ListForms(request, slug):
     return Response(resp)
 
 
+@api_view(['POST'])
+def QuestionAnswer(request):
+    resp = {}
+    resp['code'] = 500
 
+    if 'sales_force' not in request.data:
+        resp['msg'] = _('Sales force missed')
+        return Response(resp)
 
+    if 'answers' not in request.data:
+        resp['msg'] = _('Question Answer missed')
+        return Response(resp)
+
+    iForm = IForm(slug=None)
+    for raw in request.data['answers']:
+        if 'question_id' not in raw:
+            resp['msg'] = _('Question Id missed')
+            return Response(resp)
+
+        if 'answer' not in raw:
+            resp['msg'] = _('Question answer missed')
+            return Response(resp)
+
+        status = iForm.saveFormQuestionAnswer(question_id=raw['question_id'],
+                                              sales_force_id=request.data['sales_force'], answer=raw['answer'])
+
+        if status:
+            resp['data'] = _('Saved')
+            resp['code'] = 200
+        else:
+            resp['data'] = _('Error during saving ')
+
+    return Response(resp)

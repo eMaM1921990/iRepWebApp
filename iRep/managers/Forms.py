@@ -1,6 +1,7 @@
-from iRep.models import Forms, FormQuestions
+from iRep.models import Forms, FormQuestions, QuestionAnswer
+import logging
 
-
+logger = logging.getLogger(__name__)
 class IForm():
     def __init__(self, slug):
         self.corp_slug = slug
@@ -13,3 +14,16 @@ class IForm():
 
     def getFormInfo(self,id):
         return Forms.objects.get(id=id)
+
+
+    def saveFormQuestionAnswer(self, question_id,sales_force_id, answer):
+        try:
+            record = QuestionAnswer()
+            record.question_id = question_id
+            record.sales_force_id = sales_force_id
+            record.answer = answer
+            record.save()
+            return record
+        except Exception as e:
+            logging.debug('Error during save question answer cause '+str(e))
+            return None

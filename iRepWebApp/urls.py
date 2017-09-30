@@ -85,6 +85,7 @@ urlpatterns += [
     url(r'^api/v1/tags/(?P<slug>.+)/$', api.ListTags, name='apiListTags'),
 
     url(r'^api/v1/forms/(?P<slug>.+)/$', api.ListForms, name='apiListForms'),
+    url(r'^api/v1/question_answer/$', api.QuestionAnswer, name='apiQuestionAnswer'),
 
 
     # serve media
