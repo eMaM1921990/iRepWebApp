@@ -1,11 +1,10 @@
-from django.shortcuts import get_object_or_404
 from django.views.decorators.cache import never_cache
 from django.views.decorators.gzip import gzip_page
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
-from iRep.Serializers import SalesForceSerializer, ProductSerializer, ProductGroupSerializer, ClientSerializer, \
+from iRep.Serializers import ProductGroupSerializer, ClientSerializer, \
     OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
     SalesForceTracking, MemberSerializer, TagSerlizers, FormsSerializers
 from iRep.managers.Clients import ClientManager
