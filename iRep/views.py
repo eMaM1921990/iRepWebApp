@@ -19,6 +19,7 @@ from django.urls import reverse
 from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
     BaseQuestionFormSet, FormsForm, ProductCategoryForm
+from iRep.managers.BillBoards import BillBoard
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Forms import Forms, IForm
@@ -355,7 +356,7 @@ def EditForms(request, slug, id):
 
     template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
-    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet, min_num=0 , can_delete=False)
+    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet, min_num=0, can_delete=False)
 
     # Get our existing  data for this user.  This is used as initial data.
     question_data = None
@@ -391,8 +392,8 @@ def EditForms(request, slug, id):
     context = {
         'formsForm': formsForm,
         'QuestionFormSetform': QuestionFormSetform,
-        'edit':True,
-        'id':id
+        'edit': True,
+        'id': id
     }
 
     return render(request, template, context)
@@ -458,3 +459,13 @@ def TrackingVisitReportBySalesForce(request):
         }
 
         return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+
+# Bill boards
+@login_required
+def billBoards(request, slug):
+    template = 'settings/billBoard/list.html'
+    context = {
+        'billBoards': BillBoard(slug=slug).list()
+    }
+    return render(request, template_name=template, context=context)

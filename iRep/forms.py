@@ -11,7 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 from iRep.api import Clients
 from iRep.managers.Products import ProductManager
 from iRep.managers.Tags import TagManager
-from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client, Forms, FormQuestions
+from iRep.models import SalesForce, ProductGroup, Product, Corporate, UserProfile, Client, Forms, FormQuestions, \
+    BillBoard
 
 
 class SignupForm(forms.Form):
@@ -665,3 +666,10 @@ class BaseQuestionFormSet(BaseFormSet):
                         'All links must have a URL.',
                         code='missing_question'
                     )
+
+
+class BillBoardForm(forms.ModelForm):
+
+    class Meta:
+        model = BillBoard
+        exclude = ['created_date','corporate']

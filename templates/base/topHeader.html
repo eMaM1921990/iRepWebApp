@@ -57,8 +57,7 @@
                                         class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Client' %}
                                 </a></li>
 
-                                <li><a href="#"><i class="  glyphicon glyphicon-calendar"></i> {% trans 'Schedual' %}
-                                </a></li>
+
 
                                 <li><a href="#"><i class=" glyphicon glyphicon-calendar"></i> {% trans 'Dashboard' %}
                                 </a></li>
@@ -121,7 +120,7 @@
                                 <li><a href="{% url 'productList' user.corp_users.get.slug %}"><i
                                         class="fa fa-archive"></i> {% trans 'Products' %}</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="fa fa-comments"></i> Bill board</a></li>
+                                <li><a href="{% url 'billBoards' user.corp_users.get.slug %}"><i class="fa fa-comments"></i> Bill board</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#"><i class="fa fa-shopping-basket"></i> Retail Audit</a></li>
                                 <li role="separator" class="divider"></li>

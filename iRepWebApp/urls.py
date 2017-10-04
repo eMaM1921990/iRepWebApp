@@ -57,6 +57,8 @@ urlpatterns += [
     url(r'^addForms/(?P<slug>[-\w]+)/add$', views.CreateForms, name='addForms'),
     url(r'^Forms/edit/(?P<slug>[-\w]+)/(?P<id>[-\w]+)', views.EditForms, name='editForms'),
 
+    # Bill Board
+    url(r'^billboard/(?P<slug>[-\w]+)', views.EditForms, name='billBoards'),
     # Report
     url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce,
         name='TrackingVisitReportBySalesForce'),

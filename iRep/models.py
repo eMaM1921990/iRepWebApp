@@ -319,6 +319,7 @@ class BillBoard(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, db_column='auth_user_id')
     is_active = models.BooleanField(default=False)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_billboeard', db_column='corp_id')
 
     class Meta:
         managed = MANAGED
