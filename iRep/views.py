@@ -42,13 +42,16 @@ def home(request):
     template = 'index.html'
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
+    currentDate = datetime.datetime.today().strftime('%Y-%m-%d')
+    if request.POST:
+        currentDate = request.POST.get('date', currentDate)
 
-    DashBoardReports(datetime.datetime.today().strftime('%Y-%m-%d'),
-                     datetime.datetime.today().strftime('%Y-%m-%d'), None, corp,
+    DashBoardReports(currentDate,
+                     currentDate, None, corp,
                      context).get_dashboard_statistics()
 
-    context['locations'] = TrackingReports(datetime.datetime.today().strftime('%Y-%m-%d')
-                                           , datetime.datetime.today().strftime('%Y-%m-%d')
+    context['locations'] = TrackingReports(currentDate
+                                           , currentDate
                                            ).tracking_sales_force_by_corp(corp)
     return render(request, template_name=template, context=context)
 
@@ -253,6 +256,7 @@ def ExportOrders(request):
     response = HttpResponse(dataset.csv, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="orders.csv"'
     return response
+
 
 @login_required
 def ExportSalesForce(request):
@@ -583,6 +587,4 @@ def auditRetails(request, slug):
         'auditRetails': AuditRetail(slug).getAuditRetails()
     }
 
-
     return render(request, template_name=template, context=context)
-

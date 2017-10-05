@@ -23,39 +23,38 @@
             </div>
 
 
-            <div class="col-md-4" style="z-index: 50">
+            <div class="col-lg-8" style="z-index: 50">
 
-                <!--multiple data-max-options="4"-->
-                <select id="lunch2" class="selectpicker show-menu-arrow form-control bottom-align"
-                        title="Please select Governor ...">
+                <form class="form-vertical" action="{% url 'index' %}" method="post">
+                    {% csrf_token %}
+                    <div class="col-md-4">
+                        <div class="form-group">
 
+                            <div class='input-group date' id='datetimepicker1'>
 
-                    <option>Cairo</option>
-                    <option> Alexandria</option>
-                    <option> qalyobia</option>
-                    <option> sharqya</option>
-                    <option> giza</option>
+                                <input type='text' class="form-control" placeholder="Date From" name="date"/>
+                                <span class="input-group-addon">
+    <span class="glyphicon glyphicon-calendar"></span>
+    </span>
+                            </div>
 
-
-                </select>
-
-
-            </div>
-
-            <div class="col-md-4" style="z-index: 50">
-
-                <select id="lunch2" class="selectpicker show-menu-arrow form-control bottom-align" multiple
-                        data-max-options="4" title="Please select City ...">
+                        </div>
+                    </div>
 
 
-                    <option>Maadi</option>
-                    <option> Helwan</option>
-                    <option> misr el qadima</option>
-                    <option> sharqya</option>
-                    <option> giza</option>
 
+                    <div class="col-md-4">
 
-                </select>
+                        <div class="form-group">
+
+                            <button type="submit" class="btn btn-primary btn-md" title="">Apply</button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
             </div>
 
 
@@ -64,52 +63,7 @@
 
         <div class="clearfix"></div>
 
-        <div class="cl-md-12">
 
-            <form class="form-vertical">
-
-                <div class="col-md-4">
-                    <div class="form-group">
-
-                        <div class='input-group date' id='datetimepicker1'>
-
-                            <input type='text' class="form-control" placeholder="Date From"/>
-                            <span class="input-group-addon">
-    <span class="glyphicon glyphicon-calendar"></span>
-    </span>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-
-                        <div class='input-group date' id='datetimepicker2'>
-
-
-                            <input type='text' class="form-control" placeholder="Date to"/>
-                            <span class="input-group-addon">
-    <span class="glyphicon glyphicon-calendar"></span>
-    </span>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-
-                    <div class="form-group">
-
-                        <a href="#" class="btn btn-primary btn-md" title="">Apply</a>
-
-                    </div>
-
-                </div>
-
-            </form>
-
-        </div>
 
 
         <div class="clearfix"></div>
@@ -124,14 +78,17 @@
 
 
         <ul class="nav nav-pills float-statistic" role="tablist" id="summery">
-            <li role="presentation"><a href="#">Active Reps <span class="badge">{{ activeRep|default:0 }}</span></a></li>
-            <li role="presentation"><a href="#">Places <span class="badge">{{ clientCount|default:0  }}</span></a></li>
-            <li role="presentation"><a href="#">Orders <span class="badge">{{ total_order|default:0  }}</span></a></li>
-            <li role="presentation"><a href="#">Money Amount <span class="badge">{{ total_amount|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">Active Reps <span class="badge">{{ activeRep|default:0 }}</span></a>
+            </li>
+            <li role="presentation"><a href="#">Places <span class="badge">{{ clientCount|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">Orders <span class="badge">{{ total_order|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">Money Amount <span class="badge">{{ total_amount|default:0 }}</span></a>
+            </li>
         </ul>
 
         <ul class="nav nav-pills float-statistic" role="tablist" id="clients">
-            <li role="presentation"><a href="#">New client <span class="badge">{{ clientCount|default:0  }}</span></a></li>
+            <li role="presentation"><a href="#">New client <span class="badge">{{ clientCount|default:0 }}</span></a>
+            </li>
             <li role="presentation"><a href="#">Qualifying <span class="badge">2</span></a></li>
             <li role="presentation"><a href="#">Follow-up <span class="badge">10</span></a></li>
 
@@ -188,36 +145,38 @@
         function initMap() {
             // Create a map object and specify the DOM element for display.
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 29.91685223, lng: 31.35498047},
+
                 zoom: 5,
                 zoomControl: false,
                 scaleControl: true
             });
 
             infoWindow = new google.maps.InfoWindow;
-            infoWindow.open(map);
-            map.setCenter(pos);
-{##}
+            var initPos ={lat: 29.91685223, lng: 31.35498047};
+{#            map.setCenter(initPos);#}
+{#            infoWindow.open(map);#}
+
+            {##}
             // Try HTML5 geolocation.
-{#            if (navigator.geolocation) {#}
-{#                navigator.geolocation.getCurrentPosition(function (position) {#}
-{#                    var pos = {#}
-{#                        lat: position.coords.latitude,#}
-{#                        lng: position.coords.longitude#}
-{#                    };#}
-{##}
-{#                    infoWindow.setPosition(pos);#}
-{#                    infoWindow.setContent('Location found.');#}
-{#                    infoWindow.open(map);#}
-{#                    map.setCenter(pos);#}
-{##}
-{#                }, function () {#}
-{#                    handleLocationError(true, infoWindow, map.getCenter());#}
-{#                });#}
-{#            } else {#}
-{#                // Browser doesn't support Geolocation#}
-{#                handleLocationError(false, infoWindow, map.getCenter());#}
-{#            }#}
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(function (position) {
+                                var pos = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude
+                                };
+
+                                infoWindow.setPosition(pos);
+                                infoWindow.setContent('Location found.');
+                                infoWindow.open(map);
+                                map.setCenter(pos);
+
+                            }, function () {
+                                handleLocationError(true, infoWindow, map.getCenter());
+                            });
+                        } else {
+                            // Browser doesn't support Geolocation
+                            handleLocationError(false, infoWindow, map.getCenter());
+                        }
 
 
             var bounds = new google.maps.LatLngBounds();
@@ -290,12 +249,12 @@
         $(function () {
             $('#datetimepicker1').datetimepicker({
                         format: 'YYYY-MM-DD',
-                defaultDate:new Date()
+                        defaultDate: new Date()
                     }
             );
             $('#datetimepicker2').datetimepicker({
                         format: 'YYYY-MM-DD',
-                 defaultDate:new Date()
+                        defaultDate: new Date()
                     }
             );
         });
