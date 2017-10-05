@@ -9,3 +9,25 @@
 .container{
     width: 100%;
 }
+
+
+.float-statistic li {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+
+.badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #a90000;
+    border-radius: 10px;
+}
