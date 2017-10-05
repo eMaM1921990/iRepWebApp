@@ -61,6 +61,14 @@ urlpatterns += [
     url(r'^billboard/(?P<slug>[-\w]+)/', views.billBoards, name='billBoards'),
     url(r'^newBillBoard/', views.newBillBoard, name='newBillBoards'),
     url(r'^editbillBoard/(?P<id>.+)/$', views.editBillBoard, name='editBillBoard'),
+
+    # Export
+    url(r'^salesForceExport/$', views.ExportSalesForce, name='salesForceExport'),
+    url(r'^clientExport/$', views.ExportClients, name='clientExport'),
+    url(r'^exportOrders/$', views.ExportOrders, name='orderExport'),
+    url(r'^exportForms/$', views.ExportForms, name='formExport'),
+
+
     # Report
     url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce,
         name='TrackingVisitReportBySalesForce'),

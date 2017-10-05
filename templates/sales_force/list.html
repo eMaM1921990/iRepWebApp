@@ -6,9 +6,16 @@
 {% endblock %}
 {% block content %}
     <div class="body bs-example">
-    <h1 class="sub-titile"><i class="glyphicon glyphicon-user"></i> {% trans 'Sales force' %}</h1>
-    <a href="{% url 'createSalesForce' %}" class="btn btn-primary btn-lg " ><i
-            class="glyphicon glyphicon-plus-sign coloring1"></i> {% trans 'Sales force' %} </a>
+    <h1 class="sub-titile">
+        <i class="glyphicon glyphicon-user"></i> {% trans 'Sales force' %}
+    </h1>
+        <a href="{% url 'createSalesForce' %}" class="btn btn-primary  " >
+            <i class="glyphicon glyphicon-plus-sign coloring1"></i> {% trans 'Sales force' %}
+        </a>
+
+        <a href="{% url 'salesForceExport' %}" class="btn btn-info  " >
+            <i class="glyphicons glyphicons-file-export"></i> {% trans 'Export' %}
+        </a>
     <div class="outer">
     <div class="col-md-12">
         <div id="collapse4" class="body">

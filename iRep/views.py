@@ -26,7 +26,8 @@ from iRep.managers.Forms import Forms, IForm
 from iRep.managers.Orders import OrderManager
 from iRep.managers.Products import ProductManager
 from iRep.managers.Reports import TrackingReports, DashBoardReports
-from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
+from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource, SalesForceResource, ClientResource, \
+    FormResource
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
 from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders, FormQuestions, BillBoard
@@ -233,19 +234,58 @@ def ExportSchedual(request):
 
 @login_required
 def ExportOrders(request):
+    sqs = Orders.objects
+    orderResources = OrderResource()
     if request.POST:
-        orderResources = OrderResource()
         if 'fromDate' in request.POST and len(request.POST['fromDate']) > 0:
-            sqs = Orders.objects.filter(order_date__gte=request.POST['fromDate'])
+            sqs = sqs.filter(order_date__gte=request.POST['fromDate'])
         if 'toDate' in request.POST and len(request.POST['toDate']) > 0:
-            sqs = Orders.objects.filter(order_date__lte=request.POST['toDate'])
+            sqs = sqs.filter(order_date__lte=request.POST['toDate'])
         if 'salesForce' in request.POST and len(request.POST['salesForce']) > 0:
-            sqs = Orders.objects.filter(sales_force__id=request.POST['toDate'])
+            sqs = sqs.filter(sales_force__id=request.POST['toDate'])
 
-        dataset = orderResources.export(sqs)
-        response = HttpResponse(dataset.csv, content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="schedual.csv"'
-        return response
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    sqs = sqs.filter(branch__corporate=corp)
+    dataset = orderResources.export(sqs)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="orders.csv"'
+    return response
+
+@login_required
+def ExportSalesForce(request):
+    salesForceResources = SalesForceResource()
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    sqs = SalesForce.objects.filter(corp_id=corp)
+    dataset = salesForceResources.export(sqs)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="sales_force.csv"'
+    return response
+
+
+@login_required
+def ExportClients(request):
+    clientResources = ClientResource()
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    sqs = Client.objects.filter(corporate=corp)
+    dataset = clientResources.export(sqs)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="clients.csv"'
+    return response
+
+
+@login_required
+def ExportForms(request):
+    resource = FormResource()
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    sqs = Forms.objects.filter(corporate=corp)
+    dataset = resource.export(sqs)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="forms.csv"'
+    return response
 
 
 @login_required

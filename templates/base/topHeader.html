@@ -37,6 +37,10 @@
                                         class=" glyphicon glyphicon-plus-sign"></i> {% trans 'Create Sales force' %}</a>
                                 </li>
 
+                                <li><a href="{% url 'salesForceExport' %}"><i
+                                        class="glyphicons glyphicons-file-export"></i> {% trans 'Export Sales force' %}</a>
+                                </li>
+
 
                                 <li role="separator" class="divider"></li>
                                 <li>
@@ -66,6 +70,14 @@
                                         class="  glyphicon glyphicon-copy "></i> {% trans 'Orders' %}
                                 </a></li>
 
+                                <li><a href="{% url 'clientExport' %}"><i
+                                        class="glyphicons glyphicons-file-export"></i> {% trans 'Export Clients' %}</a>
+                                </li>
+
+                                <li><a href="{% url 'orderExport' %}"><i
+                                        class="glyphicons glyphicons-file-export"></i> {% trans 'Export Orders' %}</a>
+                                </li>
+
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{% url 'viewClient' user.corp_users.get.slug %}">{% trans 'View all' %}</a>
                                 </li>
@@ -84,6 +96,9 @@
                                         class=" glyphicon glyphicon-plus-sign"></i> {% trans 'New Form' %}
                                 </a></li>
 
+                                <li><a href="{% url 'formExport' %}"><i
+                                        class="glyphicons glyphicons-file-export"></i> {% trans 'Export Forms' %}</a>
+                                </li>
 
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{% url 'ViewForms' user.corp_users.get.slug %}">{% trans 'View all' %}</a>
