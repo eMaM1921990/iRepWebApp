@@ -27,7 +27,7 @@ from iRep.managers.Orders import OrderManager
 from iRep.managers.Products import ProductManager
 from iRep.managers.Reports import TrackingReports, DashBoardReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource, SalesForceResource, ClientResource, \
-    FormResource
+    FormResource, ProductResource
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
 from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders, FormQuestions, BillBoard
@@ -285,6 +285,18 @@ def ExportForms(request):
     dataset = resource.export(sqs)
     response = HttpResponse(dataset.csv, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="forms.csv"'
+    return response
+
+
+@login_required
+def ExportProduct(request):
+    resource = ProductResource()
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    sqs = Product.objects.filter(corporate=corp)
+    dataset = resource.export(sqs)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="product.csv"'
     return response
 
 

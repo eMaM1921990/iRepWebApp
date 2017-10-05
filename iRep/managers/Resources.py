@@ -1,6 +1,6 @@
 from import_export import resources
 
-from iRep.models import Visits, SalesForceSchedual, Orders, SalesForce, Client, Forms
+from iRep.models import Visits, SalesForceSchedual, Orders, SalesForce, Client, Forms, Product
 
 __author__ = 'eMaM'
 
@@ -25,7 +25,6 @@ class SalesForceResource(resources.ModelResource):
         model = SalesForce
 
 
-
 class ClientResource(resources.ModelResource):
     class Meta:
         model = Client
@@ -34,3 +33,8 @@ class ClientResource(resources.ModelResource):
 class FormResource(resources.ModelResource):
     class Meta:
         model = Forms
+
+
+class ProductResource(resources.ModelResource):
+    class Meta:
+        model = Product

@@ -62,7 +62,6 @@
                                 </a></li>
 
 
-
                                 <li><a href="#"><i class=" glyphicon glyphicon-calendar"></i> {% trans 'Dashboard' %}
                                 </a></li>
 
@@ -132,19 +131,24 @@
                             </a>
 
                             <ul class="dropdown-menu top-align2" aria-labelledby="dropdownMenu1">
+
                                 <li><a href="{% url 'productList' user.corp_users.get.slug %}"><i
                                         class="fa fa-archive"></i> {% trans 'Products' %}</a></li>
+
+                                <li><a href="{% url 'productExport' %}"><i
+                                        class="glyphicon glyphicon-export"></i> {% trans 'Export Products' %}</a>
+                                </li>
+
+
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'billBoards' user.corp_users.get.slug %}"><i class="fa fa-comments"></i> Bill board</a></li>
+                                <li><a href="{% url 'billBoards' user.corp_users.get.slug %}"><i
+                                        class="fa fa-comments"></i> Bill board</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#"><i class="fa fa-shopping-basket"></i> Retail Audit</a></li>
                                 <li role="separator" class="divider"></li>
 
 
                                 <li><a href="#"><i class="fa fa-cloud-download"></i> Export and emport </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">Settings... </a></li>
 
 
                             </ul>
@@ -155,7 +159,8 @@
                         <li class="hidden-xs">
 
                             <div class="btn-group">
-                                <span class="messages" data-toggle="tooltip" data-placement="bottom" data-original-title="Messages">
+                                <span class="messages" data-toggle="tooltip" data-placement="bottom"
+                                      data-original-title="Messages">
                                     <a href="#right" data-toggle="onoffcanvas" aria-expanded="false" class="nav-btns">
                                         <i class="glyphicon glyphicon-bell"></i>
                                         <span class="label label-info">4</span>

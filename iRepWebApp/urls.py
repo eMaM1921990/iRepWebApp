@@ -67,6 +67,7 @@ urlpatterns += [
     url(r'^clientExport/$', views.ExportClients, name='clientExport'),
     url(r'^exportOrders/$', views.ExportOrders, name='orderExport'),
     url(r'^exportForms/$', views.ExportForms, name='formExport'),
+    url(r'^exportProduct/$', views.ExportProduct, name='productExport'),
 
 
     # Report
