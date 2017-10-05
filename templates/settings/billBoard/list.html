@@ -7,13 +7,13 @@
 {% block content %}
     <div class="body bs-example">
     <h1 class="sub-titile">
-        <i class="fa fa-archive"></i> {% trans 'Products' %}
+        <i class="fa fa-archive"></i> {% trans 'Bill board' %}
 
         <span class="pull-right">
 
-            <a href="{% url 'createProduct' user.corp_users.get.slug %}"  class="btn btn-primary ">
+            <a href="{% url 'newBillBoards'  %}"  class="btn btn-primary ">
                 <i class="glyphicon glyphicon-plus-sign coloring1"></i>
-                {% trans 'New products' %}
+                {% trans 'New Bill board' %}
             </a>
         </span>
     </h1>
@@ -24,14 +24,17 @@
                 <thead>
                 <tr>
                     <th>{% trans 'Subject' %}</th>
+                    <th>{% trans 'Note' %}</th>
+                    <th>{% trans 'Date' %}</th>
                     <th>{% trans 'Active' %}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for row in billBoards %}
                     <tr>
-                        <td></td>
-                        <td>{{ row.subject }}</td>
+                        <td><a href="{% url 'editBillBoard' row.id %}">{{ row.subject }}</a></td>
+                        <td>{{ row.body }}</td>
+                        <td>{{ row.created_date }}</td>
                         <td>{{ row.is_active }}</td>
 
                     </tr>
@@ -54,8 +57,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/dataTables.bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.6/js/jquery.tablesorter.min.js"></script>
-{% endblock %}
-{% block extra_javascript %}
     <script>
         $(function () {
             Metis.MetisTable();

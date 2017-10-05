@@ -669,7 +669,59 @@ class BaseQuestionFormSet(BaseFormSet):
 
 
 class BillBoardForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        # POP from kwargs
+        action = kwargs.pop('action', None)
+        super(BillBoardForm, self).__init__(*args, **kwargs)
+        # Input label
+        self.fields['subject'].label = _('Subject')
+        self.fields['body'].label = _('Note ')
+
+        # control Required
+        self.fields['subject'].required = True
+        self.fields['body'].required = True
+
+        # init
+        self.fields['body'].widget.attrs['rows'] = 3
+
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'billboard-form-id'
+        self.helper.form_method = 'post'
+        self.helper.form_action = action
+
+        self.helper.layout = Layout(
+            Div(
+                css_class='clearfix'
+            ),
+            Div(
+                css_class='divider-md'
+            ),
+            Div(
+                Div(
+                    Field('subject', placeholder=_('Subject')),
+                    css_class='form-group'
+                ),
+                Div(
+                    Field('body', placeholder=_('Note')),
+                    css_class='form-group'
+                ),
+                Div(
+                    Reset(_('Cancel'), _('Cancel'), css_class='btn btn-default  btn-lg min-btn'),
+                    Submit(_('Save'), _('Save'), css_class='btn btn-primary  btn-lg min-btn'),
+                    css_class='text-center divider-lg'
+                )
+            )
+        )
+
+    def save(self, user,corporte, commit=True):
+        m = super(BillBoardForm, self).save(commit=False)
+        m.created_by = user
+        m.corporate = corporte
+        m.is_active= True
+        m.save()
+        return m
 
     class Meta:
         model = BillBoard
-        exclude = ['created_date','corporate']
+        exclude = ['created_date','corporate','is_active','created_by']

@@ -18,8 +18,8 @@ from django.urls import reverse
 
 from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
-    BaseQuestionFormSet, FormsForm, ProductCategoryForm
-from iRep.managers.BillBoards import BillBoard
+    BaseQuestionFormSet, FormsForm, ProductCategoryForm, BillBoardForm
+from iRep.managers.BillBoards import BillBoards
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
 from iRep.managers.Forms import Forms, IForm
@@ -29,7 +29,7 @@ from iRep.managers.Reports import TrackingReports, DashBoardReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
-from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders, FormQuestions
+from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders, FormQuestions, BillBoard
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -466,6 +466,45 @@ def TrackingVisitReportBySalesForce(request):
 def billBoards(request, slug):
     template = 'settings/billBoard/list.html'
     context = {
-        'billBoards': BillBoard(slug=slug).list()
+        'billBoards': BillBoards(slug=slug).list()
+    }
+    return render(request, template_name=template, context=context)
+
+
+@login_required
+def newBillBoard(request):
+    template = 'settings/billBoard/form.html'
+
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+
+    form = BillBoardForm(request.POST or None, action=reverse('newBillBoards'))
+    if form.is_valid():
+        m = form.save(user=request.user, corporte=corp)
+        if m:
+            return redirect(reverse('billBoards', kwargs={'slug': corp.slug}))
+    context = {
+        'form': form
+    }
+    return render(request, template_name=template, context=context)
+
+
+@login_required
+def editBillBoard(request, id):
+    template = 'settings/billBoard/form.html'
+
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+
+    # Bill boards
+    instance = get_object_or_404(BillBoard, id=id)
+
+    form = BillBoardForm(request.POST or None, instance=instance, action=reverse('newBillBoards'))
+    if form.is_valid():
+        m = form.save(user=request.user, corporte=corp)
+        if m:
+            return redirect(reverse('billBoards', kwargs={'slug': corp.slug}))
+    context = {
+        'form': form
     }
     return render(request, template_name=template, context=context)
