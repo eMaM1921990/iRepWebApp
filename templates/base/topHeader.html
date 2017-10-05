@@ -144,7 +144,7 @@
                                 <li><a href="{% url 'billBoards' user.corp_users.get.slug %}"><i
                                         class="fa fa-comments"></i> Bill board</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="fa fa-shopping-basket"></i> Retail Audit</a></li>
+                                <li><a href="{% url 'auditRetails' user.corp_users.get.slug %}"><i class="fa fa-shopping-basket"></i> Retail Audit</a></li>
                                 <li role="separator" class="divider"></li>
 
 
@@ -181,10 +181,7 @@
 
                                 <span class="caret"></span></a>
                             <ul class="dropdown-menu user-align user-droplist ">
-                                <li><a href="#"><i class="glyphicon glyphicon-user"></i> My profile</a></li>
-                                <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Change password</a></li>
 
-                                <li role="separator" class="divider"></li>
                                 <li>
 
                                     <a href="{% url 'logout' %}"><i class="fa fa-power-off"></i> {% trans 'Logout' %}
@@ -194,15 +191,7 @@
                         </li>
 
 
-                        <li class="visible-xs">
 
-                            <a href="#right" data-toggle="onoffcanvas" aria-expanded="false" class="nav-btns">
-                                <i class="glyphicon glyphicon-bell"></i>Messages
-                                <span class="label label-info">4</span>
-                            </a>
-
-
-                        </li>
 
 
                     </ul>

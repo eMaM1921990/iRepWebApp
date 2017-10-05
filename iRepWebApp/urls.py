@@ -68,7 +68,11 @@ urlpatterns += [
     url(r'^exportOrders/$', views.ExportOrders, name='orderExport'),
     url(r'^exportForms/$', views.ExportForms, name='formExport'),
     url(r'^exportProduct/$', views.ExportProduct, name='productExport'),
+    url(r'^exportAuditRetails/$', views.ExportAuditRetails, name='auditRetailExport'),
 
+
+    # Audit Retails
+    url(r'^auditRetails/(?P<slug>[-\w]+)/$', views.auditRetails, name='auditRetails'),
 
     # Report
     url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce,

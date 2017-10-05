@@ -6,3 +6,6 @@ from django.apps import AppConfig
 
 class IrepConfig(AppConfig):
     name = 'iRep'
+
+    def ready(self):
+        import Signals

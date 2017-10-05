@@ -19,6 +19,7 @@ from django.urls import reverse
 from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
     BaseQuestionFormSet, FormsForm, ProductCategoryForm, BillBoardForm
+from iRep.managers.AuditRetail import AuditRetail
 from iRep.managers.BillBoards import BillBoards
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Corp import CorpManager
@@ -27,10 +28,11 @@ from iRep.managers.Orders import OrderManager
 from iRep.managers.Products import ProductManager
 from iRep.managers.Reports import TrackingReports, DashBoardReports
 from iRep.managers.Resources import VisitsResource, SchedualResource, OrderResource, SalesForceResource, ClientResource, \
-    FormResource, ProductResource
+    FormResource, ProductResource, AuditRetailResources
 from iRep.managers.SalesForce import SalesForceManager
 from iRep.managers.Schedular import SchedulerManager
-from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders, FormQuestions, BillBoard
+from iRep.models import SalesForce, Product, Client, Visits, SalesForceSchedual, Orders, FormQuestions, BillBoard, \
+    AuditRetails
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -301,6 +303,18 @@ def ExportProduct(request):
 
 
 @login_required
+def ExportAuditRetails(request):
+    resource = AuditRetailResources()
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    sqs = AuditRetails.objects.filter(corporate=corp)
+    dataset = resource.export(sqs)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="auditRetails.csv"'
+    return response
+
+
+@login_required
 def AddScheduler(request):
     if request.POST:
         valid = False
@@ -560,3 +574,15 @@ def editBillBoard(request, id):
         'form': form
     }
     return render(request, template_name=template, context=context)
+
+
+@login_required
+def auditRetails(request, slug):
+    template = 'settings/auditRetail/list.html'
+    context = {
+        'auditRetails': AuditRetail(slug).getAuditRetails()
+    }
+
+
+    return render(request, template_name=template, context=context)
+

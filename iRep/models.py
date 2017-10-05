@@ -127,6 +127,14 @@ class SalesForce(models.Model):
     def __str__(self):
         return "[" + self.position.name + "] " + self.name
 
+
+    @property
+    def getParsedQuery(self):
+        txt= ''
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
+
     class Meta:
         managed = MANAGED
         db_table = 'sales_force'
@@ -158,6 +166,13 @@ class Client(models.Model):
     slug = models.SlugField(db_index=True)
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_branch',
                                     db_column='sales_force_id', null=True)
+
+    @property
+    def getParsedQuery(self):
+        txt= None
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
 
     class Meta:
         managed = MANAGED
@@ -200,6 +215,13 @@ class SalesForceSchedual(models.Model):
     notes = models.TextField(null=True)
     is_visit = models.BooleanField(default=True)
 
+    @property
+    def getParsedQuery(self):
+        txt= ''
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
+
     class Meta:
         managed = MANAGED
         db_table = 'schedual'
@@ -217,6 +239,13 @@ class ProductGroup(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def getParsedQuery(self):
+        txt= None
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
 
     class Meta:
         managed = MANAGED
@@ -252,6 +281,13 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     image = models.ImageField(upload_to=settings.PRODUCT_DIR)
     slug = models.SlugField()
+
+    @property
+    def getParsedQuery(self):
+        txt= None
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
 
     class Meta:
         managed = MANAGED
@@ -321,6 +357,13 @@ class BillBoard(models.Model):
     is_active = models.BooleanField(default=False)
     corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_billboeard', db_column='corp_id')
 
+    @property
+    def getParsedQuery(self):
+        txt= None
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
+
     class Meta:
         managed = MANAGED
         db_table = 'billboard'
@@ -349,6 +392,13 @@ class Visits(models.Model):
                                  db_column='schedual_id', null=True)
     created_date = models.DateTimeField(default=timezone.now)
 
+    @property
+    def getParsedQuery(self):
+        txt= None
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
+
     class Meta:
         managed = MANAGED
         db_table = 'visits'
@@ -367,6 +417,13 @@ class Orders(models.Model):
     order_number = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4)
     notes = models.TextField(null=True)
     created_date = models.DateTimeField(default=timezone.now)
+
+    @property
+    def getParsedQuery(self):
+        txt= None
+        for field in self._meta.fields:
+            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+        return txt
 
     class Meta:
         managed = MANAGED
@@ -442,6 +499,13 @@ class Forms(models.Model):
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now)
 
+    @property
+    def getParsedQuery(self):
+        txt= None
+        for field in self._meta.fields:
+            txt += '['+field.name+']:'+str(getattr(self, str(field.name)))
+        return txt
+
     class Meta:
         managed = MANAGED
         db_table = 'forms'
@@ -467,3 +531,15 @@ class QuestionAnswer(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'question_answer'
+
+
+class AuditRetails(models.Model):
+    created_date = models.DateTimeField(default=timezone.now)
+    created_by = models.CharField(max_length=100)
+    action_type = models.CharField(max_length=100)
+    details = models.TextField(null=False)
+    corporate = models.ForeignKey(Corporate, models.CASCADE, related_name='corp_audit_retails', db_column='corp_id')
+
+    class Meta:
+        managed = MANAGED
+        db_table = 'audit_retails'
