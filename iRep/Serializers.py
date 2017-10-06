@@ -22,6 +22,12 @@ class ProfileLang(serializers.ModelSerializer):
 class SalesForceSerializer(serializers.ModelSerializer):
     u_avatar = serializers.SerializerMethodField('get_avatar_url')
 
+    text = serializers.SerializerMethodField('get_text_val')
+
+    def get_text_val(self, obj):
+        if hasattr(obj, 'name'):
+            return obj.name
+
     def get_avatar_url(self, obj):
         if hasattr(obj, 'avatar'):
             if obj.avatar:
@@ -30,7 +36,7 @@ class SalesForceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SalesForce
-        fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug']
+        fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug','text']
 
 
 class MemberSerializer(serializers.ModelSerializer):

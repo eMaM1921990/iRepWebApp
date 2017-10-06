@@ -49,18 +49,18 @@ def clientDeleted(sender, instance, **kwargs):
 @receiver(post_save, sender=SalesForceSchedual)
 def salesForceScedualCreatedOrUpdated(sender, instance, created, **kwargs):
     if created:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Add schedual',
                      details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
     else:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Update schedual',
                      details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
 
 
 @receiver(pre_delete, sender=SalesForceSchedual)
 def salesForceScedualDeleted(sender, instance, **kwargs):
-    AuditRetails(created_by=instance.created_by,
+    AuditRetails(created_by='',
                  action_type='Delete schedual',
                  details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
 

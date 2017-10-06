@@ -2,7 +2,7 @@ import logging
 
 from django.utils.text import slugify
 
-from iRep.models import Client, Corporate
+from iRep.models import Client, Corporate, SalesForce
 
 logger = logging.getLogger(__name__)
 
@@ -53,3 +53,7 @@ class ClientManager():
         except Exception as e:
             logger.debug('Error during retrieve saleforce ' + str(slug) + ' clients cause ' + str(e))
             return None
+
+
+    def get_sales_force_by_client(self, slug):
+        return SalesForce.objects.filter(id__in = [client.id for client in Client.objects.filter(slug=slug)])

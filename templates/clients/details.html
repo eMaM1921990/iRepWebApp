@@ -57,13 +57,14 @@
         </div>
 
     </div>
-    {% include 'schedual/schedual_visit_modal_clients.html' %}
+    {% include 'schedual/schedual_visit_modal.html' %}
 {% endblock %}
 {% block extra_js_src %}
     <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
     <script src="{% static 'app_js/highcharts.js' %}"></script>
     {#    <script src="{% static 'app_js/exporting.js' %}"></script>#}
     <script src="{% static 'full_calendar/fullcalendar.min.js' %}"></script>
+    <script src="{% static 'app_js/scheduler.js' %}"></script>
 {% endblock %}
 {% block extra_javascript %}
     <script>
@@ -121,6 +122,14 @@
         $(document).ready(function () {
 
             // page is now ready, initialize the calendar...
+
+            var data = {{ sales_force|safe }};
+            console.log(data);
+
+            $('#salesForce').select2({
+                placeholder: '--------',
+                data: data
+            });
 
             $('#calendar').fullCalendar({
                 header: {

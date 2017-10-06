@@ -16,7 +16,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers
+from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers, SalesForceSerializer
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
     BaseQuestionFormSet, FormsForm, ProductCategoryForm, BillBoardForm
 from iRep.managers.AuditRetail import AuditRetail
@@ -199,8 +199,17 @@ def EditClient(request, slug):
     # retrieve schedual
     schedular = SchedulerManager().get_scheduler_by_client(client_slug=slug)
 
+    # retrieve client salesforce
+    sqs= ClientManager().get_sales_force_by_client(slug=slug)
+    data = []
+    # serialize data
+    if sqs:
+        for row in sqs:
+            data.append(SalesForceSerializer(row, context={'request': request}).data)
+        data = json.dumps(data, ensure_ascii=False)
+
     return render(request, template_name=template,
-                  context={'form': form, 'new': False, 'reportForm': reportForm, 'schedular': schedular})
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'schedular': schedular,'sales_force':data,'client_id':client_instance.pk})
 
 
 # Export

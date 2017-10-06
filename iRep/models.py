@@ -169,7 +169,7 @@ class Client(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= None
+        txt= ''
         for field in self._meta.fields:
             txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
         return txt
