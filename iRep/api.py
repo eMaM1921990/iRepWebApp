@@ -691,11 +691,11 @@ def QuestionAnswer(request):
 
 
 @api_view(['GET'])
-def ListBillboard(request):
+def ListBillboard(request,slug):
     resp = {}
     resp['code'] = 500
 
-    if 'corp' not in request.data:
+    if not slug:
         resp['msg'] = _('Corporate is missing')
         return Response(resp)
 
