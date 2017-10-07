@@ -706,6 +706,7 @@ def ListBillboard(request,slug):
             resp['data'].append(BillBoardSerializers(row).data)
         resp['code'] = 200
     except Exception as e:
+        logger.debug('error during retrieve billboards cause:-' +str(e))
         resp['data'] = _('Error during retrieve bill boards ')
 
     return Response(resp)
