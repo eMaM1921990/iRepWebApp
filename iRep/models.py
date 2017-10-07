@@ -242,7 +242,7 @@ class ProductGroup(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= None
+        txt= ''
         for field in self._meta.fields:
             txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
         return txt
@@ -284,7 +284,7 @@ class Product(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= None
+        txt= ''
         for field in self._meta.fields:
             txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
         return txt
@@ -359,7 +359,7 @@ class BillBoard(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= None
+        txt= ''
         for field in self._meta.fields:
             txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
         return txt
@@ -394,7 +394,7 @@ class Visits(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= None
+        txt= ''
         for field in self._meta.fields:
             txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
         return txt
@@ -420,7 +420,7 @@ class Orders(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= None
+        txt= ''
         for field in self._meta.fields:
             txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
         return txt
@@ -501,7 +501,7 @@ class Forms(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= None
+        txt= ''
         for field in self._meta.fields:
             txt += '['+field.name+']:'+str(getattr(self, str(field.name)))
         return txt
