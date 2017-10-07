@@ -700,7 +700,7 @@ def ListBillboard(request,slug):
         return Response(resp)
 
     try:
-        billBoards = BillBoards(slug=request.data['corp']).list()
+        billBoards = BillBoards(slug=slug).list()
         resp['data'] = []
         for row in billBoards:
             resp['data'].append(BillBoardSerializers(row).data)
