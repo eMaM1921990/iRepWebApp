@@ -104,6 +104,7 @@ urlpatterns += [
     url(r'^api/v1/forms/(?P<slug>.+)/$', api.ListForms, name='apiListForms'),
     url(r'^api/v1/question_answer/$', api.QuestionAnswer, name='apiQuestionAnswer'),
 
+    url(r'^api/v1/billboard/(?P<slug>.+)/$', api.ListBillboard, name='apiListBillboard'),
 
     # serve media
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, }),

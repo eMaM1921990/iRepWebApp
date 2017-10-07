@@ -5,7 +5,7 @@ from rest_framework import serializers
 from iRep.models import ProductGroup, ProductUnit, Product, SalesForce, AppLanguage, Client, Orders, OrderLine, \
     SalesForceSchedual, SalesFunnelStatus, SalesForceTimeLine, SalesForceCheckInOut, Visits, SalesForceTrack, \
     ClientTags, \
-    Tags, Forms, FormQuestions
+    Tags, Forms, FormQuestions, BillBoard
 
 
 class ProductUnitSerializer(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class SalesForceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SalesForce
-        fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug','text']
+        fields = ['id', 'u_avatar', 'name', 'phone', 'email', 'profile_language', 'last_activity', 'slug', 'text']
 
 
 class MemberSerializer(serializers.ModelSerializer):
@@ -189,3 +189,9 @@ class FormsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Forms
         fields = ['id', 'form_name', 'description', 'form_questions']
+
+
+class BillBoardSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = BillBoard
+        fields = ['id', 'subject', 'body', 'created_by']

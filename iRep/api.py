@@ -6,7 +6,8 @@ from rest_framework.response import Response
 
 from iRep.Serializers import ProductGroupSerializer, ClientSerializer, \
     OrderSerializers, SchedualSerializers, SalesFunnelSerializer, TimeLineSerializers, CheckInOutSerializers, \
-    SalesForceTracking, MemberSerializer, TagSerlizers, FormsSerializers
+    SalesForceTracking, MemberSerializer, TagSerlizers, FormsSerializers, BillBoardSerializers
+from iRep.managers.BillBoards import BillBoards
 from iRep.managers.Clients import ClientManager
 from iRep.managers.Forms import IForm
 from iRep.managers.Orders import OrderManager
@@ -685,5 +686,26 @@ def QuestionAnswer(request):
             resp['code'] = 200
         else:
             resp['data'] = _('Error during saving ')
+
+    return Response(resp)
+
+
+@api_view(['GET'])
+def ListBillboard(request):
+    resp = {}
+    resp['code'] = 500
+
+    if 'corp' not in request.data:
+        resp['msg'] = _('Corporate is missing')
+        return Response(resp)
+
+    try:
+        billBoards = BillBoards(slug=request.data['corp']).list()
+        resp['data'] = []
+        for row in billBoards:
+            resp['data'].append(BillBoardSerializers(row).data)
+        resp['code'] = 200
+    except Exception as e:
+        resp['data'] = _('Error during retrieve bill boards ')
 
     return Response(resp)
