@@ -125,18 +125,18 @@ def billBoardDeleted(sender, instance, **kwargs):
 @receiver(post_save, sender=Visits)
 def visitCreatedOrUpdated(sender, instance, created, **kwargs):
     if created:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Add visit',
                      details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
     else:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Update visit',
                      details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
 
 
 @receiver(pre_delete, sender=Visits)
 def visitDeleted(sender, instance, **kwargs):
-    AuditRetails(created_by=instance.created_by,
+    AuditRetails(created_by='',
                  action_type='Delete visit',
                  details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
 
@@ -144,18 +144,18 @@ def visitDeleted(sender, instance, **kwargs):
 @receiver(post_save, sender=Orders)
 def orderCreatedOrUpdated(sender, instance, created, **kwargs):
     if created:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Add Order',
                      details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
     else:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Update Order',
                      details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
 
 
 @receiver(pre_delete, sender=Orders)
 def orderDeleted(sender, instance, **kwargs):
-    AuditRetails(created_by=instance.created_by,
+    AuditRetails(created_by='',
                  action_type='Delete Order',
                  details=instance.getParsedQuery,corporate=instance.sales_force.corp_id).save()
 
@@ -163,17 +163,17 @@ def orderDeleted(sender, instance, **kwargs):
 @receiver(post_save, sender=Forms)
 def formsCreatedOrUpdated(sender, instance, created, **kwargs):
     if created:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Add Forms',
                      details=instance.getParsedQuery,corporate=instance.corporate).save()
     else:
-        AuditRetails(created_by=instance.created_by,
+        AuditRetails(created_by='',
                      action_type='Update Forms',
                      details=instance.getParsedQuery,corporate=instance.corporate).save()
 
 
 @receiver(pre_delete, sender=Forms)
 def formsDeleted(sender, instance, **kwargs):
-    AuditRetails(created_by=instance.created_by,
+    AuditRetails(created_by='',
                  action_type='Delete Forms',
                  details=instance.getParsedQuery,corporate=instance.corporate).save()
