@@ -33,11 +33,11 @@
                         {% trans 'New product' %}
                     </a>
                 </li>
-                <li role="presentation">
-                    <a href="#report" aria-controls="profile" role="tab" {% if not new %}data-toggle="tab"{% endif %}>
-                        {% trans 'Report' %}
-                    </a>
-                </li>
+{#                <li role="presentation">#}
+{#                    <a href="#report" aria-controls="profile" role="tab" {% if not new %}data-toggle="tab"{% endif %}>#}
+{#                        {% trans 'Report' %}#}
+{#                    </a>#}
+{#                </li>#}
 
 
             </ul>
@@ -48,19 +48,19 @@
                     {% crispy form %}
 
                 </div>
-                <div role="tabpanel" class="tab-pane fade in active" id="report">
-                    <div class="divider-md"></div>
-                    <div class="top-controlbar">
-                        {% if reportForm %}
-                            {% crispy reportForm %}
-                        {% endif %}
-                        <div class="clearfix"></div>
-                    </div>
-
+{#                <div role="tabpanel" class="tab-pane fade in active" id="report">#}
+{#                    <div class="divider-md"></div>#}
+{#                    <div class="top-controlbar">#}
+{#                        {% if reportForm %}#}
+{#                            {% crispy reportForm %}#}
+{#                        {% endif %}#}
+{#                        <div class="clearfix"></div>#}
+{#                    </div>#}
+{##}
                     {#                    {% include 'sales_force/reports.html' %}#}
-
-
-                </div>
+{##}
+{##}
+{#                </div>#}
 
 
             </div>
