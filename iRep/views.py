@@ -136,9 +136,9 @@ def ViewProduct(request, slug):
 def ViewEditProduct(request, slug):
     template = 'settings/products/details.html'
     product_instance = get_object_or_404(Product, slug=slug)
-    form = ProductForm(request.POST or None, request.FILES or None, slug=slug,
+    form = ProductForm(request.POST or None, request.FILES or None, slug=product_instance.corporate.slug,
                        instance=product_instance,
-                       action=reverse('editProduct', kwargs={'slug': product_instance.corporate.slug}))
+                       action=reverse('editProduct', kwargs={'slug': slug}))
 
     categoryForm = ProductCategoryForm(request.POST or None)
 
