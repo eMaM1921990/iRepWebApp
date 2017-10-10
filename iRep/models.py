@@ -138,7 +138,7 @@ class SalesForce(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'sales_force'
-        unique_together = ['user_pin', 'corp_id']
+        unique_together = ['user_pin', 'corp_id','name']
 
 
 class Client(models.Model):
@@ -177,6 +177,7 @@ class Client(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'client'
+        unique_together=['name','corporate']
 
 
 class Tags(models.Model):
@@ -292,6 +293,7 @@ class Product(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'product'
+        unique_together = ['name','corporate']
 
 
 class ProductTags(models.Model):
@@ -367,6 +369,7 @@ class BillBoard(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'billboard'
+        unique_together = ['subject','corporate']
 
 
 class Messages(models.Model):
@@ -509,6 +512,7 @@ class Forms(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'forms'
+        unique_together = ['form_name','corporate']
 
 
 class FormQuestions(models.Model):
