@@ -620,10 +620,10 @@ class FormsForm(forms.ModelForm):
         self.fields['is_active'].label = _('Is active')
 
     def save(self, commit=True):
-        m = Forms()
-        m.form_name = self.cleaned_data['form_name']
-        m.description = self.cleaned_data['description']
-        m.is_active = self.cleaned_data['is_active']
+        m = super(FormsForm, self).save(commit=False)
+        # m.form_name = self.cleaned_data['form_name']
+        # m.description = self.cleaned_data['description']
+        # m.is_active = self.cleaned_data['is_active']
         m.corporate = self.corp
         m.save()
         return m

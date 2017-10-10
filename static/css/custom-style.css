@@ -606,23 +606,10 @@ ul.manage_actions li a span {
 }
 
 .questin-addon{ background-color: #3986c3 ; color: #fff}
-.navbar-nav-links > .help-btn > a{ color:#5bc0de !important }
 
-.divider{ border-bottom: 1px solid #ccc}
+.num-product{ font-size: 40px}
 
-.float-statistic{    bottom: 60px;
-    position: absolute;
-    z-index: 100;  margin-left: 20px;}
+.products-coounter{ border-radius: 7px; padding: 5px; color: #fff}
+.custom-head{ background-color: #fff !important; border-color:#fff !important}
 
-.float-statistic li{background: rgba(255,255,255,0.3) ; border-radius: 5px }
-.float-statistic li a{   padding: 5px 11px;}
-
-#summery, #clients, #Activities {  display: none}
-.bootstrap-select{ z-index: 1000}
-.t-sort .bootstrap-select{ z-index: 1000}
-
-.head-td{ background-color: #c9d7d8; padding: 5px ;margin: 3px auto; color: #505050; font-weight: 600}
-.body-td{ background-color: #f0f7f2 ;padding: 5px; margin: 3px auto}
-
-
-
+.font-lg{ font-size: 19px}

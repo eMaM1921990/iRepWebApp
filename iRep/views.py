@@ -386,15 +386,6 @@ def CreateForms(request, slug):
     template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
     QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
-
-    # Get our existing  data for this user.  This is used as initial data.
-    # question_data = None
-    # form_questions = IForm(slug=slug).getFormQuestions(id)
-    # if form_questions:
-    #     question_data = [{'question': l.question}
-    #                      for l in form_questions]
-
-
     formsForm = FormsForm(request.POST or None, user=request.user, corp=corp)
 
     QuestionFormSetform = QuestionFormSet(request.POST or None)
@@ -416,6 +407,8 @@ def CreateForms(request, slug):
 
                 # And notify our users that it worked
                 messages.success(request, 'You have updated your form.')
+                # Redirect
+                return redirect(reverse('ViewForms', kwargs={'slug': slug}))
 
         except IntegrityError:  # If the transaction failed
             messages.error(request, 'There was an error saving your form.')
@@ -435,7 +428,7 @@ def EditForms(request, slug, id):
 
     template = 'forms/form.html'
     # Create the formset, specifying the form and formset we want to use.
-    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet, min_num=0, can_delete=False)
+    QuestionFormSet = formset_factory(QuestionForm, formset=BaseQuestionFormSet)
 
     # Get our existing  data for this user.  This is used as initial data.
     question_data = None
@@ -464,6 +457,9 @@ def EditForms(request, slug, id):
 
                 # And notify our users that it worked
                 messages.success(request, 'You have updated your form.')
+
+                # Redirect
+                return redirect(reverse('ViewForms', kwargs={'slug': slug}))
 
         except IntegrityError:  # If the transaction failed
             messages.error(request, 'There was an error saving your form.')
@@ -597,3 +593,17 @@ def auditRetails(request, slug):
     }
 
     return render(request, template_name=template, context=context)
+
+
+@login_required
+def dashboard(request,slug):
+    template = 'clients/dashboard.html'
+    context = {}
+
+    if request.POST:
+        # Get Corp Info
+        corp = CorpManager().get_corp_by_user(request.user)
+        dashboards = DashBoardReports(start_date=request.POST['dateFrom'],end_date=request.POST['dateTo'],city=None,corp=corp, context=None)
+        context['visitDetails']=dashboards.get_visit_details_charts()
+        context['orders'] = dashboards.get_total_orders_chart()
+    return render(request, template_name=template,context=context)

@@ -1,0 +1,325 @@
+{% extends 'base/base.html' %}
+{% load i18n staticfiles crispy_forms_tags%}
+{% block extra_head %}
+    <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.min.css' %}"/>
+    {#    <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.print.css' %}"/>#}
+    <link rel="stylesheet" href="{% static 'css/development.css' %}">
+{% endblock %}
+{% block content %}
+    <h1 class="sub-titile">    <i class="glyphicon glyphicon-dashboard"></i> Darshboard</h1>
+
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+
+
+            <form class="form-inline" method="post" action="{% url 'dashboard' user.corp_users.get.slug %}">
+                {% csrf_token %}
+                <div class="form-group col-md-4">
+                    <label  >Date From</label>
+
+                    <div class='input-group date' >
+
+                        <input type='text' class="form-control" id="id_date_from" name="dateFrom"/>
+                        <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group col-md-4">
+                    <label  > Date to </label>
+                    <div class='input-group date' id='datetimepicker2'>
+
+
+                        <input type='text' class="form-control" id="id_date_to" name="dateTo"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-group col-md-4">
+
+                    <button type="submit" class="btn btn-primary">Filter</button>
+
+
+                </div>
+
+            </form>
+
+
+
+        </div>
+
+    </div>
+
+    <div class="divider-lg"></div>
+    <div class="row">
+
+        <div class="col-md-12">
+
+
+            <div class="col-md-4">
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading custom-head">
+                        <h3 class="panel-title">Number of visits\day</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div id="barChart"></div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="col-md-4">
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading custom-head">
+                        <h3 class="panel-title">Number of orders\Day</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div id="barChart2"></div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading custom-head">
+                        <h3 class="panel-title">Orders amount\day</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div id="barChart3"></div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+    <div class="divider-sm"></div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="col-md-4">
+
+                <a href="#" class="btn btn-primary btn-block font-lg">Number of visits <span class="badge" id="visitDetails">{{ visitDetails|length }}</span></a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="#" class="btn btn-primary btn-block font-lg">Number of orders <span class="badge" id="ordersDetails">0</span></a>
+            </div>
+
+            <div class="col-md-4">
+
+                <a href="#" class="btn btn-primary btn-block font-lg">Amount of orders <span class="badge" id="orderAmount">0</span></a>
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+    </div>
+
+
+
+    </div>
+
+
+{% endblock %}
+{% block extra_js_src %}
+    <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'app_js/highcharts.js' %}"></script>
+
+
+{% endblock %}
+{% block extra_javascript %}
+    <script>
+        $(function () {
+            $('#id_date_from').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#id_date_to').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+        });
+
+        var categoriesVisit = [];
+        var seriesVisit = [];
+        var totalSeriesVisit = 0
+        {% for visit in visitDetails %}
+            categoriesVisit.push('{{ visit.visit_date }}');
+            seriesVisit.push({{ visit.totalVisit }});
+            totalSeriesVisit += {{ visit.totalVisit }};
+        {% endfor %}
+        $('#visitDetails').text(totalSeriesVisit);
+
+
+        var categoriesOrders = [];
+        var seriesOrders = [];
+        var seriesOrdersAmount = [];
+        var totalSeriesOrders = 0;
+        var totalAmount = 0;
+        {% for order in orders %}
+            categoriesOrders.push('{{ order.order_date }}');
+            seriesOrders.push({{ order.totalOrder }});
+            seriesOrdersAmount.push({{ order.totalAmount }});
+            totalSeriesOrders += {{ order.totalOrder }};
+            totalAmount += {{ order.totalAmount }};
+        {% endfor %}
+        $('#ordersDetails').text(totalSeriesOrders);
+        $('#orderAmount').text(totalAmount);
+
+
+
+
+
+
+        Highcharts.chart('barChart', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: ''
+            },
+
+            xAxis: {
+                categories: categoriesVisit
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            credits: {
+                enabled: false
+            },
+
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: 'Visits',
+                data: seriesVisit
+            }]
+        });
+
+
+        Highcharts.chart('barChart2', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: ''
+            },
+
+            xAxis: {
+                categories: categoriesOrders
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            credits: {
+                enabled: false
+            },
+
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: 'Orders',
+                data: seriesOrders
+            }]
+        });
+
+
+        Highcharts.chart('barChart3', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: ''
+            },
+
+            xAxis: {
+                categories: categoriesOrders
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            credits: {
+                enabled: false
+            },
+
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                name: 'Orders',
+                data: seriesOrdersAmount
+            }]
+        });
+
+
+    </script>
+{% endblock %}

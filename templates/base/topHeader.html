@@ -62,7 +62,7 @@
                                 </a></li>
 
 
-                                <li><a href="#"><i class=" glyphicon glyphicon-calendar"></i> {% trans 'Dashboard' %}
+                                <li><a href="{% url 'dashboard' user.corp_users.get.slug %}"><i class=" glyphicon glyphicon-calendar"></i> {% trans 'Dashboard' %}
                                 </a></li>
 
                                 <li><a href="{% url 'viewOrder' user.corp_users.get.slug %}"><i

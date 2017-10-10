@@ -35,6 +35,8 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+
+
     # sales force
     url(r'^salesForce/add/$', views.AddSalesForce, name='createSalesForce'),
     url(r'^(?P<slug>[-\w]+)/salesForce/list/$', views.ViewSalesForceDefault, name='viewSalesForceByUser'),
@@ -49,6 +51,7 @@ urlpatterns += [
     url(r'^client/edit/(?P<slug>[-\w]+)/$', views.EditClient, name='EditClient'),
     url(r'^client/(?P<slug>[-\w]+)/add/$', views.AddClient, name='AddClient'),
     url(r'^orders/(?P<slug>[-\w]+)/$', views.viewOrder, name='viewOrder'),
+    url(r'^dashboard/(?P<slug>[-\w]+)/$', views.dashboard, name='dashboard'),
     # schedual
     url(r'^scheduler/add/$', views.AddScheduler, name='AddScheduler'),
 

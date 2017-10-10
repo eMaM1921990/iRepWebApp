@@ -87,3 +87,13 @@ class DashBoardReports():
         start_date = datetime.datetime.strptime(self.from_date, DATE_INPUT_FORMATS[0])
         return (Orders.objects.filter(sales_force__corp_id=self.corp, order_date__day=start_date.day,
                                      order_date__month=start_date.month, order_date__year=start_date.year).aggregate(Sum('total')))['total__sum']
+
+    def get_visit_details_charts(self):
+        return Visits.objects.filter(visit_date__lte=self.to_date,visit_date__gte = self.from_date,sales_force__corp_id=self.corp).values('visit_date').annotate(
+            totalVisit = Count('visit_date')
+        )
+
+    def get_total_orders_chart(self):
+        return Orders.objects.filter(order_date__lte=self.to_date,order_date__gte=self.from_date,sales_force__corp_id=self.corp).values('order_date').annotate(
+            totalOrder = Count('order_date'), totalAmount = Sum('total')
+        )
