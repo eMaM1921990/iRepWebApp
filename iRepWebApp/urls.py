@@ -80,6 +80,9 @@ urlpatterns += [
     # Report
     url(r'^report/visit_tracking_by_sales_force/$', views.TrackingVisitReportBySalesForce,
         name='TrackingVisitReportBySalesForce'),
+
+    url(r'^report/visit_tracking_by_client/$', views.ClientReport,
+        name='ClientReport'),
 ]
 
 urlpatterns += [

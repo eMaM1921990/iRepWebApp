@@ -18,7 +18,7 @@ from django.urls import reverse
 
 from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers, SalesForceSerializer
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
-    BaseQuestionFormSet, FormsForm, ProductCategoryForm, BillBoardForm
+    BaseQuestionFormSet, FormsForm, ProductCategoryForm, BillBoardForm, ClientReportForm
 from iRep.managers.AuditRetail import AuditRetail
 from iRep.managers.BillBoards import BillBoards
 from iRep.managers.Clients import ClientManager
@@ -189,7 +189,7 @@ def EditClient(request, slug):
     client_instance = get_object_or_404(Client, slug=slug)
     form = ClientForm(request.POST or None, instance=client_instance, corp_instance=corp,
                       action=reverse('EditClient', kwargs={'slug': slug}))
-    reportForm = SalesForceReportForm()
+    reportForm = ClientReportForm(client=client_instance.id)
     if form.is_valid():
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
@@ -607,3 +607,21 @@ def dashboard(request,slug):
         context['visitDetails']=dashboards.get_visit_details_charts()
         context['orders'] = dashboards.get_total_orders_chart()
     return render(request, template_name=template,context=context)
+
+
+@login_required
+def ClientReport(request):
+
+    if request.POST:
+        trackingInstance = TrackingReports(start_date=request.POST['date_from'], end_date=request.POST['date_to'])
+        visitCount =trackingInstance.visits_by_client_count(client_id=request.POST['client_id'])
+        orders = trackingInstance.countNumberOfOrdersByClient(client_id=request.POST['client_id'])
+
+        ret = {
+            'visits':visitCount,
+            'orders':orders
+        }
+
+        return HttpResponse(json.dumps(ret,ensure_ascii=False))
+
+

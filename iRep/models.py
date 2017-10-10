@@ -177,7 +177,7 @@ class Client(models.Model):
     class Meta:
         managed = MANAGED
         db_table = 'client'
-        unique_together=['name','corporate']
+        unique_together=['name','corporate','phone']
 
 
 class Tags(models.Model):

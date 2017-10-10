@@ -228,6 +228,52 @@ class SalesForceReportForm(BaseReportForm):
         )
 
 
+class ClientReportForm(BaseReportForm):
+    client_id = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        client_id = kwargs.pop('client', None)
+        super(ClientReportForm, self).__init__(*args, **kwargs)
+        # initial
+        self.fields['date_from'].initial = datetime.datetime.today()
+        self.fields['date_to'].initial = datetime.datetime.today()
+        self.fields['client_id'].widget = forms.HiddenInput()
+        if client_id:
+            self.fields['client_id'].initial = str(client_id)
+
+        # override label
+        self.fields['date_from'].label = ''
+        self.fields['date_to'].label = ''
+        # self.fields['static_range'].label = ''
+
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_id = 'sales-force-form-report-id'
+        self.helper.form_method = 'post'
+        self.helper.form_action = None
+        self.helper.layout = Layout(
+            Div(
+                AppendedText('date_from',
+                             '<span class="glyphicon glyphicon-calendar"></span>',
+                             placeholder=_('Start date'))
+                , css_class='col-md-3'
+            ),
+            Div(
+                AppendedText('date_to',
+                             '<span class="glyphicon glyphicon-calendar"></span>',
+                             placeholder=_('Start date'))
+                , css_class='col-md-3'
+            ),
+
+            Div(
+                Button(_('Apply'), _('Apply'), css_class='bbtn btn-primary btn-md'),
+                css_class='col-md-3'
+            ),
+            Field('client_id')
+
+        )
+
+
 class ProductCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductCategoryForm, self).__init__(*args, **kwargs)

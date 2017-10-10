@@ -23,12 +23,20 @@ class TrackingReports():
                                                                       check_in_date__lte=self.to_date,
                                                                       check_in_date__gte=self.from_date)
 
+    def visits_by_client_count(self, client_id):
+        return SalesForceCheckInOut.objects.prefetch_related().filter(branch__id=client_id,
+                                                                      check_in_date__lte=self.to_date,
+                                                                      check_in_date__gte=self.from_date).count()
+
     def countTotalPlaceVisited(self, sales_force_id):
         return Visits.objects.filter(sales_force__id=sales_force_id, visit_date__lte=self.to_date,
                                      visit_date__gte=self.from_date).count()
 
     def countNumberOfOrders(self, sales_force_id):
         return Orders.objects.filter(sales_force__id=sales_force_id).count()
+
+    def countNumberOfOrdersByClient(self, client_id):
+        return Orders.objects.filter(branch__id=client_id).count()
 
     def countTotalPlaceVisitedGroupByBranch(self, sales_force_id):
         return Visits.objects.filter(sales_force__id=sales_force_id, visit_date__lte=self.to_date,

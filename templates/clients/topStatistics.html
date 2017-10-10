@@ -1,36 +1,26 @@
 {% load i18n %}
-<div class="col-sm-12 col-md-4">
-    <div class="thumbnail report-blk color-red">
 
-        <div class="caption">
-            <small>{% trans 'Time at place' %}</small>
-            <h3>{% trans '0h:0m' %}</h3>
-            <p>{% trans 'Total time spent at place' %}</p>
 
-        </div>
-    </div>
-</div>
-
-<div class="col-sm-12 col-md-4">
+<div class="col-sm-12 col-md-6">
     <div class="thumbnail report-blk color-blue">
 
         <div class="caption">
             <small>{% trans 'Place visits' %}</small>
-            <h3>0</h3>
-            <p>{% trans 'Total time spent at place' %}</p>
+            <h3 id="totalVisits">0</h3>
+            <p>{% trans 'Total visits' %}</p>
 
         </div>
     </div>
 </div>
 
 
-<div class="col-sm-12 col-md-4">
+<div class="col-sm-12 col-md-6">
     <div class="thumbnail report-blk color-green">
 
         <div class="caption">
             <small>{% trans 'Activities' %}</small>
-            <h3>0</h3>
-            <p>{% trans 'Total time spent at place' %}</p>
+            <h3 id="totalOrder">0</h3>
+            <p>{% trans 'Total activities' %}</p>
 
         </div>
     </div>
