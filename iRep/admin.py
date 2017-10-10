@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 from iRep.models import SalesForceCategory, ProductGroup, Product, ProductUnit, AppLanguage, Client, SalesFunnelStatus, \
-    SalesForce, SalesForceTrack, SalesForceCheckInOut, Tags, Forms, Orders, OrderLine, Corporate, Visits
+    SalesForce, SalesForceTrack, SalesForceCheckInOut, Tags, Forms, Orders, OrderLine, Corporate, Visits, \
+    SalesForceSchedual
 
 admin.site.register(SalesForceCategory)
 admin.site.register(ProductGroup)
@@ -22,3 +23,4 @@ admin.site.register(Orders)
 admin.site.register(OrderLine)
 admin.site.register(Corporate)
 admin.site.register(Visits)
+admin.site.register(SalesForceSchedual)
