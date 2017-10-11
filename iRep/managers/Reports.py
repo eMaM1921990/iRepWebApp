@@ -135,4 +135,4 @@ class DashBoardReports():
          visit = Visits.objects.filter(visit_date__lte=self.to_date, visit_date__gte=self.from_date,
                               sales_force__corp_id=self.corp)
 
-         return Client.objects.all().exclude(id__in = [v.branch.id for v in visit])
+         return Client.objects.all().exclude(id__in = [v.branch.id for v in visit]).count()
