@@ -576,7 +576,7 @@ def editBillBoard(request, id):
     # Bill boards
     instance = get_object_or_404(BillBoard, id=id)
 
-    form = BillBoardForm(request.POST or None, instance=instance, action=reverse('newBillBoards'))
+    form = BillBoardForm(request.POST or None, instance=instance, action=reverse('editBillBoard',kwargs={'id':id}))
     if form.is_valid():
         m = form.save(user=request.user, corporte=corp)
         if m:
