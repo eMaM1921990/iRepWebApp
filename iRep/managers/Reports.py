@@ -3,7 +3,8 @@ from django.db.models import Count, Sum, fields
 from django.db.models import ExpressionWrapper
 from django.db.models import F
 import datetime
-from iRep.models import SalesForceCheckInOut, Visits, Orders, SalesForceTimeLine, SalesForceTrack, Client
+from iRep.models import SalesForceCheckInOut, Visits, Orders, SalesForceTimeLine, SalesForceTrack, Client, \
+    SalesForceSchedual
 
 __author__ = 'eMaM'
 
@@ -74,6 +75,9 @@ class DashBoardReports():
         self.context['clientCount'] = self.get_create_clients_count()
         self.context['total_order'] = self.get_total_orders()
         self.context['total_amount']  = self.get_total_amount()
+        self.context['totalSchedual'] = self.get_total_schedual()
+        self.context['totalVisit'] = self.get_total_visits()
+        self.context['missed'] = self.context['totalSchedual']-self.context['totalVisit']
 
     def get_active_salesforce_count(self):
         return SalesForceTimeLine.objects.filter(time_line_date=self.from_date, end_time__isnull=True,
@@ -105,3 +109,9 @@ class DashBoardReports():
         return Orders.objects.filter(order_date__lte=self.to_date,order_date__gte=self.from_date,sales_force__corp_id=self.corp).values('order_date').annotate(
             totalOrder = Count('order_date'), totalAmount = Sum('total')
         )
+
+    def get_total_schedual(self):
+        return SalesForceSchedual.objects.filter(schedual_date__lte=self.to_date,schedual_date__gte=self.from_date,sales_force__corp_id=self.corp).count()
+
+    def get_total_visits(self):
+        return Visits.objects.filter(visit_date__lte=self.to_date,visit_date__gte=self.from_date,sales_force__corp_id=self.corp).count()

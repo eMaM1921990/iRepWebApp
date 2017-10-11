@@ -89,15 +89,15 @@
             <li role="presentation"><a href="#">Qualifying <span class="badge">2</span></a></li>
             <li role="presentation"><a href="#">Follow-up <span class="badge">10</span></a></li>
 
-        </ul>
+        </ul>-->
 
 
         <ul class="nav nav-pills float-statistic" role="tablist" id="Activities">
-            <li role="presentation"><a href="#">Planned <span class="badge">42</span></a></li>
-            <li role="presentation"><a href="#">Achieved <span class="badge">2</span></a></li>
-            <li role="presentation"><a href="#">Missed <span class="badge">10</span></a></li>
+            <li role="presentation"><a href="#">Planned <span class="badge">{{ totalSchedual|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">Achieved <span class="badge">{{ totalVisit|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">Missed <span class="badge">{{ missed|default:0 }}</span></a></li>
 
-        </ul>-->
+        </ul>
 
 
     </div>

@@ -223,6 +223,7 @@ class SalesForceSchedual(models.Model):
             txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
         return txt
 
+
     class Meta:
         managed = MANAGED
         db_table = 'schedual'
