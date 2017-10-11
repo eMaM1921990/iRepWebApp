@@ -57,4 +57,4 @@ class ClientManager():
 
     def get_sales_force_by_client(self, slug):
         client = Client.objects.get(slug=slug)
-        return SalesForce.objects.filter(id__in = [client.id for client in Client.objects.filter(slug=slug)])
+        return SalesForce.objects.filter(id=client.sales_force.id)
