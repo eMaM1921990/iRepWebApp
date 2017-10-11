@@ -46,10 +46,10 @@
                         <div class="col-md-4">
 
                             <div class="form-group">
-                                <label>{% trans 'Sales force' %}</label>
-                                <input type="text" class="form-control" placeholder="{% trans 'SalesRep name' %}"
+                                <label>{% trans 'Client' %}</label>
+                                <input type="text" class="form-control" placeholder="{% trans 'Client' %}"
                                        id="salesRepName" name="salesRepName">
-                                <input type="hidden" name="sales_force_id" value="{{ sales_force_id }}">
+                                <input type="hidden" name="client_id" value="{{ client_id }}">
                             </div>
 
                         </div>
@@ -59,10 +59,8 @@
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>{% trans 'Place' %}</label>
-                                <input type="text" class="form-control" placeholder="{% trans 'Client name' %}"
-                                       id="salesRepName" name="salesRepName">
-                                <input type="hidden" name="client_id" value="{{ sales_force_id }}">
+                                <label>{% trans 'Sales force' %}</label>
+                               <select id="sales_force_id" class="form-control js-example-basic-multiple" name="sales_force_id"></select>
                             </div>
                         </div>
 

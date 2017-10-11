@@ -57,7 +57,7 @@
         </div>
 
     </div>
-    {% include 'schedual/schedual_visit_modal.html' %}
+    {% include 'schedual/schedual_visit_modal_clients.html' %}
 {% endblock %}
 {% block extra_js_src %}
     <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
@@ -86,7 +86,7 @@
             var data = {{ sales_force|safe }};
             console.log(data);
 
-            $('#salesForce').select2({
+            $('#sales_force_id').select2({
                 placeholder: '--------',
                 data: data
             });

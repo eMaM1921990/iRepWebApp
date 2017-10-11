@@ -200,7 +200,7 @@ def EditClient(request, slug):
     schedular = SchedulerManager().get_scheduler_by_client(client_slug=slug)
 
     # retrieve client salesforce
-    sqs= ClientManager().get_sales_force_by_client(slug=slug)
+    sqs= client_instance.sales_force
     data = []
     # serialize data
     if sqs:
