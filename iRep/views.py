@@ -449,6 +449,8 @@ def EditForms(request, slug, id):
         # Now save the data for each form in the formset
         new_questions = []
         for question_form in QuestionFormSetform:
+            print hasattr(question_form,'cleaned_data')
+            print question_form
             new_questions.append(FormQuestions(form=m, question=question_form.cleaned_data.get('question')))
 
         try:
@@ -465,6 +467,7 @@ def EditForms(request, slug, id):
 
         except IntegrityError:  # If the transaction failed
             messages.error(request, 'There was an error saving your form.')
+            return redirect(reverse('ViewForms', kwargs={'slug': slug}))
 
     context = {
         'formsForm': formsForm,

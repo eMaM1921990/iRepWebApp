@@ -628,7 +628,7 @@ class TrackingVisitFormByClient(BaseReportForm):
         )
 
 
-class QuestionForm(forms.ModelForm):
+class QuestionForm(forms.Form):
     question = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
@@ -638,9 +638,9 @@ class QuestionForm(forms.ModelForm):
         }),
         required=True)
 
-    class Meta:
-        model = FormQuestions
-        exclude = ['created_date', 'form']
+    # class Meta:
+    #     model = FormQuestions
+    #     exclude = ['created_date', 'form']
 
 
 class FormsForm(forms.ModelForm):
