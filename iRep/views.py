@@ -144,7 +144,9 @@ def ViewEditProduct(request, slug):
 
     reportForm = BaseReportForm()
     if form.is_valid():
-        form.save(user=request.user, corporate=product_instance.corporate)
+        corporate = CorpManager().get_corp_form_user_profile(request.user)
+        corporate = corporate.corporate
+        form.save(user=request.user, corporate=corporate)
         return redirect(reverse('productList', kwargs={'slug': product_instance.corporate.slug}))
 
     return render(request, template_name=template,
