@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from math import sin, cos, radians, degrees, acos
+
 
 MANAGED = True
 
@@ -166,6 +168,9 @@ class Client(models.Model):
     slug = models.SlugField(db_index=True)
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_branch',
                                     db_column='sales_force_id', null=True)
+
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
     @property
     def getParsedQuery(self):
@@ -473,7 +478,30 @@ class SalesForceCheckInOut(models.Model):
 
     @property
     def getTimeDiff(self):
-        return self.check_out_time - self.check_in_time
+        from datetime import datetime
+        FMT = '%H:%M:%S'
+        tdelta = datetime.strptime(str(self.check_out_time), FMT) - datetime.strptime(str(self.check_in_time), FMT)
+        return tdelta
+
+    @property
+    def getDelay(self):
+        from datetime import datetime
+        FMT = '%H:%M:%S'
+        visit_date = self.visit.created_date
+        schedul_date = self.visit.schedual.schedual_time
+        tdelta = datetime.strptime(str(visit_date.time().strftime(FMT)), FMT) - datetime.strptime(str(schedul_date), FMT)
+        return tdelta
+
+    @property
+    def getDistance(self):
+        client = self.branch
+        lat_a = radians(self.latitude)
+        lat_b = radians(client.latitude)
+        long_diff = radians(self.longitude - client.longitude)
+        distance = (sin(lat_a) * sin(lat_b) +
+                    cos(lat_a) * cos(lat_b) * cos(long_diff))
+
+        return float("{:.2f}".format(degrees(acos(distance)) * 69.09))
 
     class Meta:
         managed = MANAGED
