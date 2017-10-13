@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load staticfiles %}
+{% load staticfiles i18n %}
 {% block content %}
 
     <!--content-->
@@ -14,9 +14,9 @@
                         title="Please select a section to filter ...">
 
 
-                    <option value="0" selected>Summary</option>
-                    <option value="1"> Clients</option>
-                    <option value="2"> Activities</option>
+                    <option value="0" selected>{% trans 'Summary' %}</option>
+                    <option value="1"> {% trans 'Clients' %}</option>
+                    <option value="2"> {% trans 'Activities' %}</option>
 
 
                 </select>
@@ -46,7 +46,7 @@
 
                         <div class="form-group">
 
-                            <button type="submit" class="btn btn-primary btn-md" title="">Apply</button>
+                            <button type="submit" class="btn btn-primary btn-md" title="">{% trans 'Apply' %}</button>
 
                         </div>
 
@@ -75,11 +75,11 @@
 
 
         <ul class="nav nav-pills float-statistic" role="tablist" id="summery">
-            <li role="presentation"><a href="#">Active Reps <span class="badge">{{ activeRep|default:0 }}</span></a>
+            <li role="presentation"><a href="#">{% trans 'Active Reps' %} <span class="badge">{{ activeRep|default:0 }}</span></a>
             </li>
-            <li role="presentation"><a href="#">Places <span class="badge">{{ clientCount|default:0 }}</span></a></li>
-            <li role="presentation"><a href="#">Orders <span class="badge">{{ total_order|default:0 }}</span></a></li>
-            <li role="presentation"><a href="#">Money Amount <span class="badge">{{ total_amount|default:0 }}</span></a>
+            <li role="presentation"><a href="#">{% trans 'Places' %} <span class="badge">{{ clientCount|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">{% trans 'Orders' %} <span class="badge">{{ total_order|default:0 }}</span></a></li>
+            <li role="presentation"><a href="#">{% trans 'Money Amount' %} <span class="badge">{{ total_amount|default:0 }}</span></a>
             </li>
         </ul>
 

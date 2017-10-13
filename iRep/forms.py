@@ -531,7 +531,9 @@ class ClientForm(forms.ModelForm):
                         css_class='col-md-4'
                     )
 
-                ),
+                )
+            ),
+            Accordion(
                 AccordionGroup(
                     _('Contact Info'),
                     Div(

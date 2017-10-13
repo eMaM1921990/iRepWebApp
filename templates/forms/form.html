@@ -3,7 +3,7 @@
 {% block content %}
     <div class="body bs-example">
 
-        <h1 class="sub-titile"><i class="glyphicon glyphicon-list-alt"></i> Add new forms
+        <h1 class="sub-titile"><i class="glyphicon glyphicon-list-alt"></i> {% trans 'Add new forms' %}
 
 
             <div class="clearfix"></div>
@@ -41,7 +41,7 @@
                     <div class="row">
 
                         <div class="col-md-12">
-                            <label for="exampleInputEmail1">Description</label>
+                            <label for="exampleInputEmail1">{{ formsForm.description.label }}</label>
                             {{ formsForm.description }}
 
                         </div>
@@ -96,7 +96,7 @@
         $(document).ready(function () {
             $('.question-formset').formset({
                 addText: "{% trans 'Add Question' %}",
-                deleteText: 'Remove',
+                deleteText: '{% trans 'Remove' %}',
                 addCssClass: 'btn btn-success btn-lg ',
 
             });

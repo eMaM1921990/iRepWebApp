@@ -1,3 +1,4 @@
+{% load i18n %}
 <!-- cust group -->
 <div class="modal fade" id="productCategory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -5,7 +6,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add groups, change sort or deactivate them</h4>
+                <h4 class="modal-title" id="myModalLabel">{% trans 'Add groups' %}</h4>
             </div>
             <form  id="saveCategory">
                 <div class="modal-body">
@@ -36,8 +37,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveCategoryBtn">Save changes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Close' %}</button>
+                    <button type="button" class="btn btn-primary" id="saveCategoryBtn">{% trans 'Save' %}</button>
                 </div>
             </form>
         </div>

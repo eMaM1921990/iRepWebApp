@@ -62,7 +62,8 @@
                                 </a></li>
 
 
-                                <li><a href="{% url 'dashboard' user.corp_users.get.slug %}"><i class=" glyphicon glyphicon-calendar"></i> {% trans 'Dashboard' %}
+                                <li><a href="{% url 'dashboard' user.corp_users.get.slug %}"><i
+                                        class=" glyphicon glyphicon-calendar"></i> {% trans 'Dashboard' %}
                                 </a></li>
 
                                 <li><a href="{% url 'viewOrder' user.corp_users.get.slug %}"><i
@@ -142,32 +143,17 @@
 
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{% url 'billBoards' user.corp_users.get.slug %}"><i
-                                        class="fa fa-comments"></i> Bill board</a></li>
+                                        class="fa fa-comments"></i> {% trans 'Bill board' %}</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'auditRetails' user.corp_users.get.slug %}"><i class="fa fa-shopping-basket"></i> Retail Audit</a></li>
+                                <li><a href="{% url 'auditRetails' user.corp_users.get.slug %}"><i
+                                        class="fa fa-shopping-basket"></i> {% trans 'Retail Audit' %} </a></li>
                                 <li role="separator" class="divider"></li>
-
-
-{#                                <li><a href="#"><i class="fa fa-cloud-download"></i> Export and emport </a></li>#}
 
 
                             </ul>
 
 
                         </li>
-
-{#                        <li class="hidden-xs">#}
-{##}
-{#                            <div class="btn-group">#}
-{#                                <span class="messages" data-toggle="tooltip" data-placement="bottom"#}
-{#                                      data-original-title="Messages">#}
-{#                                    <a href="#right" data-toggle="onoffcanvas" aria-expanded="false" class="nav-btns">#}
-{#                                        <i class="glyphicon glyphicon-bell"></i>#}
-{#                                        <span class="label label-info">4</span>#}
-{#                                    </a>#}
-{#                                </span>#}
-{#                            </div>#}
-{#                        </li>#}
 
 
                         <li class="dropdown">
@@ -189,9 +175,6 @@
                                 </li>
                             </ul>
                         </li>
-
-
-
 
 
                     </ul>
