@@ -200,6 +200,16 @@ def AddClient(request):
         resp['msg'] = _('Sales force  is missed')
         return Response(resp)
 
+    if 'lng' not in request.data:
+        resp['msg'] = _('Longitude  is missed')
+        return Response(resp)
+
+    if 'lat' not in request.data:
+        resp['msg'] = _('Latitude  is missed')
+        return Response(resp)
+
+
+
     status = ClientManager().CreateClientFromAPI(
         name=request.data['name'],
         address_txt=request.data['address_txt'],
@@ -216,7 +226,7 @@ def AddClient(request):
         state=request.data['state'],
         country=request.data['country'],
         sales_force=request.data['sales_force'],
-        tags=request.data['tags'] if 'tags' in request.data else None
+        tags=request.data['tags'] if 'tags' in request.data else None,latitude=request.data['lat'], longitude=request.data['lng']
 
     )
 

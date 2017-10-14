@@ -16,7 +16,7 @@ class ClientManager():
             return None
 
     def CreateClientFromAPI(self, name, address_txt, zipcode, contact_name, contact_title, website, email, phone, notes,
-                            corporate, status, city, state, country, sales_force, tags):
+                            corporate, status, city, state, country, sales_force, tags , latitude , longitude):
         try:
             record = Client()
             record.name = name
@@ -36,6 +36,8 @@ class ClientManager():
             record.sales_force_id = sales_force
             record.created_by_id = 1
             record.slug = slugify('%s %s' % (name, 1), allow_unicode=True)
+            record.latitude  = latitude
+            record.longitude =longitude
             record.save()
             if tags:
                 for tag in tags:
