@@ -1,9 +1,15 @@
 {% load staticfiles i18n %}
 <div class="form-sample">
     <div class="pull-right">
-        <a class="btn btn-default" href="{% url 'editForms' slug=user.corp_users.get.slug id=form.id%}">
+        <a class="btn btn-default" href="{% url 'editForms' slug=user.corp_users.get.slug id=form.id %}">
             <span class="glyphicon glyphicon-pencil"></span>
             {% trans 'Edit' %}
+        </a>
+    </div>
+    <div class="pull-right">
+        <a class="btn btn-default" href="{% url 'ViewFormsQuestion' id=form.id %}">
+            <span class="glyphicon glyphicon-pencil"></span>
+            {% trans 'Answers' %}
         </a>
     </div>
     <blockquote>

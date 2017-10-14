@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% load i18n staticfiles %}
+{% block extra_head %}
+{% endblock %}
+{% block content %}
+    <div class="body bs-example">
+
+        <h1 class="sub-titile">
+            <i class="glyphicon glyphicon-list-alt"></i> {{ form.form_name }}
+            <span class="pull-right"></span>
+        </h1>
+
+        <!-- new -->
+
+        <div class="outer">
+
+            <div class="col-md-12">
+            <label class="control-label">{% trans 'Select Client' %}</label>
+                <select class="select form-control" id="fetch_from_answer">
+                    <option>{% trans 'Select client' %}</option>
+                {% for client in clients %}
+                    <option value="{{ client.id }}-{{ form.id }}">{{ client.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-8" id="form_answer">
+
+
+            </div>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block extra_js_src %}
+{% endblock %}
+{% block extra_javascript %}
+{% endblock %}

@@ -560,6 +560,7 @@ class QuestionAnswer(models.Model):
     answer = models.TextField(null=False)
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_question',
                                     db_column='sales_force_id')
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_answer', db_column='branch_id')
 
     class Meta:
         managed = MANAGED

@@ -27,3 +27,33 @@ $("#button-id-apply").click(function (event) {
     });
 
 });
+
+
+
+$("#fetch_from_answer").change(function (event) {
+    event.preventDefault();
+
+    $.ajax({
+        url: "/forms/answer/",
+        type: 'POST',
+        //dataType: 'JSON',
+        data: {
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            id : $(this).val().split('-')[1],
+            branch_id:$(this).val().split('-')[0]
+
+        },
+        success: function (responseText) {
+            if(JSON.parse(responseText).valid){
+                $('#form_answer').html();
+                $('#form_answer').append(JSON.parse(responseText).html)
+            }
+
+
+        },
+        error: function (xhr, errmsg, err) {
+            console.log(errmsg);
+        }
+    });
+
+});

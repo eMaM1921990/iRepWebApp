@@ -1,5 +1,21 @@
 {% load i18n crispy_forms_tags crispy_forms_field %}
 
+{% if form.errors %}
+    <!-- Error messaging -->
+    <div id="errors">
+        <div class="alert alert-danger ">
+            {{ form.non_field_errors }}
+            <ul class="alert-message">
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li>{{ field.label }}: {{ field.errors|striptags|linebreaks }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <!-- /Error messaging -->
+{% endif %}
+
 <div class="divider-md"></div>
 
 <div class=" ">

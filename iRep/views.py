@@ -379,6 +379,22 @@ def ViewForms(request, slug):
     }
     return render(request, template_name=template, context=context)
 
+@login_required
+def ViewFormQuestionAnswer(request):
+    valid = False
+    template = 'forms/form_answer.html'
+    answerList= IForm(slug=None).getFormQuestionAnswer(id=request.POST['id'],branch=request.POST['branch_id'])
+    if answerList:
+        valid = True
+        html = render_to_string(template, {'answerList':answerList})
+
+    ret ={
+        'valid':valid,
+        'html':html
+
+    }
+    return HttpResponse(json.dumps(ret,ensure_ascii=False))
+
 
 @login_required
 def CreateForms(request, slug):
