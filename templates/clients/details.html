@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load i18n staticfiles crispy_forms_tags%}
+{% load i18n staticfiles crispy_forms_tags %}
 {% block extra_head %}
     <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.min.css' %}"/>
     {#    <link rel='stylesheet' href="{% static 'full_calendar/fullcalendar.print.css' %}"/>#}
@@ -43,8 +43,7 @@
                         <div class="clearfix"></div>
                     </div>
 
-                {% include 'clients/reports.html' %}
-
+                    {% include 'clients/reports.html' %}
 
 
                 </div>
@@ -78,7 +77,6 @@
         });
 
 
-
         $(document).ready(function () {
 
             // page is now ready, initialize the calendar...
@@ -103,25 +101,241 @@
                     if (moment().format('YYYY-MM-DD') === date.format('YYYY-MM-DD') || date.isAfter(moment())) {
                         // This allows today and future date
                         $('#myModal').modal('show');
-                        $("#date").val( date.format('YYYY-MM-DD') );
+                        $("#date").val(date.format('YYYY-MM-DD'));
                         $('#dataTxt').text(date.format('YYYY-MM-DD'));
                         $('#salesRepName').val('{{ form.name.value }}');
-                        $('#salesRepName').attr('readonly','readonly');
+                        $('#salesRepName').attr('readonly', 'readonly');
                     }
 
                 },
-                events:
-                       [{% for row in schedular %}
-                               {
-                                "start": '{{ row.schedual_date |date:"o-m-d"}}',
-                                "end": '{{ row.schedual_date |date:"o-m-d"}}',
-                                "title": '{{ row.sales_force.name }}',
-                                   'backgroundColor':'#378006'
-                              },
-                        {% endfor %}]
+                events: [{% for row in schedular %}
+                    {
+                        "start": '{{ row.schedual_date |date:"o-m-d"}}',
+                        "end": '{{ row.schedual_date |date:"o-m-d"}}',
+                        "title": '{{ row.sales_force.name }}',
+                        'backgroundColor': '#378006'
+                    },
+                {% endfor %}]
 
             });
 
         });
     </script>
+
+    <script>
+        var map, infoWindow;
+        var markers = [];
+        // Location
+        var flightPlanCoordinates = {};
+        var geocoder ;
+        function initMap() {
+            // Create a map object and specify the DOM element for display.
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 30.0444, lng: 31.2357},
+                zoom: 15,
+                zoomControl: true,
+                scaleControl: true,
+                styles: [
+                    {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+                    {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+                    {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+                    {
+                        featureType: 'administrative.locality',
+                        elementType: 'labels.text.fill',
+                        stylers: [{color: '#d59563'}]
+                    },
+                    {
+                        featureType: 'poi',
+                        elementType: 'labels.text.fill',
+                        stylers: [{color: '#d59563'}]
+                    },
+                    {
+                        featureType: 'poi.park',
+                        elementType: 'geometry',
+                        stylers: [{color: '#263c3f'}]
+                    },
+                    {
+                        featureType: 'poi.park',
+                        elementType: 'labels.text.fill',
+                        stylers: [{color: '#6b9a76'}]
+                    },
+                    {
+                        featureType: 'road',
+                        elementType: 'geometry',
+                        stylers: [{color: '#38414e'}]
+                    },
+                    {
+                        featureType: 'road',
+                        elementType: 'geometry.stroke',
+                        stylers: [{color: '#212a37'}]
+                    },
+                    {
+                        featureType: 'road',
+                        elementType: 'labels.text.fill',
+                        stylers: [{color: '#9ca5b3'}]
+                    },
+                    {
+                        featureType: 'road.highway',
+                        elementType: 'geometry',
+                        stylers: [{color: '#746855'}]
+                    },
+                    {
+                        featureType: 'road.highway',
+                        elementType: 'geometry.stroke',
+                        stylers: [{color: '#1f2835'}]
+                    },
+                    {
+                        featureType: 'road.highway',
+                        elementType: 'labels.text.fill',
+                        stylers: [{color: '#f3d19c'}]
+                    },
+                    {
+                        featureType: 'transit',
+                        elementType: 'geometry',
+                        stylers: [{color: '#2f3948'}]
+                    },
+                    {
+                        featureType: 'transit.station',
+                        elementType: 'labels.text.fill',
+                        stylers: [{color: '#d59563'}]
+                    },
+                    {
+                        featureType: 'water',
+                        elementType: 'geometry',
+                        stylers: [{color: '#17263c'}]
+                    },
+                    {
+                        featureType: 'water',
+                        elementType: 'labels.text.fill',
+                        stylers: [{color: '#515c6d'}]
+                    },
+                    {
+                        featureType: 'water',
+                        elementType: 'labels.text.stroke',
+                        stylers: [{color: '#17263c'}]
+                    }
+                ],
+
+
+            });
+
+            geocoder = new google.maps.Geocoder;
+
+            // This event listener will call addMarker() when the map is clicked.
+            map.addListener('click', function (event) {
+                addMarker(event.latLng);
+            });
+
+
+            // Sets the map on all markers in the array.
+            function setMapOnAll(map) {
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(map);
+                }
+            }
+
+            // Adds a marker to the map and push to the array.
+            function addMarker(location) {
+                deleteMarkers();
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+                markers.push(marker);
+                geocodeLatLng(location);
+
+                $('#id_longitude').val(marker.position.lng());
+                $('#id_latitude').val(marker.position.lat());
+            }
+
+            // Removes the markers from the map, but keeps them in the array.
+            function clearMarkers() {
+                setMapOnAll(null);
+            }
+
+
+            // Deletes all markers in the array by removing references to them.
+            function deleteMarkers() {
+                clearMarkers();
+                markers = [];
+            }
+
+
+            infoWindow = new google.maps.InfoWindow;
+            // Try HTML5 geolocation.
+            {#                        if (navigator.geolocation) {#}
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Location found.');
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+
+                }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+
+
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+
+            marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                strokeColor: '#f0ad4e',
+
+            });
+            infoWindow.setContent('Default location');
+            infoWindow.setPosition(pos);
+            infoWindow.open(map);
+            infoWindow.setCenter(pos);
+
+
+        }
+
+
+        function addToflightDict(key, val) {
+            if (flightPlanCoordinates.hasOwnProperty(key)) {
+                flightPlanCoordinates[key].push(val);
+            } else {
+                flightPlanCoordinates[key] = [val];
+            }
+        }
+
+        function geocodeLatLng(latlng) {
+            geocoder.geocode({'location': latlng}, function (results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        console.log(results[0]);
+
+                        $('#id_address_txt').val(results[0].address_components[0].long_name+','+results[0].address_components[1].long_name);
+                        $('#id_city').val(results[0].address_components[2].long_name);
+                        $('#id_state').val(results[0].address_components[3].long_name);
+                        $('#id_country').val(results[0].address_components[4].long_name);
+                        console.log(results[0].formatted_address);
+
+                    } else {
+                        window.alert('No results found');
+                    }
+                } else {
+                    window.alert('Geocoder failed due to: ' + status);
+                }
+            });
+        }
+
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAP_KEY }}&callback=initMap"
+            async defer></script>
+
 {% endblock %}

@@ -4,6 +4,7 @@ from crispy_forms.bootstrap import PrependedText, AppendedText, Accordion, Accor
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Reset, Layout, Field, Fieldset, Div, HTML, Button
 from django import forms
+from django.forms import HiddenInput
 from django.forms.formsets import BaseFormSet
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -443,6 +444,8 @@ class ClientForm(forms.ModelForm):
         action = kwargs.pop('action', None)
         corp_instance = kwargs.pop('corp_instance', None)
         super(ClientForm, self).__init__(*args, **kwargs)
+        self.fields['latitude'].widget = HiddenInput()
+        self.fields['longitude'].widget = HiddenInput()
         # Input label
         self.fields['name'].label = _('Name')
         self.fields['address_txt'].label = _('Address ')
@@ -495,6 +498,8 @@ class ClientForm(forms.ModelForm):
                     Field('name', placeholder=_('Product name')),
                     Field('sales_force', placeholder=_('Sales force')),
                     Field('phone', placeholder=_('Phone')),
+                    Field('longitude'),
+                    Field('latitude'),
                     css_class='col-md-6'
                 ),
                 Div(
@@ -510,6 +515,12 @@ class ClientForm(forms.ModelForm):
             Accordion(
                 AccordionGroup(
                     _('Address Info'),
+                    Div(
+                      css_id='map'
+                    ),
+                    Div(
+                       css_class='divider-md'
+                    ),
                     Div(
                         Field('address_txt', placeholder=_('Address')),
                         css_class='col-md-6'
