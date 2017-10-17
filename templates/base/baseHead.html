@@ -26,3 +26,7 @@
 <link rel="stylesheet" href="{% static 'css/custom-style.css' %}">
 <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/development.css' %}">
+{% if LANGUAGE_CODE == 'ar' %}
+    <link href="{% static 'css/custom-style-ar.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/bootstrap-rtl.css' %}" rel="stylesheet" />
+{% endif %}

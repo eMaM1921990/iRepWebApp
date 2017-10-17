@@ -613,3 +613,7 @@ ul.manage_actions li a span {
 .custom-head{ background-color: #fff !important; border-color:#fff !important}
 
 .font-lg{ font-size: 19px}
+
+.float-statistic li{background:#fff !important}
+.badge{background-color: #777 !important ;}
+.label-default{ color:#777 }
