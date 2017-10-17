@@ -196,7 +196,7 @@ def EditClient(request, slug):
         corporate = CorpManager().get_corp_form_user_profile(request.user)
         corporate = corporate.corporate
         m = form.save(user=request.user, corporate=corporate, main_branch=None)
-        return redirect(reverse('viewClient', kwargs={'slug': slug}))
+        return redirect(reverse('viewClient', kwargs={'slug': corp.slug}))
 
     # retrieve schedual
     schedular = SchedulerManager().get_scheduler_by_client(client_slug=slug)
