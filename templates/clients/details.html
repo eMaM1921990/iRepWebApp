@@ -244,8 +244,8 @@
                 markers.push(marker);
                 geocodeLatLng(location);
 
-                $('#id_longitude').val(marker.position.lng().toFixed(7));
-                $('#id_latitude').val(marker.position.lat().toFixed(7));
+                $('#id_longitude').val(marker.position.lng().toFixed(6));
+                $('#id_latitude').val(marker.position.lat().toFixed(6));
             }
 
             // Removes the markers from the map, but keeps them in the array.
