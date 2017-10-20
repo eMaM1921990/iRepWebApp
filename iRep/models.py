@@ -563,6 +563,7 @@ class QuestionAnswer(models.Model):
     sales_force = models.ForeignKey(SalesForce, models.CASCADE, related_name='sales_force_question',
                                     db_column='sales_force_id')
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_answer', db_column='branch_id')
+    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_form', db_column='visit_id')
 
     class Meta:
         managed = MANAGED
