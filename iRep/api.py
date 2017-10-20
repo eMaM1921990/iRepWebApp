@@ -208,8 +208,6 @@ def AddClient(request):
         resp['msg'] = _('Latitude  is missed')
         return Response(resp)
 
-
-
     status = ClientManager().CreateClientFromAPI(
         name=request.data['name'],
         address_txt=request.data['address_txt'],
@@ -226,7 +224,8 @@ def AddClient(request):
         state=request.data['state'],
         country=request.data['country'],
         sales_force=request.data['sales_force'],
-        tags=request.data['tags'] if 'tags' in request.data else None,latitude=request.data['lat'], longitude=request.data['lng']
+        tags=request.data['tags'] if 'tags' in request.data else None, latitude=request.data['lat'],
+        longitude=request.data['lng']
 
     )
 
@@ -453,6 +452,10 @@ def CheckIn(request):
         resp['msg'] = _('Client missed')
         return Response(resp)
 
+    if 'check_in_address' not in request.data:
+        resp['msg'] = _('Check in address missed')
+        return Response(resp)
+
     # check visit
 
     object = SchedulerManager().get_schedular(request.data['sales_force'], request.data['client'],
@@ -474,7 +477,8 @@ def CheckIn(request):
                                                                latitude=request.data['latitude'],
                                                                check_date=request.data['check_date'],
                                                                check_time=request.data['check_time'],
-                                                               branch=request.data['client'], visit=visit_record)
+                                                               branch=request.data['client'], visit=visit_record,
+                                                               check_in_address=request.data['check_in_address'])
                 if checkInOutRecord:
                     resp['code'] = 200
                     resp['data'] = CheckInOutSerializers(checkInOutRecord).data
@@ -528,8 +532,12 @@ def CheckOut(request):
         resp['msg'] = _('Check In ID missed')
         return Response(resp)
 
+    if 'check_out_address' not in request.data:
+        resp['msg'] = _('Check out Address  missed')
+        return Response(resp)
+
     record = SalesForceManager().checkOut(id=request.data['id'], check_date=request.data['check_date'],
-                                          check_time=request.data['check_time'])
+                                          check_time=request.data['check_time'], check_out_address=request.data['check_out_address'])
     if record:
         resp['code'] = 200
         resp['data'] = CheckInOutSerializers(record).data
@@ -701,7 +709,7 @@ def QuestionAnswer(request):
 
 
 @api_view(['GET'])
-def ListBillboard(request,slug):
+def ListBillboard(request, slug):
     resp = {}
     resp['code'] = 500
 
@@ -716,7 +724,7 @@ def ListBillboard(request,slug):
             resp['data'].append(BillBoardSerializers(row).data)
         resp['code'] = 200
     except Exception as e:
-        logger.debug('error during retrieve billboards cause:-' +str(e))
+        logger.debug('error during retrieve billboards cause:-' + str(e))
         print str(e)
         resp['data'] = _('Error during retrieve bill boards ')
 

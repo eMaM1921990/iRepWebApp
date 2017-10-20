@@ -50,7 +50,7 @@ class SalesForceManager():
             print str(e)
             return None
 
-    def CheckIn(self, sales_force, latitude, longtude, check_date, check_time, branch, visit):
+    def CheckIn(self, sales_force, latitude, longtude, check_date, check_time, branch, visit,check_in_address):
         try:
 
             record = SalesForceCheckInOut(
@@ -60,7 +60,8 @@ class SalesForceManager():
                 check_in_date=check_date,
                 check_in_time=check_time,
                 branch_id=branch,
-                visit=visit
+                visit=visit,
+                check_in_address= check_in_address
             )
             record.save()
             return record
@@ -68,11 +69,12 @@ class SalesForceManager():
             print str(e)
             return None
 
-    def checkOut(self, id, check_date, check_time):
+    def checkOut(self, id, check_date, check_time , check_out_address):
         try:
             record = SalesForceCheckInOut.objects.get(id=id)
             record.check_out_date = check_date
             record.check_out_time = check_time
+            record.check_out_address = check_out_address
             record.save()
             return record
 

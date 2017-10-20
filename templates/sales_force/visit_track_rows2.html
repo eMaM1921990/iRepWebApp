@@ -1,0 +1,38 @@
+{% load i18n %}
+
+<table class="table tracking-table" >
+    <thead>
+    <tr>
+        <th>{% trans 'Client' %}</th>
+        <th>{% trans 'Client address' %}</th>
+        <th>{% trans 'Checkin Address' %}</th>
+        <th>{% trans 'Check out Address' %}</th>
+        <th>{% trans 'Deviation in Miles' %}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in tracking %}
+        <tr>
+            <td>{{ row.branch.name }}</td>
+            <td>{{ row.branch.address_txt }}</td>
+
+            <td>{{ row.check_in_address }}</td>
+            <td>{{ row.check_out_address }}</td>
+            <td>{{ row.getDistance|default:0 }} {% trans 'Miles' %}</td>
+
+            <td>
+                {{ row.branch.address_txt }}
+                {#            <span class="label label-gray"> {% trans 'Longitude:' %} {{ row.latitude }}</span>#}
+                {#            <span class="label label-gray"> {% trans 'latitude:' %} {{ row.longitude }}</span>#}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td>{% trans 'No data found' %}</td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+</table>

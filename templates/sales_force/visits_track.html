@@ -1,42 +1,19 @@
 {% load  i18n %}
 <div class="col-md-12"><h1 class="sub-titile"> {% trans 'Track visits' %}</h1></div>
 <div class="row" id="tracking">
-
-
     <div class="col-md-12">
         <div class="track-rus"> {% trans 'Result: from' %} <span class="label  label-warning" id="from_date"></span> {% trans 'to' %}
             <span class="label  label-warning " id="to_date"></span>
         </div>
         <div class="divider-md"></div>
 
-        <fieldset class="track-visit">
+        <fieldset class="track-visit" id="tracking2">
+            {% include 'sales_force/visit_track_rows.html' %}
 
+        </fieldset>
 
-
-            <table class="table tracking-table" id="tracking">
-
-
-                <thead>
-                <tr>
-                    <th>{% trans 'CheckIn Date - Time' %}</th>
-                    <th>{% trans 'CheckOut Date - Time' %}</th>
-                    <th>{% trans 'Visit Duration' %}</th>
-                    <th>{% trans 'Delay Time' %}</th>
-                    <th>{% trans 'Distance' %}</th>
-                    <th>{% trans 'Client' %}</th>
-                    <th>{% trans 'Location' %}</th>
-                </tr>
-                </thead>
-
-                <tbody>
-
-
-                </tbody>
-
-
-
-            </table>
-
+        <fieldset class="track-visit" id="tracking3">
+            {% include 'sales_force/visit_track_rows2.html' %}
 
         </fieldset>
 

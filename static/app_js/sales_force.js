@@ -20,7 +20,10 @@ $("#button-id-apply").click(function (event) {
             $('#from_date').text(vFD.get('date_from'));
             $('#to_date').text(vFD.get('date_to'));
                if(JSON.parse(responseText).valid){
-                   $('#tracking tr:last').after(JSON.parse(responseText).html);
+                   $('#tracking2').html();
+                   $('#tracking3').html();
+                   $('#tracking2').html(JSON.parse(responseText).html);
+                   $('#tracking3').html(JSON.parse(responseText).html2);
                    $('#totalVisits').text(JSON.parse(responseText).totalVisits);
                    $('#totalOrder').text(JSON.parse(responseText).totalOrder);
                    $('#totalVisitGroupByBranch').text(JSON.parse(responseText).totalVisitGroupByBranch);

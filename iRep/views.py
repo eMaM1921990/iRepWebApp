@@ -516,6 +516,7 @@ def TrackingVisitReportBySalesForce(request):
     if request.POST:
         valid = False
         template = 'sales_force/visit_track_rows.html'
+        template2 = 'sales_force/visit_track_rows2.html'
         trackingInstance = TrackingReports(start_date=request.POST['date_from'], end_date=request.POST['date_to'])
         result = trackingInstance.visits_by_sales_force(sales_force_id=request.POST['sales_force'])
         totalVisits = trackingInstance.countTotalPlaceVisited(sales_force_id=request.POST['sales_force'])
@@ -537,11 +538,14 @@ def TrackingVisitReportBySalesForce(request):
             countDay = totalHrAndMile[0]['totalDay']
 
         html = None
+        html2 = None
         if result:
             valid = True
             html = render_to_string(template_name=template, context={'tracking': result})
+            html2 = render_to_string(template_name=template2, context={'tracking': result})
         ret = {
             "html": html,
+            "html2": html2,
             "valid": valid,
             "totalVisits": totalVisits,
             "totalOrder": totalOrder,

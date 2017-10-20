@@ -473,6 +473,8 @@ class SalesForceCheckInOut(models.Model):
     check_in_time = models.TimeField()
     check_out_date = models.DateField(null=True)
     check_out_time = models.TimeField(null=True)
+    check_in_address = models.TextField()
+    check_out_address = models.TextField()
     branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id')
     visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out', db_column='visit_id')
 
