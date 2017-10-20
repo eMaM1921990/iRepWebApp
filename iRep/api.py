@@ -500,7 +500,7 @@ def CheckIn(request):
                                                            latitude=request.data['latitude'],
                                                            check_date=request.data['check_date'],
                                                            check_time=request.data['check_time'],
-                                                           branch=request.data['client'], visit=visit_record)
+                                                           branch=request.data['client'], visit=visit_record,check_in_address=request.data['check_in_address'])
             if checkInOutRecord:
                 resp['code'] = 200
                 resp['data'] = CheckInOutSerializers(checkInOutRecord).data
