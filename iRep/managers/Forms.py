@@ -33,3 +33,7 @@ class IForm():
 
     def getFormQuestionAnswer(self, id,branch):
         return QuestionAnswer.objects.filter(question__form__id=id,branch__id=branch)
+
+
+    def getFormQuestionAnswerVisit(self, visit_id):
+        return QuestionAnswer.objects.filter(visit__id=visit_id)

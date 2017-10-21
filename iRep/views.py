@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import csv
 import json
 
 import datetime
@@ -395,6 +396,26 @@ def ViewFormQuestionAnswer(request):
     }
     return HttpResponse(json.dumps(ret,ensure_ascii=False))
 
+
+@login_required
+def exportForm(request, id):
+    visit_id = id
+    # Form
+    formInfo = IForm(slug=None).getFormQuestionAnswerVisit(visit_id=visit_id)
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    if formInfo:
+        response['Content-Disposition'] = 'attachment; filename="' + visit_id + '.csv"'
+    else :
+        response['Content-Disposition'] = 'attachment; filename="visit_form.csv"'
+
+    writer = csv.writer(response)
+    field_names = ["Question ", "Answer"]
+    writer.writerow(field_names)
+    for question in formInfo:
+        writer.writerow([question.question.question,question.answer])
+
+    return response
 
 @login_required
 def CreateForms(request, slug):

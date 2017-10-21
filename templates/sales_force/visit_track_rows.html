@@ -22,6 +22,7 @@
 
             <td><span class="label label-danger">{{ row.check_out_date }}</span>{{ row.check_out_time }}</td>
             <td>{{ row.getTimeDiff }}</td>
+            <td><a href="{% url 'exportFormAnswer' row.visit.id %}" download="iREP-File01"><i class="glyphicon glyphicon-save-file" download=""></i>Download</a></td>
 
         </tr>
     {% empty %}
