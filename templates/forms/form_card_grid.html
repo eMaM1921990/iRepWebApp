@@ -6,12 +6,12 @@
             {% trans 'Edit' %}
         </a>
     </div>
-    <div class="pull-right">
-        <a class="btn btn-default" href="{% url 'ViewFormsQuestion' id=form.id %}">
-            <span class="glyphicon glyphicon-pencil"></span>
-            {% trans 'Answers' %}
-        </a>
-    </div>
+{#    <div class="pull-right">#}
+{#        <a class="btn btn-default" href="{% url 'ViewFormsQuestion' id=form.id %}">#}
+{#            <span class="glyphicon glyphicon-pencil"></span>#}
+{#            {% trans 'Answers' %}#}
+{#        </a>#}
+{#    </div>#}
     <blockquote>
         <p>{{ form.form_name }} </p>
         <footer>{{ form.created_date }} </footer>
