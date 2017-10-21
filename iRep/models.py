@@ -481,11 +481,11 @@ class SalesForceCheckInOut(models.Model):
     @property
     def getTimeDiff(self):
         from datetime import datetime
+        tdelta = 0
         FMT = '%H:%M:%S'
-        if self.check_out_time:
+        if self.check_out_time and self.check_in_time:
             tdelta = datetime.strptime(str(self.check_out_time), FMT) - datetime.strptime(str(self.check_in_time), FMT)
-        else:
-            tdelta = datetime.strptime(str(self.check_out_time), FMT) - datetime.strptime(str('00:00:00'), FMT)
+
         return tdelta
 
     @property
