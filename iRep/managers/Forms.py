@@ -17,13 +17,14 @@ class IForm():
     def getFormInfo(self, id):
         return Forms.objects.get(id=id)
 
-    def saveFormQuestionAnswer(self, question_id, sales_force, answer, visit_id):
+    def saveFormQuestionAnswer(self, question_id, sales_force, answer, visit_id, branch_id):
         try:
             record = QuestionAnswer()
             record.question_id = question_id
             record.sales_force_id = sales_force
             record.answer = answer
             record.visit_id = visit_id
+            record.branch_id= branch_id
             record.save()
             return record
         except Exception as e:
