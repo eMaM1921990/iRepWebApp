@@ -689,6 +689,10 @@ def QuestionAnswer(request):
     if 'visit_id' not in request.data:
         resp['msg'] = _('Visit id missed')
         return Response(resp)
+    
+    if 'client' not in request.data:
+        resp['msg'] = _('Client id missed')
+        return Response(resp)
 
     iForm = IForm(slug=None)
     for raw in request.data['answers']:
@@ -701,7 +705,8 @@ def QuestionAnswer(request):
             return Response(resp)
 
         status = iForm.saveFormQuestionAnswer(question_id=raw['question_id'],
-                                              sales_force=request.data['sales_force'], answer=raw['answer'],visit_id=request.data['visit_id'])
+                                              sales_force=request.data['sales_force'], answer=raw['answer'],
+                                              visit_id=request.data['visit_id'],branch_id=request.data['client'])
 
         if status:
             resp['data'] = _('Saved')
