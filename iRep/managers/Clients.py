@@ -8,6 +8,17 @@ logger = logging.getLogger(__name__)
 
 
 class ClientManager():
+    
+    def deleteClient(self,slug):
+        try:
+            Client.objects.get(slug=slug).delete()
+            return True
+        except Exception as e:
+            logger.debug('Error during delete client for  slug ' + str(slug) + ' Cause: ' + str(e))
+            return None
+        
+    
+    
     def get_client_by_slug(self, slug):
         try:
             return Client.objects.filter(corporate__slug=slug)
