@@ -475,8 +475,8 @@ class SalesForceCheckInOut(models.Model):
     check_out_time = models.TimeField(null=True)
     check_in_address = models.TextField()
     check_out_address = models.TextField()
-    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id')
-    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out', db_column='visit_id')
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id',null=True)
+    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out', db_column='visit_id',null=True)
 
     @property
     def getTimeDiff(self):

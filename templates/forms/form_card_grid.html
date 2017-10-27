@@ -5,6 +5,10 @@
             <span class="glyphicon glyphicon-pencil"></span>
             {% trans 'Edit' %}
         </a>
+        <a href="{% url 'DeleteForm' form.id %}" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+
     </div>
 {#    <div class="pull-right">#}
 {#        <a class="btn btn-default" href="{% url 'ViewFormsQuestion' id=form.id %}">#}

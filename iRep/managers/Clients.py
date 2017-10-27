@@ -14,6 +14,7 @@ class ClientManager():
             Client.objects.get(slug=slug).delete()
             return True
         except Exception as e:
+            print str(e)
             logger.debug('Error during delete client for  slug ' + str(slug) + ' Cause: ' + str(e))
             return None
         

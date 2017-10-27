@@ -110,6 +110,13 @@ def EditSalesForce(request, slug):
 
 
 @login_required
+def DeleteSalesForce(request, slug):
+    corp = CorpManager().get_corp_by_user(request.user)
+    SalesForceManager().deleteSalesForce(slug)
+    return redirect(reverse('viewSalesForceByUser', kwargs={'slug': corp.slug}))
+
+
+@login_required
 def AddProduct(request, slug):
     template = 'settings/products/details.html'
     form = ProductForm(request.POST or None, request.FILES or None, slug=slug,
@@ -122,6 +129,14 @@ def AddProduct(request, slug):
         m = form.save(user=request.user, corporate=corporate)
         return redirect(reverse('productList', kwargs={'slug': slug}))
     return render(request, template_name=template, context={'form': form, 'new': True, 'categoryForm': categoryForm})
+
+
+@login_required
+def DeleteProduct(request, slug):
+    # Get product
+    corp = CorpManager().get_corp_by_user(request.user)
+    ProductManager().deleteProduct(slug=slug)
+    return redirect(reverse('productList', kwargs={'slug': corp.slug}))
 
 
 @login_required
@@ -178,6 +193,13 @@ def AddClient(request, slug):
 
 
 @login_required
+def DeleteClient(request, slug):
+    corp = CorpManager().get_corp_by_user(request.user)
+    ClientManager().deleteClient(slug)
+    return redirect(reverse('viewClient', kwargs={'slug': corp.slug}))
+
+
+@login_required
 def viewOrder(request, slug):
     template = 'orders/details.html'
     orders = OrderManager().get_corp_orders(slug=slug)
@@ -203,7 +225,7 @@ def EditClient(request, slug):
     schedular = SchedulerManager().get_scheduler_by_client(client_slug=slug)
 
     # retrieve client salesforce
-    sqs= ClientManager().get_sales_force_by_client(slug=slug)
+    sqs = ClientManager().get_sales_force_by_client(slug=slug)
     data = []
     # serialize data
     if sqs:
@@ -212,7 +234,8 @@ def EditClient(request, slug):
         data = json.dumps(data, ensure_ascii=False)
 
     return render(request, template_name=template,
-                  context={'form': form, 'new': False, 'reportForm': reportForm, 'schedular': schedular,'sales_force':data,'client_id':client_instance.pk})
+                  context={'form': form, 'new': False, 'reportForm': reportForm, 'schedular': schedular,
+                           'sales_force': data, 'client_id': client_instance.pk})
 
 
 # Export
@@ -380,21 +403,22 @@ def ViewForms(request, slug):
     }
     return render(request, template_name=template, context=context)
 
+
 @login_required
 def ViewFormQuestionAnswer(request):
     valid = False
     template = 'forms/form_answer.html'
-    answerList= IForm(slug=None).getFormQuestionAnswer(id=request.POST['id'],branch=request.POST['branch_id'])
+    answerList = IForm(slug=None).getFormQuestionAnswer(id=request.POST['id'], branch=request.POST['branch_id'])
     if answerList:
         valid = True
-        html = render_to_string(template, {'answerList':answerList})
+        html = render_to_string(template, {'answerList': answerList})
 
-    ret ={
-        'valid':valid,
-        'html':html
+    ret = {
+        'valid': valid,
+        'html': html
 
     }
-    return HttpResponse(json.dumps(ret,ensure_ascii=False))
+    return HttpResponse(json.dumps(ret, ensure_ascii=False))
 
 
 @login_required
@@ -406,16 +430,25 @@ def exportForm(request, id):
     response = HttpResponse(content_type='text/csv')
     if formInfo:
         response['Content-Disposition'] = 'attachment; filename="' + visit_id + '.csv"'
-    else :
+    else:
         response['Content-Disposition'] = 'attachment; filename="visit_form.csv"'
 
     writer = csv.writer(response)
     field_names = ["Question ", "Answer"]
     writer.writerow(field_names)
     for question in formInfo:
-        writer.writerow([question.question.question,question.answer])
+        writer.writerow([question.question.question, question.answer])
 
     return response
+
+
+@login_required
+def DeleteForm(request, id):
+    # Get Corp Info
+    corp = CorpManager().get_corp_by_user(request.user)
+    IForm(slug=None).deleteForm(id)
+    return redirect(reverse('ViewForms', kwargs={'slug': corp.slug}))
+
 
 @login_required
 def CreateForms(request, slug):
@@ -486,7 +519,7 @@ def EditForms(request, slug, id):
         # Now save the data for each form in the formset
         new_questions = []
         for question_form in QuestionFormSetform:
-            print hasattr(question_form,'cleaned_data')
+            print hasattr(question_form, 'cleaned_data')
             print question_form
             new_questions.append(FormQuestions(form=m, question=question_form.cleaned_data.get('question')))
 
@@ -620,7 +653,7 @@ def editBillBoard(request, id):
     # Bill boards
     instance = get_object_or_404(BillBoard, id=id)
 
-    form = BillBoardForm(request.POST or None, instance=instance, action=reverse('editBillBoard',kwargs={'id':id}))
+    form = BillBoardForm(request.POST or None, instance=instance, action=reverse('editBillBoard', kwargs={'id': id}))
     if form.is_valid():
         m = form.save(user=request.user, corporte=corp)
         if m:
@@ -642,32 +675,30 @@ def auditRetails(request, slug):
 
 
 @login_required
-def dashboard(request,slug):
+def dashboard(request, slug):
     template = 'clients/dashboard.html'
     context = {}
 
     if request.POST:
         # Get Corp Info
         corp = CorpManager().get_corp_by_user(request.user)
-        dashboards = DashBoardReports(start_date=request.POST['dateFrom'],end_date=request.POST['dateTo'],city=None,corp=corp, context=None)
-        context['visitDetails']=dashboards.get_visit_details_charts()
+        dashboards = DashBoardReports(start_date=request.POST['dateFrom'], end_date=request.POST['dateTo'], city=None,
+                                      corp=corp, context=None)
+        context['visitDetails'] = dashboards.get_visit_details_charts()
         context['orders'] = dashboards.get_total_orders_chart()
-    return render(request, template_name=template,context=context)
+    return render(request, template_name=template, context=context)
 
 
 @login_required
 def ClientReport(request):
-
     if request.POST:
         trackingInstance = TrackingReports(start_date=request.POST['date_from'], end_date=request.POST['date_to'])
-        visitCount =trackingInstance.visits_by_client_count(client_id=request.POST['client_id'])
+        visitCount = trackingInstance.visits_by_client_count(client_id=request.POST['client_id'])
         orders = trackingInstance.countNumberOfOrdersByClient(client_id=request.POST['client_id'])
 
         ret = {
-            'visits':visitCount,
-            'orders':orders
+            'visits': visitCount,
+            'orders': orders
         }
 
-        return HttpResponse(json.dumps(ret,ensure_ascii=False))
-
-
+        return HttpResponse(json.dumps(ret, ensure_ascii=False))

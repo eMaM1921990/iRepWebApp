@@ -41,17 +41,20 @@ urlpatterns += [
     url(r'^salesForce/add/$', views.AddSalesForce, name='createSalesForce'),
     url(r'^(?P<slug>[-\w]+)/salesForce/list/$', views.ViewSalesForceDefault, name='viewSalesForceByUser'),
     url(r'^salesForce/edit/(?P<slug>[-\w]+)/', views.EditSalesForce, name='editSalesForce'),
+    url(r'^salesForce/delete/(?P<slug>[-\w]+)/', views.DeleteSalesForce, name='DeleteSalesForce'),
     # Products
     url(r'^settings/(?P<slug>[-\w]+)/product/add/$', views.AddProduct, name='createProduct'),
     url(r'^settings/(?P<slug>[-\w]+)/product/list/$', views.ViewProduct, name='productList'),
     url(r'^settings/product/(?P<slug>[-\w]+)/$', views.ViewEditProduct, name='editProduct'),
     url(r'^settings/category/add/$', views.AddCategory, name='AddCategory'),
+    url(r'^settings/delete_product/(?P<slug>[-\w]+)/$', views.DeleteProduct, name='DeleteProduct'),
     # Clients
     url(r'^client/(?P<slug>[-\w]+)/$', views.ViewClient, name='viewClient'),
     url(r'^client/edit/(?P<slug>[-\w]+)/$', views.EditClient, name='EditClient'),
     url(r'^client/(?P<slug>[-\w]+)/add/$', views.AddClient, name='AddClient'),
     url(r'^orders/(?P<slug>[-\w]+)/$', views.viewOrder, name='viewOrder'),
     url(r'^dashboard/(?P<slug>[-\w]+)/$', views.dashboard, name='dashboard'),
+    url(r'^client_delete/(?P<slug>[-\w]+)/', views.DeleteClient, name='DeleteClient'),
     # schedual
     url(r'^scheduler/add/$', views.AddScheduler, name='AddScheduler'),
 
@@ -61,6 +64,7 @@ urlpatterns += [
     url(r'^Forms/edit/(?P<slug>[-\w]+)/(?P<id>[-\w]+)', views.EditForms, name='editForms'),
     url(r'^forms/answer/$', views.ViewFormQuestionAnswer, name='ViewFormsQuestion'),
     url(r'^forms/export/(?P<id>.+)/$', views.exportForm, name='exportFormAnswer'),
+    url(r'^forms/delete/(?P<id>.+)/$', views.DeleteForm, name='DeleteForm'),
 
     # Bill Board
     url(r'^billboard/(?P<slug>[-\w]+)/', views.billBoards, name='billBoards'),

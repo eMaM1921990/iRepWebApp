@@ -27,6 +27,7 @@
                     <th>{% trans 'EAN' %}</th>
                     <th>{% trans 'Price' %}</th>
                     <th>{% trans 'Active' %}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,7 @@
                         <td>{{ row.ean_code }}</td>
                         <td>{{ row.default_price }}</td>
                         <td>{{ row.is_active }}</td>
+                        <td><a href="{% url 'DeleteProduct' row.slug %}" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a></td>
 
                     </tr>
                 {% endfor %}

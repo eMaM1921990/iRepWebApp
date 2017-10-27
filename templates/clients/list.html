@@ -17,6 +17,7 @@
                     <th>{% trans 'Name' %}</th>
                     <th>{% trans  'Status' %}</th>
                     <th>{% trans 'Active' %}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,7 @@
                         <td><a href="{% url 'EditClient' row.slug %}">{{ row.name }}</a></td>
                         <td>{{ row.status.status_name }}</td>
                         <td>{{ row.is_active }}</td>
+                        <td><a href="{% url 'DeleteClient' row.slug %}" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a></td>
 
                     </tr>
                 {% endfor %}

@@ -15,10 +15,18 @@ class ProductManager():
             logger.debug('Error during retrieve products for company slug ' + str(slug) + ' cause: ' + str(e))
             return None
 
-    def get_corp_category(self,slug):
+    def get_corp_category(self, slug):
         try:
             sqs = ProductGroup.objects.filter(corporate__slug=slug)
             return sqs
+        except Exception as e:
+            logger.debug('Error during retrieve products category for company slug ' + str(slug) + ' cause: ' + str(e))
+            return None
+
+    def deleteProduct(self, slug):
+        try:
+            Product.objects.get(slug=slug).delete()
+            return True
         except Exception as e:
             logger.debug('Error during retrieve products category for company slug ' + str(slug) + ' cause: ' + str(e))
             return None
