@@ -17,7 +17,14 @@
     {% for row in tracking %}
         <tr>
             <td>{{ row.branch.name }}</td>
-            <td>{{ row.getDelay }}</td>
+            {% if row.getDelay < 0 %}
+                <td><span class="label label-info">{% trans 'Early' %}</span></td>
+            {% elif row.getDelay|floatformat == 0 %}
+                <td><span class="label label-success">{% trans 'On time' %}</span></td>
+            {% else %}
+                <td><span class="label label-danger">{% trans 'Delay' %}  {{ row.getDelay }}</span></td>
+            {% endif %}
+
             <td><span class="label label-primary">{{ row.check_in_date }}</span>{{ row.check_in_time }}</td>
 
             <td><span class="label label-danger">{{ row.check_out_date }}</span>{{ row.check_out_time }}</td>
