@@ -3,6 +3,15 @@ from iRep.models import SalesForce, UserProfile, SalesForceTimeLine, SalesForceC
 
 
 class SalesForceManager():
+    
+    def deleteSalesForce(self,slug):
+        try:
+            SalesForce.objects.get(slug=slug).delete()
+            return True
+        except Exception as e:
+            print str(e)
+            return None
+        
     def createSalesForce(self, avatar, name, phone, email, profile_language, corp_id, user_pin, password_pin, notes,
                          is_active, auth_user):
         record = SalesForce()
