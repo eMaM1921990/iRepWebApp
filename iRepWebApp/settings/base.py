@@ -139,7 +139,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, '..', 'locale'),
 )
 
-TIME_ZONE = 'GMT+2'
+TIME_ZONE = 'Africa/Cairo'
 
 USE_I18N = True
 
