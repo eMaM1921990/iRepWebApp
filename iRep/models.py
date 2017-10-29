@@ -399,7 +399,7 @@ class Visits(models.Model):
     schedualed = models.BooleanField(default=True)
     schedual = models.ForeignKey(SalesForceSchedual, models.CASCADE, related_name='visit_schedual',
                                  db_column='schedual_id', null=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    created_date = models.DateTimeField(default=django.utils.timezone.now)
 
     @property
     def getParsedQuery(self):
