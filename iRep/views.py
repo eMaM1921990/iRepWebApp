@@ -603,8 +603,7 @@ def TrackingVisitReportBySalesForce(request):
             "valid": valid,
             "totalVisits": totalVisits,
             "totalOrder": totalOrder,
-            "totalVisitGroupByBranch": totalVisitGroupByBranch[0][
-                'totalVistitBranch'] if totalVisitGroupByBranch else None,
+            "totalVisitGroupByBranch":totalVisitGroupByBranch,
             "hr": hr,
             "km": km,
             "countDay": countDay,
