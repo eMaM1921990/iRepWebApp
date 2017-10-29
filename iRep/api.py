@@ -468,7 +468,7 @@ def CheckIn(request):
                                                            notes='not schedual visit')
         if schedual_record:
             retrievedDateTime = request.data['check_date'] + ' ' +request.data['check_time']
-            datetime_object = datetime.datetime.strptime(str(retrievedDateTime), '%d-%m-%Y %X')
+            datetime_object = datetime.datetime.strptime(str(retrievedDateTime), '%Y-%m-%d %I:%M')
             visit_record = VisitsManager().add_visit(sales_force=request.data['sales_force'],
                                                      branch=request.data['client'],
                                                      visit_date=retrievedDateTime, notes=None,
@@ -493,7 +493,7 @@ def CheckIn(request):
 
     else:
         retrievedDateTime = request.data['check_date'] + ' ' +request.data['check_time']
-        datetime_object = datetime.datetime.strptime(str(retrievedDateTime), '%d-%m-%Y %X')
+        datetime_object = datetime.datetime.strptime(str(retrievedDateTime), '%Y-%m-%d %I:%M')
         visit_record = VisitsManager().add_visit(sales_force=request.data['sales_force'],
                                                  branch=request.data['client'],
                                                  visit_date=retrievedDateTime, notes=None,
