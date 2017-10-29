@@ -499,7 +499,7 @@ class SalesForceCheckInOut(models.Model):
     
     @property
     def get_sec(self):
-        h, m, s = self.getDelay.split(':')
+        h, m, s = str(self.getDelay).split(':')
         return int(h) * 3600 + int(m) * 60 + int(s)
 
 
