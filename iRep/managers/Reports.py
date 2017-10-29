@@ -41,8 +41,7 @@ class TrackingReports():
 
     def countTotalPlaceVisitedGroupByBranch(self, sales_force_id):
         return Visits.objects.filter(sales_force__id=sales_force_id, visit_date__lte=self.to_date,
-                                     visit_date__gte=self.from_date) \
-            .values('branch').annotate(totalVistitBranch=Count('branch'))
+                                     visit_date__gte=self.from_date).count()
 
     def countSalesForceTimeAndMile(self, sales_force_id):
         return SalesForceTimeLine.objects.filter(sales_force__id=sales_force_id, time_line_date__lte=self.to_date,
