@@ -496,6 +496,12 @@ class SalesForceCheckInOut(models.Model):
         schedul_date = self.visit.schedual.schedual_time
         tdelta = datetime.strptime(str(visit_date.time().strftime(FMT)), FMT) - datetime.strptime(str(schedul_date), FMT)
         return tdelta
+    
+    @property
+    def get_sec(self):
+        h, m, s = self.getDelay.split(':')
+        return int(h) * 3600 + int(m) * 60 + int(s)
+
 
     @property
     def getDistance(self):
