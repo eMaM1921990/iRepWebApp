@@ -123,3 +123,9 @@ urlpatterns += [
 
 ]
 
+
+if 'rosetta' in settings.INSTALLED_APPS:
+    urlpatterns += [
+        url(r'^trans/', include('rosetta.urls')),
+    ]
+
