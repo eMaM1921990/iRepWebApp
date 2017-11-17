@@ -16,10 +16,10 @@
     <tbody>
     {% for row in tracking %}
         <tr>
-            <td>{{ row.branch.name }}</td>
-            {% if row.getDelay < 0 %}
+            <td>{{ row.branch.name }} </td>
+            {% if row.get_sec < 0 %}
                 <td><span class="label label-info">{% trans 'Early' %}</span></td>
-            {% elif row.getDelay|floatformat == 0 %}
+            {% elif row.get_sec == 0 %}
                 <td><span class="label label-success">{% trans 'On time' %}</span></td>
             {% else %}
                 <td><span class="label label-danger">{% trans 'Delay' %}  {{ row.getDelay }}</span></td>
