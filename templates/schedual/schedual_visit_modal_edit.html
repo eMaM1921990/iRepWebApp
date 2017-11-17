@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+<div class="modal fade" id="myModaledit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,7 +7,7 @@
                         aria-hidden="true">×</span></button>
                 <h4 class="modal-title" id="myModalLabel">
 
-                    <i class="glyphicon glyphicon-calendar"></i> {% trans 'Schedule new visit for' %} <span class="label label-info"
+                    <i class="glyphicon glyphicon-calendar"></i> {% trans 'Schedule current visit for' %} <span class="label label-info"
                                                                                               id="dataTxt">05/17/2017</span>
 
                 </h4>
@@ -104,9 +104,9 @@
 
                         <div class="col-md-4">
 
-                            <div class="form-group">
+                            <div class="radio">
 
-                                <input type="text" class="form-control" placeholder="{% trans 'Weeks' %}" name="week"/>
+                                <input type="text" class="form-control" placeholder="{% trans 'Weeks' %}" name="week">
 
                             </div>
 

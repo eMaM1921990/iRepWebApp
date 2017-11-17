@@ -15,3 +15,7 @@ DETAIL:  Failing row contains (2, 2017-08-21 18:17:08.335552+00, 4, null, 1).
 [21/Aug/2017 18:17:48] DEBUG [iRep.managers.Clients:46] Error during add new client from mobile cause insert or update on table "branch_tags" violates foreign key constraint "branch_tags_tag_id_11d3934b_fk_tags_id"
 DETAIL:  Key (tag_id)=(1) is not present in table "tags".
 
+[27/Oct/2017 08:25:15] DEBUG [iRep.managers.Clients:17] Error during delete client for  slug client-name-1 Cause: get() returned more than one Client -- it returned 8!
+[27/Oct/2017 08:25:21] DEBUG [iRep.managers.Clients:17] Error during delete client for  slug client-name-1 Cause: get() returned more than one Client -- it returned 8!
+[27/Oct/2017 09:59:20] DEBUG [iRep.managers.Clients:17] Error during delete client for  slug client-name-1 Cause: get() returned more than one Client -- it returned 8!
+[27/Oct/2017 10:01:41] DEBUG [iRep.managers.Clients:18] Error during delete client for  slug client-name-1 Cause: get() returned more than one Client -- it returned 8!

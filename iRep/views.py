@@ -361,7 +361,8 @@ def AddScheduler(request):
         schedual_instance = SchedulerManager()
         result = schedual_instance.add_scheduler(request.POST['client_id'], request.POST['sales_force_id'],
                                                  request.POST['dates'],
-                                                 request.POST['times'], request.POST['notes'])
+                                                 request.POST['times'], request.POST['notes'],
+                                                 week=request.POST.get('week', 0))
         if result:
             valid = True
             message = 'Scheduler add successfully'

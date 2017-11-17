@@ -11,7 +11,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from math import sin, cos, radians, degrees, acos
 
-
 MANAGED = True
 
 
@@ -129,18 +128,17 @@ class SalesForce(models.Model):
     def __str__(self):
         return "[" + self.position.name + "] " + self.name
 
-
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
 
     class Meta:
         managed = MANAGED
         db_table = 'sales_force'
-        unique_together = ['user_pin', 'corp_id','name']
+        unique_together = ['user_pin', 'corp_id', 'name']
 
 
 class Client(models.Model):
@@ -174,15 +172,29 @@ class Client(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
+
+    @property
+    def getAvatar(self):
+        if self.avatar:
+            return self.avatar.url
+        return settings.STATIC_URL + 'img/default_avatar_male.jpg'
+
+    @property
+    def getObjectAsJson(self):
+        json = '{'
+        for field in self._meta.fields:
+            json + field.name + ":" + str(getattr(self, str(field.name))) + ','
+        json += '}'
+        return json
 
     class Meta:
         managed = MANAGED
         db_table = 'client'
-        unique_together=['name','corporate','phone']
+        unique_together = ['name', 'corporate', 'phone']
 
 
 class Tags(models.Model):
@@ -223,11 +235,19 @@ class SalesForceSchedual(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
 
+    @property
+    def getObjectAsJson(self):
+        json = '{'
+        for field in self._meta.fields:
+            print field.name
+            json += field.name + ":" + str(getattr(self, str(field.name))) + ','
+        json += '}'
+        return json
 
     class Meta:
         managed = MANAGED
@@ -249,9 +269,9 @@ class ProductGroup(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
 
     class Meta:
@@ -291,15 +311,15 @@ class Product(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
 
     class Meta:
         managed = MANAGED
         db_table = 'product'
-        unique_together = ['name','corporate']
+        unique_together = ['name', 'corporate']
 
 
 class ProductTags(models.Model):
@@ -367,15 +387,15 @@ class BillBoard(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
 
     class Meta:
         managed = MANAGED
         db_table = 'billboard'
-        unique_together = ['subject','corporate']
+        unique_together = ['subject', 'corporate']
 
 
 class Messages(models.Model):
@@ -403,9 +423,9 @@ class Visits(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
 
     class Meta:
@@ -429,9 +449,9 @@ class Orders(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+':'+str(getattr(self, str(field.name)))+']'
+            txt += '[' + field.name + ':' + str(getattr(self, str(field.name))) + ']'
         return txt
 
     class Meta:
@@ -475,8 +495,10 @@ class SalesForceCheckInOut(models.Model):
     check_out_time = models.TimeField(null=True)
     check_in_address = models.TextField()
     check_out_address = models.TextField()
-    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id',null=True)
-    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out', db_column='visit_id',null=True)
+    branch = models.ForeignKey(Client, models.CASCADE, related_name='branch_check_in_out', db_column='branch_id',
+                               null=True)
+    visit = models.ForeignKey(Visits, models.CASCADE, related_name='visit_check_in_out', db_column='visit_id',
+                              null=True)
 
     @property
     def getTimeDiff(self):
@@ -494,7 +516,8 @@ class SalesForceCheckInOut(models.Model):
         FMT = '%H:%M:%S'
         visit_date = self.visit.created_date
         schedul_date = self.visit.schedual.schedual_time
-        tdelta = datetime.strptime(str(visit_date.time().strftime(FMT)), FMT) - datetime.strptime(str(schedul_date), FMT)
+        tdelta = datetime.strptime(str(visit_date.time().strftime(FMT)), FMT) - datetime.strptime(str(schedul_date),
+                                                                                                  FMT)
         return tdelta
 
     @property
@@ -538,15 +561,15 @@ class Forms(models.Model):
 
     @property
     def getParsedQuery(self):
-        txt= ''
+        txt = ''
         for field in self._meta.fields:
-            txt += '['+field.name+']:'+str(getattr(self, str(field.name)))
+            txt += '[' + field.name + ']:' + str(getattr(self, str(field.name)))
         return txt
 
     class Meta:
         managed = MANAGED
         db_table = 'forms'
-        unique_together = ['form_name','corporate']
+        unique_together = ['form_name', 'corporate']
 
 
 class FormQuestions(models.Model):

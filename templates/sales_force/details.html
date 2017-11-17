@@ -58,6 +58,7 @@
 
     </div>
     {% include 'schedual/schedual_visit_modal.html' %}
+    {% include 'schedual/schedual_visit_modal_edit.html' %}
 {% endblock %}
 {% block extra_js_src %}
     <script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
@@ -80,7 +81,6 @@
         });
 
 
-
         $(document).ready(function () {
             var data = {{ clients|safe }};
 
@@ -98,6 +98,7 @@
                     right: 'month,agendaWeek,agendaDay'
                 },
                 defaultView: 'month',
+                eventLimit: true,
                 editable: true,
                 dayClick: function (date, jsEvent, view) {
                     if (moment().format('YYYY-MM-DD') === date.format('YYYY-MM-DD') || date.isAfter(moment())) {
@@ -115,9 +116,21 @@
                         "start": '{{ row.schedual_date |date:"o-m-d"}}',
                         "end": '{{ row.schedual_date |date:"o-m-d"}}',
                         "title": '{{ row.branch.name }}',
-                        'backgroundColor': '#378006'
+                        'backgroundColor': '#378006',
+                        "time": '{{ row.schedual_time }}',
+                        "custom_data": '{{ row.getObjectAsJson }}'
+
                     },
-                {% endfor %}]
+                {% endfor %}],
+                eventClick: function (event) {
+                    console.log(event.custom_data);
+                    $('#myModaledit').modal('show');
+                    $("#myModaledit #date").val(event.custom_data.schedual_date);
+                    $('#myModaledit #dataTxt').text(event.custom_data.schedual_date);
+                    $('#salesRepName').val('{{ form.name.value }}');
+                    $('#salesRepName').attr('readonly', 'readonly');
+                    $('#myModaledit #client').val(event.custom_data.branch.id);
+                }
 
 
             });
