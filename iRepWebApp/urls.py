@@ -57,6 +57,8 @@ urlpatterns += [
     url(r'^client_delete/(?P<slug>[-\w]+)/', views.DeleteClient, name='DeleteClient'),
     # schedual
     url(r'^scheduler/add/$', views.AddScheduler, name='AddScheduler'),
+    url(r'^scheduler/edit/$', views.EditScheduler, name='EditScheduler'),
+    url(r'^scheduler/delete/$', views.DeleteScheduler, name='DeleteScheduler'),
 
     # Froms
     url(r'^forms/(?P<slug>[-\w]+)/$', views.ViewForms, name='ViewForms'),

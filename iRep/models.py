@@ -7,6 +7,7 @@ from cities_light.models import City, Region, Country
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.http import request
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from math import sin, cos, radians, degrees, acos
@@ -242,12 +243,21 @@ class SalesForceSchedual(models.Model):
 
     @property
     def getObjectAsJson(self):
-        json = '{'
-        for field in self._meta.fields:
-            print field.name
-            json += field.name + ":" + str(getattr(self, str(field.name))) + ','
-        json += '}'
-        return json
+        # json = '{'
+        # for field in self._meta.fields:
+        #     print field.name
+        #     json += field.name + ":" + str(getattr(self, str(field.name))) + ','
+        #
+        # if json.endswith(','):
+        #     length = len(json)
+        #     json = json[:length-1]
+        # json += '}'
+        from django.core import serializers
+
+        # assuming obj is a model instance
+        serialized_obj = serializers.serialize('json', [self, ])
+
+        return serialized_obj
 
     class Meta:
         managed = MANAGED
@@ -519,12 +529,11 @@ class SalesForceCheckInOut(models.Model):
         tdelta = datetime.strptime(str(visit_date.time().strftime(FMT)), FMT) - datetime.strptime(str(schedul_date),
                                                                                                   FMT)
         return tdelta
-    
+
     @property
     def get_sec(self):
         h, m, s = str(self.getDelay).split(':')
         return int(h) * 3600 + int(m) * 60 + int(s)
-
 
     @property
     def getDistance(self):

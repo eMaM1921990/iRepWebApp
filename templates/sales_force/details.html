@@ -89,6 +89,11 @@
                 placeholder: '--------',
                 data: data
             });
+
+            $('#client_edit').select2({
+                placeholder: '--------',
+                data: data
+            })
             // page is now ready, initialize the calendar...
 
             $('#calendar').fullCalendar({
@@ -113,23 +118,34 @@
                 },
                 events: [{% for row in schedular %}
                     {
+                        "id":'{{ forloop.counter0 }}',
                         "start": '{{ row.schedual_date |date:"o-m-d"}}',
                         "end": '{{ row.schedual_date |date:"o-m-d"}}',
                         "title": '{{ row.branch.name }}',
                         'backgroundColor': '#378006',
                         "time": '{{ row.schedual_time }}',
-                        "custom_data": '{{ row.getObjectAsJson }}'
+                        "custom_data": '{{ row.getObjectAsJson|safe }}'
 
                     },
                 {% endfor %}],
                 eventClick: function (event) {
-                    console.log(event.custom_data);
+
+                    var dataAll = (JSON.parse(event.custom_data));
+                    var data = dataAll[0].fields;
+                    console.log(dataAll);
+
                     $('#myModaledit').modal('show');
-                    $("#myModaledit #date").val(event.custom_data.schedual_date);
-                    $('#myModaledit #dataTxt').text(event.custom_data.schedual_date);
-                    $('#salesRepName').val('{{ form.name.value }}');
-                    $('#salesRepName').attr('readonly', 'readonly');
-                    $('#myModaledit #client').val(event.custom_data.branch.id);
+                    $("#myModaledit #date").val(data.schedual_date);
+                    $("#myModaledit #dataTxt").text(data.schedual_date);
+                    $('#myModaledit #id').val(dataAll[0].pk);
+
+                    $('#myModaledit #time').val(data.schedual_time);
+                    $('#myModaledit #salesRepName').val('{{ form.name.value }}');
+                    $('#myModaledit #salesRepName').attr('readonly', 'readonly');
+                    $('#myModaledit #client_edit').val(data.branch);
+                    $('#myModaledit #notes').val(data.notes);
+                    $('#myModaledit #edit').attr('onclick','editSchedular('+event.id+')');
+                    $('#myModaledit #delete').attr('onclick','deleteSchedular('+event.id+')');
                 }
 
 

@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n staticfiles%}
 {% if LANGUAGE_CODE == 'ar' %}
     <html dir="rtl" lang="ar">
 {% else %}
@@ -31,10 +31,38 @@
 </div>
 <div class="divider-lg"></div>
 <footer class="Footer">
-    <p>2017 &copy;iRep</p>
+    <div class="container">
+
+        <div class="col-md-8">
+
+            <div class="dropup">
+                <span> {% trans 'Change language' %}</span>
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    {% if LANGUAGE_CODE == 'ar' %}
+                        <img src="{% static 'img/AR2.png' %}" alt="EN"> اللغة العربية
+                    {% else %}
+                        <img src="{% static 'img/EN.png' %}" alt="EN"> {% trans 'English' %}
+                    {% endif %}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <li><a href="javascript:changeAppLanguage('ar')"> <img src="{% static 'img/AR2.png' %}" alt="EN"> اللغة العربية</a></li>
+
+                    <li role="separator" class="divider"></li>
+                    <li><a href="javascript:changeAppLanguage('en')"> <img src="{% static 'img/EN.png' %}" alt="EN"> {% trans 'English' %}</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-right">
+            <p>All Rights Recirved to iRep &copy;2017 </p>
+        </div>
+
+    </div>
 </footer>
 </body>
 {% include 'base/baseJs.html' %}
- {% block extra_js_src %}{% endblock %}
-    {% block extra_javascript %}{% endblock %}
+{% block extra_js_src %}{% endblock %}
+{% block extra_javascript %}{% endblock %}
 </html>

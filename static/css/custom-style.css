@@ -617,3 +617,8 @@ ul.manage_actions li a span {
 .float-statistic li{background:#fff !important}
 .badge{background-color: #777 !important ;}
 .label-default{ color:#777 }
+
+
+.Footer{ padding-top: 10px !important; padding-bottom: 5px}
+.Footer p,
+#footer p { text-align: right !important}

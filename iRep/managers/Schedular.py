@@ -20,7 +20,7 @@ class SchedulerManager():
             record.notes = notes
             record.is_visit = is_visit
             record.save()
-            if int(week) > 0:
+            if not week and len(week) > 0 and int(week) > 0:
                 self.add_recuiring(object=record, week=week)
             return record
 
@@ -28,6 +28,39 @@ class SchedulerManager():
             print str(e)
             logging.debug('Error during save schedual cause :' + str(e))
             return None
+
+
+    def edit_scheduler(self, id ,client_id, sales_force_id, dates, times, notes, week, is_visit=True):
+        try:
+            record = SalesForceSchedual.objects.get(id=id)
+            record.sales_force_id = sales_force_id
+            record.branch_id = client_id
+            record.schedual_date = dates
+            record.schedual_time = times
+            record.notes = notes
+            record.is_visit = is_visit
+            record.save()
+            if not week and len(week) > 0 and int(week) > 0:
+                self.add_recuiring(object=record, week=week)
+            return record
+
+        except Exception as e:
+            print str(e)
+            logging.debug('Error during update schedual cause :' + str(e))
+            return None
+
+
+    def delete(self, id):
+        try:
+            SalesForceSchedual.objects.get(id=id).delete()
+            return True
+        except Exception as e:
+            print str(e)
+            logging.debug('Error during delete schedual cause :' + str(e))
+            return None
+
+
+
 
     def add_recuiring(self, object, week):
         current_date = datetime.datetime.strptime(object.schedual_date, "%Y-%m-%d")

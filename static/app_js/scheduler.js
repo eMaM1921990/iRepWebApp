@@ -29,6 +29,34 @@ function addSchedular() {
 }
 
 
+function editSchedular(event_id) {
+    var vFD = new FormData(document.getElementById('schedualer-form-edit'));
+    $.ajax({
+        url: "/scheduler/edit/",
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        //dataType: 'JSON',
+        data: vFD,
+        success: function (responseText) {
+            if (JSON.parse(responseText).valid) {
+                $('#myModaledit ').modal('hide');
+                $('#schedualer-form').trigger('reset');
+                removeFromCalender(event_id);
+                addToCalendeer('new_visit',vFD.get('dates'));
+            } else {
+
+            }
+        },
+        error: function (xhr, errmsg, err) {
+            console.log(errmsg);
+        }
+    });
+}
+
+
+
 function addToCalendeer(visit_name, date) {
     var myCalendar = $('#calendar');
     myCalendar.fullCalendar();
@@ -41,3 +69,36 @@ function addToCalendeer(visit_name, date) {
     myCalendar.fullCalendar('renderEvent', myEvent);
 
 }
+
+
+function removeFromCalender(id){
+    var myCalendar = $('#calendar');
+    myCalendar.fullCalendar( 'removeEvents' , id);
+}
+
+function deleteSchedular(event_id) {
+    var vFD = new FormData(document.getElementById('schedualer-form-edit'));
+    $.ajax({
+        url: "/scheduler/delete/",
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        //dataType: 'JSON',
+        data: vFD,
+        success: function (responseText) {
+            if (JSON.parse(responseText).valid) {
+                $('#myModaledit ').modal('hide');
+                $('#schedualer-form').trigger('reset');
+                removeFromCalender(event_id);
+                // addToCalendeer('new_visit',vFD.get('dates'));
+            } else {
+
+            }
+        },
+        error: function (xhr, errmsg, err) {
+            console.log(errmsg);
+        }
+    });
+}
+

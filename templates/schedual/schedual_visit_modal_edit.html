@@ -15,8 +15,9 @@
             </div>
             <div class="modal-body">
 
-                <form id="schedualer-form">
+                <form id="schedualer-form-edit">
                     {% csrf_token %}
+                    <input type="hidden" id="id"  name="id">
                     <div class="row">
                         <div class="col-md-4">
 
@@ -30,11 +31,11 @@
                         <div class="col-md-4">
 
                             <div class="form-group">
-                                <label>{% trans 'Time (optional)' %}</label>
+                                <label>{% trans 'Time ' %}</label>
 
 
                                 <div class="input-group date" id="datetimepicker3">
-                                    <input type="text" class="form-control" name="times">
+                                    <input type="text" class="form-control" name="times" id="time">
                                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-time"></span>
                     </span>
@@ -60,7 +61,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>{% trans 'Place' %}</label>
-                                <select id="client" class="form-control js-example-basic-multiple" name="client_id"></select>
+                                <select id="client_edit" class="form-control js-example-basic-multiple" name="client_id"></select>
                             </div>
                         </div>
 
@@ -72,7 +73,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>{% trans 'Visit note (optional)' %}</label>
-                                <input type="text" class="form-control" placeholder="{% trans 'Notes' %}" name="notes">
+                                <input type="text" class="form-control" placeholder="{% trans 'Notes' %}" name="notes" id="notes">
                             </div>
                         </div>
 
@@ -122,7 +123,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Close' %}</button>
-                <button type="button" class="btn btn-primary" onclick="addSchedular()">{% trans 'Save changes' %}</button>
+                <button type="button" class="btn btn-primary" onclick="editSchedular(this)"  id="edit">{% trans 'Update' %}</button>
+                <button type="button" class="btn btn-danger" onclick="deleteSchedular()" id="delete">{% trans 'Delete' %}</button>
             </div>
         </div>
     </div>

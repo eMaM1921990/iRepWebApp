@@ -374,6 +374,46 @@ def AddScheduler(request):
         return HttpResponse(json.dumps(ret, ensure_ascii=False))
 
 
+@login_required
+def EditScheduler(request):
+    if request.POST:
+        valid = False
+        message = 'Error during edit scheduler'
+        schedual_instance = SchedulerManager()
+        result = schedual_instance.edit_scheduler(request.POST['id'], request.POST['client_id'],
+                                                  request.POST['sales_force_id'],
+                                                  request.POST['dates'],
+                                                  request.POST['times'], request.POST['notes'],
+                                                  week=request.POST.get('week', 0))
+        if result:
+            valid = True
+            message = 'Scheduler updated successfully'
+
+        ret = {
+            "valid": valid,
+            "msg": message
+        }
+        return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+
+@login_required
+def DeleteScheduler(request):
+    if request.POST:
+        valid = False
+        message = 'Error during delete scheduler'
+        schedual_instance = SchedulerManager()
+        result = schedual_instance.delete(request.POST['id'])
+        if result:
+            valid = True
+            message = 'Scheduler deleted successfully'
+
+        ret = {
+            "valid": valid,
+            "msg": message
+        }
+        return HttpResponse(json.dumps(ret, ensure_ascii=False))
+
+
 # product category
 @login_required
 def AddCategory(request):
@@ -604,7 +644,7 @@ def TrackingVisitReportBySalesForce(request):
             "valid": valid,
             "totalVisits": totalVisits,
             "totalOrder": totalOrder,
-            "totalVisitGroupByBranch":totalVisitGroupByBranch,
+            "totalVisitGroupByBranch": totalVisitGroupByBranch,
             "hr": hr,
             "km": km,
             "countDay": countDay,
