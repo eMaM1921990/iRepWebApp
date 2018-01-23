@@ -18,6 +18,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from iRep.Serializers import ClientSerializer, ProductGroupWithoutProductSerialziers, SalesForceSerializer
+from iRep.decorators import user_is_same_company
 from iRep.forms import SalesForceForm, SalesForceReportForm, ProductForm, BaseReportForm, ClientForm, QuestionForm, \
     BaseQuestionFormSet, FormsForm, ProductCategoryForm, BillBoardForm, ClientReportForm
 from iRep.managers.AuditRetail import AuditRetail
@@ -71,6 +72,7 @@ def AddSalesForce(request):
 
 
 @login_required
+@user_is_same_company
 def ViewSalesForceDefault(request, slug):
     template = 'sales_force/list.html'
     context = {
