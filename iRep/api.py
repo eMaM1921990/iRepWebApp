@@ -311,7 +311,7 @@ def addSchedual(request):
                                               sales_force_id=request.data['sales_force'],
                                               dates=request.data['date'], times=request.data['time'],
                                               notes=request.data['notes'] if 'notes' in request.data else None,
-                                              is_visit=request.data['is_visit'])
+                                              is_visit=request.data['is_visit'],week=0)
 
     if record:
         resp['code'] = 200
@@ -465,7 +465,7 @@ def CheckIn(request):
                                                            dates=request.data['check_date'],
                                                            sales_force_id=request.data['sales_force'],
                                                            times=request.data['check_time'],
-                                                           notes='not schedual visit')
+                                                           notes='not schedual visit',week=0)
         if schedual_record:
             #retrievedDateTime = request.data['check_date'] + ' ' +request.data['check_time']
             #datetime_object = datetime.datetime.strptime(str(retrievedDateTime), '%Y-%m-%d %H:%M')
