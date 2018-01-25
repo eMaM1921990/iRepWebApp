@@ -19,7 +19,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.static import serve
 
-from iRep import views, api
+from iRep import views, api,httpError
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -131,3 +131,5 @@ if 'rosetta' in settings.INSTALLED_APPS:
         url(r'^trans/', include('rosetta.urls')),
     ]
 
+
+handler404 = httpError.error_forbidden

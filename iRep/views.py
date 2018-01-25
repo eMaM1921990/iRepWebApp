@@ -119,6 +119,7 @@ def DeleteSalesForce(request, slug):
 
 
 @login_required
+@user_is_same_company
 def AddProduct(request, slug):
     template = 'settings/products/details.html'
     form = ProductForm(request.POST or None, request.FILES or None, slug=slug,
@@ -142,6 +143,7 @@ def DeleteProduct(request, slug):
 
 
 @login_required
+@user_is_same_company
 def ViewProduct(request, slug):
     template = 'settings/products/list.html'
     context = {
@@ -172,6 +174,7 @@ def ViewEditProduct(request, slug):
 
 
 @login_required
+@user_is_same_company
 def ViewClient(request, slug):
     template = 'clients/list.html'
     context = {
@@ -181,6 +184,7 @@ def ViewClient(request, slug):
 
 
 @login_required
+@user_is_same_company
 def AddClient(request, slug):
     template = 'clients/details.html'
     # Get Corp Info
@@ -202,6 +206,7 @@ def DeleteClient(request, slug):
 
 
 @login_required
+@user_is_same_company
 def viewOrder(request, slug):
     template = 'orders/details.html'
     orders = OrderManager().get_corp_orders(slug=slug)
@@ -439,6 +444,7 @@ def AddCategory(request):
 
 ## FROMS
 @login_required
+@user_is_same_company
 def ViewForms(request, slug):
     template = 'forms/list.html'
     context = {
@@ -494,6 +500,7 @@ def DeleteForm(request, id):
 
 
 @login_required
+@user_is_same_company
 def CreateForms(request, slug):
     # Get Corp Info
     corp = CorpManager().get_corp_by_user(request.user)
@@ -659,6 +666,7 @@ def TrackingVisitReportBySalesForce(request):
 
 # Bill boards
 @login_required
+@user_is_same_company
 def billBoards(request, slug):
     template = 'settings/billBoard/list.html'
     context = {
@@ -707,6 +715,7 @@ def editBillBoard(request, id):
 
 
 @login_required
+@user_is_same_company
 def auditRetails(request, slug):
     template = 'settings/auditRetail/list.html'
     context = {
@@ -717,6 +726,7 @@ def auditRetails(request, slug):
 
 
 @login_required
+@user_is_same_company
 def dashboard(request, slug):
     template = 'clients/dashboard.html'
     context = {}
